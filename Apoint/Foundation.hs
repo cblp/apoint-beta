@@ -5,10 +5,9 @@ import Yesod
 import Yesod.Static
 import Yesod.Auth
 import Yesod.Auth.BrowserId
-import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
-import Network.HTTP.Conduit (Manager)
+import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
 import qualified Settings
 import Settings.Development (development)
 import qualified Database.Persist
@@ -33,6 +32,9 @@ data App = App
     , appLogger :: Logger
     }
 
+instance HasHttpManager App where
+    getHttpManager = httpManager
+
 -- Set up i18n messages. See the message folder.
 mkMessage "App" "messages" "en"
 
@@ -55,7 +57,7 @@ instance Yesod App where
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
     makeSessionBackend _ = fmap Just $ defaultClientSessionBackend
-        (120 * 60) -- 120 minutes
+        120    -- timeout in minutes
         "config/client_session_key.aes"
 
     defaultLayout widget = do
@@ -133,7 +135,7 @@ instance YesodAuth App where
                     }
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId def, authGoogleEmail]
+    authPlugins _ = [authBrowserId def]
 
     authHttpManager = httpManager
 
