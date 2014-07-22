@@ -1,0 +1,16 @@
+syntax: glob
+
+*.hi
+*.o
+*.sqlite3
+*.swp
+.cabal-sandbox
+.DS_Store
+.hsenv*
+cabal-dev/
+cabal.sandbox.config
+config/client_session_key.aes
+dist*
+static/combined/
+static/tmp/
+yesod-devel/

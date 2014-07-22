@@ -1,7 +1,7 @@
-/static StaticR Static getStatic
-/auth   AuthR   Auth   getAuth
+/auth                   AuthR   Auth    getAuth
+/static                 StaticR Static  getStatic
 
-/favicon.ico FaviconR GET
-/robots.txt RobotsR GET
-
-/ HomeR GET POST
+/                       HomeR       GET POST
+/api/v1/note/#NoteId    NoteR       GET
+/favicon.ico            FaviconR    GET
+/robots.txt             RobotsR     GET
