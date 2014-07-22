@@ -1,0 +1,24 @@
+Default: &defaults
+  user: Apoint
+  password: Apoint
+  host: localhost
+  port: 5432
+  database: Apoint
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: Apoint_test
+  <<: *defaults
+
+Staging:
+  database: Apoint_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: Apoint_production
+  poolsize: 100
+  <<: *defaults
