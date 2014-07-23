@@ -3,5 +3,6 @@
 
 /                       HomeR       GET POST
 /api/v1/note/#NoteId    NoteR       GET
+/api/v1/notes           NotesR          POST
 /favicon.ico            FaviconR    GET
 /robots.txt             RobotsR     GET
