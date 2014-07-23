@@ -2,7 +2,7 @@
 /static                 StaticR Static  getStatic
 
 /                       HomeR       GET POST
-/api/v1/note/#NoteId    NoteR       GET
-/api/v1/notes           NotesR          POST
 /favicon.ico            FaviconR    GET
+/note/#NoteId           NoteR       GET
+/notes                  NotesR          POST
 /robots.txt             RobotsR     GET
