@@ -23,6 +23,8 @@ library
                      Handler.Note
                      Handler.Notes
 
+    other-modules: Local.Data.Text
+
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
         ghc-options:   -Wall -O0

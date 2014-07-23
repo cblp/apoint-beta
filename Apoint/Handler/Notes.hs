@@ -4,11 +4,13 @@
 
 module Handler.Notes where
 
-import Import
-
 import Data.Aeson as Json
 import Data.Text as Text
 import GHC.Generics (Generic)
+
+import Local.Data.Text as Text
+
+import Import
 
 
 data CreateNoteRequest = CreateNoteRequest
@@ -33,15 +35,14 @@ postNotesR = do
     parsedRequest <- parseJsonBody
     case parsedRequest of
         Json.Error errorDescription ->
-            invalidArgs [ "request body must be an object"
-                        , Text.pack errorDescription ]
+            invalidArgs [Text.pack errorDescription]
         Json.Success request -> do
             -- TODO authorId <- getCurrentUser
             let authorIdent = author request
                 noteContent = content request
             mAuthor <- runDB $ getBy $ UniqueUser authorIdent
             case mAuthor of
-                Nothing -> invalidArgs ["user not found", authorIdent]
+                Nothing -> invalidArgs [mconcat ["user ", Text.show authorIdent, " not found"]]
                 Just (Entity authorId _) -> do
                     createdNoteId <- runDB $ insert $ Note noteContent authorId
                     returnJson CreateNoteResponse{noteId = createdNoteId}
