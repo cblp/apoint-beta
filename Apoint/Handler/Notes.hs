@@ -54,5 +54,6 @@ postNotesR = do
             Just (Entity authorId _) ->
                 return authorId
 
-    createdNoteId <- runDB $ insert $ Note noteContent authorId
-    returnJson CreateNoteResponse{noteId = createdNoteId}
+    noteId <- runDB $ insert $ Note noteContent authorId
+    returnJson $ CreateNoteResponse noteId
+        -- TODO return 201 CREATE + url to created note
