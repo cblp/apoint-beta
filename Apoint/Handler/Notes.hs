@@ -32,7 +32,7 @@ instance ToJSON CreateNoteResponse
 
 postNotesR :: Handler Value
 postNotesR = do
-    request <- do
+    CreateNoteRequest{author, content} <- do
         parsedRequest <- parseJsonBody
         case parsedRequest of
             Json.Error errorDescription ->
@@ -40,20 +40,18 @@ postNotesR = do
             Json.Success request ->
                 return request
 
-    -- TODO authorId <- getCurrentUser
-    let authorIdent = author request
-        noteContent = content request
+    -- TODO authorize; author <- authUser
 
     authorId <- do
-        mAuthor <- runDB $ getBy $ UniqueUser authorIdent
+        mAuthor <- runDB $ getBy $ UniqueUser author
         case mAuthor of
             Nothing -> do
                 let errMsg =
-                        mconcat ["user ", Text.show authorIdent, " not found"]
+                        mconcat ["user ", Text.show author, " not found"]
                 invalidArgs [errMsg]
             Just (Entity authorId _) ->
                 return authorId
 
-    noteId <- runDB $ insert $ Note noteContent authorId
+    noteId <- runDB $ insert $ Note content authorId
     returnJson $ CreateNoteResponse noteId
         -- TODO return 201 CREATE + url to created note
