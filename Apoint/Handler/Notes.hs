@@ -46,9 +46,7 @@ postNotesR = do
         mAuthor <- runDB $ getBy $ UniqueUser author
         case mAuthor of
             Nothing -> do
-                let errMsg =
-                        mconcat ["user ", Text.show author, " not found"]
-                invalidArgs [errMsg]
+                invalidArgs ["user " ⊕ Text.show author ⊕ " not found"]
             Just (Entity authorId _) ->
                 return authorId
 
