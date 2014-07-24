@@ -1,4 +1,5 @@
-{-# LANGUAGE  DeriveGeneric
+{-# LANGUAGE  ConstraintKinds
+            , DeriveGeneric
             , NamedFieldPuns
   #-}
 
@@ -30,7 +31,7 @@ instance ToJSON CreateNoteResponse
 
 postNotesR :: Handler Value
 postNotesR = do
-    userId <- requireAuthId
+    userId <- requireAuthIdOrUnauthorized
 
     CreateNoteRequest{content} <- do
         parsedRequest <- parseJsonBody
@@ -43,3 +44,12 @@ postNotesR = do
     noteId <- runDB $ insert $ Note{noteContent = content, noteAuthor = userId}
     returnJson $ CreateNoteResponse noteId
         -- TODO return 201 CREATE + url to created note
+
+
+-- | Similar to 'requireAuthId',
+-- but returns "HTTP 401 Unauthorized" if user is not authorized.
+requireAuthIdOrUnauthorized ::
+    YesodAuthPersist master => HandlerT master IO (AuthId master)
+requireAuthIdOrUnauthorized =
+    maybeAuthId
+    >>= maybe notAuthenticated return
