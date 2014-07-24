@@ -5,18 +5,15 @@
 module Handler.Notes where
 
 import Data.Aeson             as Json
-import Data.Aeson.Encode      as Json
 import Data.Text              as Text (pack)
-import Data.Text.Lazy         as Text (toStrict)
-import Data.Text.Lazy.Builder as Text (toLazyText)
 import GHC.Generics                   (Generic)
+import Yesod.Auth
 
 import Import
 
 
 data CreateNoteRequest = CreateNoteRequest
-    { author :: Text -- User.ident
-    , content :: Text
+    { content :: Text
     }
         deriving (Generic)
 
@@ -33,7 +30,9 @@ instance ToJSON CreateNoteResponse
 
 postNotesR :: Handler Value
 postNotesR = do
-    CreateNoteRequest{author, content} <- do
+    userId <- requireAuthId
+
+    CreateNoteRequest{content} <- do
         parsedRequest <- parseJsonBody
         case parsedRequest of
             Json.Error errorDescription ->
@@ -41,25 +40,6 @@ postNotesR = do
             Json.Success request ->
                 return request
 
-    -- TODO authorize; author <- authUser
-
-    authorId <- do
-        mAuthor <- runDB $ getBy $ UniqueUser author
-        case mAuthor of
-            Nothing -> do
-                invalidArgs ["user " ⊕ toJsonText author ⊕ " not found"]
-            Just (Entity authorId _) ->
-                return authorId
-
-    noteId <- runDB $ insert $ Note content authorId
+    noteId <- runDB $ insert $ Note{noteContent = content, noteAuthor = userId}
     returnJson $ CreateNoteResponse noteId
         -- TODO return 201 CREATE + url to created note
-
-  where
-
-    toJsonText :: ToJSON a => a -> Text
-    toJsonText =
-        Json.toJSON
-        >>> Json.encodeToTextBuilder
-        >>> Text.toLazyText
-        >>> Text.toStrict
