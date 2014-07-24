@@ -4,11 +4,12 @@
 
 module Handler.Notes where
 
-import Data.Aeson as Json
-import Data.Text as Text
-import GHC.Generics (Generic)
-
-import Local.Data.Text as Text
+import Data.Aeson             as Json
+import Data.Aeson.Encode      as Json
+import Data.Text              as Text (pack)
+import Data.Text.Lazy         as Text (toStrict)
+import Data.Text.Lazy.Builder as Text (toLazyText)
+import GHC.Generics                   (Generic)
 
 import Import
 
@@ -46,10 +47,19 @@ postNotesR = do
         mAuthor <- runDB $ getBy $ UniqueUser author
         case mAuthor of
             Nothing -> do
-                invalidArgs ["user " ⊕ Text.show author ⊕ " not found"]
+                invalidArgs ["user " ⊕ toJsonText author ⊕ " not found"]
             Just (Entity authorId _) ->
                 return authorId
 
     noteId <- runDB $ insert $ Note content authorId
     returnJson $ CreateNoteResponse noteId
         -- TODO return 201 CREATE + url to created note
+
+  where
+
+    toJsonText :: ToJSON a => a -> Text
+    toJsonText =
+        Json.toJSON
+        >>> Json.encodeToTextBuilder
+        >>> Text.toLazyText
+        >>> Text.toStrict

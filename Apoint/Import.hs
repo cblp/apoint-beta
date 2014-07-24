@@ -7,6 +7,8 @@ import           Prelude              as Import hiding (head, init, last,
 import           Yesod                as Import hiding (Route (..))
 
 import           Control.Applicative  as Import (pure, (<$>), (<*>))
+import           Control.Arrow        as Import ((>>>))
+
 import           Data.Text            as Import (Text)
 
 import           Foundation           as Import
