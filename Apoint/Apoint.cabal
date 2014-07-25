@@ -72,6 +72,8 @@ library
                  , monad-logger                  >= 0.3        && < 0.4
                  , fast-logger                   >= 2.1.4      && < 2.2
                  , wai-logger                    >= 2.1        && < 2.2
+                 , mime-mail
+                 , blaze-html
 
 executable         Apoint
     if flag(library-only)
