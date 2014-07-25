@@ -1,3 +1,31 @@
-$maybe msg <- mmsg
-    <div #message>#{msg}
-^{widget}
+<header .row>
+    <nav .navbar>
+        <div .navbar-inner .nav-tabs>
+            <ul .nav>
+                <li>
+                    <a href=@{NoteNewR}>
+                        <.icon-file>
+                        New
+                <li> <!-- TODO .active -->
+                    <a href=@{NotesR}>
+                        <.icon-list>
+                        Next
+            <ul .nav .pull-right>
+                $maybe user <- maybeUser
+                    <li>
+                        <a>
+                            <.icon-user>
+                            #{userEmail user}
+                    <li>
+                        <a href=@{AuthR LogoutR}>
+                            <.icon-off>
+                            Logout
+                $nothing
+                    <li>
+                        <a href=@{AuthR LoginR}>
+                            <.icon-user>
+                            Login/Register
+<div id="main" role="main">
+    $maybe msg <- mmsg
+        <div #message>#{msg}
+    ^{widget}

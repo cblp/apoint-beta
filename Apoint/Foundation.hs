@@ -24,6 +24,18 @@ import Text.Hamlet (hamletFile)
 import Text.Shakespeare.Text (stext)
 import Yesod.Core.Types (Logger)
 
+
+(|>) :: a -> (a -> b) -> b
+x |> f = f x
+{-# INLINE (|>) #-}
+
+(<$$>) ::
+    (Functor f, Functor g) =>
+    (a -> b) -> f (g a) -> f (g b)
+(<$$>) = fmap . fmap
+{-# INLINE (<$$>) #-}
+
+
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
@@ -74,6 +86,12 @@ instance Yesod App where
         -- default-layout-wrapper is the entire page. Since the final
         -- value passed to hamletToRepHtml cannot be a widget, this allows
         -- you to use normal widget features in default-layout.
+
+        let copyright =
+                master |> settings |> appExtra |> extraCopyright
+                |> preEscapedToMarkup
+
+        maybeUser <- entityVal <$$> maybeAuth
 
         pc <- widgetToPageContent $ do
             $(combineStylesheets 'StaticR

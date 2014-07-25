@@ -1,7 +1,11 @@
 <h1>
     Next
-<hr>
-<ol>
-    $forall Entity noteId note <- notes
-        <li>
-            #{show noteId} -> #{show note}
+$if null notes
+    No notes.
+    <a href=@{NoteNewR}>
+        Create one!
+$else
+    <ol>
+        $forall Entity noteId note <- notes
+            <li>
+                #{show noteId} -> #{show note}
