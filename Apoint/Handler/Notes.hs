@@ -8,9 +8,22 @@ module Handler.Notes where
 import Data.Aeson             as Json
 import Data.Text              as Text (pack)
 import GHC.Generics                   (Generic)
-import Yesod.Auth
+import Local.Yesod.Auth               (requireAuthId')
 
 import Import
+
+
+getNotesR :: Handler Html
+getNotesR = do
+    userId <- requireAuthId'
+    notes <- runDB $
+        selectList
+            [NoteAuthor ==. userId]
+            [LimitTo $ notesOnAPage + 1] -- one for pagination
+    defaultLayout $ $(widgetFile "notes")
+
+    where
+        notesOnAPage = 20
 
 
 data CreateNoteRequest = CreateNoteRequest
@@ -44,23 +57,3 @@ postNotesR = do
     noteId <- runDB $ insert $ Note{noteContent = content, noteAuthor = userId}
     returnJson $ CreateNoteResponse noteId
         -- TODO return 201 CREATE + url to created note
-
-
--- | Similar to 'requireAuthId',
--- but returns "HTTP 401 Unauthorized" if user is not authorized.
-requireAuthId' ::
-    YesodAuthPersist master => HandlerT master IO (AuthId master)
-requireAuthId' =
-    maybeAuthId >>= maybe handleAuthLack return
-    where
-        handleAuthLack = do
-            aj <- acceptsJson
-            if aj then notAuthenticated else redirectLogin
-
-        redirectLogin :: Yesod master => HandlerT master IO a
-        redirectLogin = do
-            y <- getYesod
-            setUltDestCurrent
-            case authRoute y of
-                Just z -> redirect z
-                Nothing -> permissionDenied "Please configure authRoute"

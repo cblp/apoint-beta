@@ -4,5 +4,5 @@
 /                       HomeR       GET POST
 /favicon.ico            FaviconR    GET
 /note/#NoteId           NoteR       GET
-/notes                  NotesR          POST
+/notes                  NotesR      GET POST
 /robots.txt             RobotsR     GET

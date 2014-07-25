@@ -1,0 +1,7 @@
+<h1>
+    Next
+<hr>
+<ol>
+    $forall Entity noteId note <- notes
+        <li>
+            #{show noteId} -> #{show note}

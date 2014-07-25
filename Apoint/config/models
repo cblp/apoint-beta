@@ -2,6 +2,8 @@ Note
     content Text
     author UserId
 
+    deriving Show
+
 
 User
     email Text

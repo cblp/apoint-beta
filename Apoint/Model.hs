@@ -1,7 +1,7 @@
 module Model where
 
 import Yesod
-import Prelude (Bool)
+import Prelude (Bool, Show)
 import Data.Text (Text)
 import Database.Persist.Quasi
 import Data.Typeable (Typeable)
