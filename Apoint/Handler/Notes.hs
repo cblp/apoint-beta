@@ -31,7 +31,7 @@ instance ToJSON CreateNoteResponse
 
 postNotesR :: Handler Value
 postNotesR = do
-    userId <- requireAuthIdOrUnauthorized
+    userId <- requireAuthId'
 
     CreateNoteRequest{content} <- do
         parsedRequest <- parseJsonBody
@@ -48,8 +48,19 @@ postNotesR = do
 
 -- | Similar to 'requireAuthId',
 -- but returns "HTTP 401 Unauthorized" if user is not authorized.
-requireAuthIdOrUnauthorized ::
+requireAuthId' ::
     YesodAuthPersist master => HandlerT master IO (AuthId master)
-requireAuthIdOrUnauthorized =
-    maybeAuthId
-    >>= maybe notAuthenticated return
+requireAuthId' =
+    maybeAuthId >>= maybe handleAuthLack return
+    where
+        handleAuthLack = do
+            aj <- acceptsJson
+            if aj then notAuthenticated else redirectLogin
+
+        redirectLogin :: Yesod master => HandlerT master IO a
+        redirectLogin = do
+            y <- getYesod
+            setUltDestCurrent
+            case authRoute y of
+                Just z -> redirect z
+                Nothing -> permissionDenied "Please configure authRoute"
