@@ -5,8 +5,9 @@ import Local.Yesod.Auth (requireAuthId')
 import Import
 
 
-getNoteR :: NoteId -> Handler Value
+getNoteR :: NoteId -> Handler Html
 getNoteR noteId = do
     _ <- requireAuthId'
+    -- TODO check acl
     note <- runDB $ get404 noteId
-    returnJson $ noteContent note
+    defaultLayout $(widgetFile "note")
