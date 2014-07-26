@@ -1,16 +1,13 @@
 module Handler.Note where
 
-import Local.Yesod.Auth (requireAuthId')
-
-import AccessControl
+import Access
 import Import
 
 
 getNoteR :: NoteId -> Handler Html
 getNoteR noteId = do
-    userId <- requireAuthId'
     note <- runDB $ get404 noteId
-    checkUserCanRead userId note
+    authorize Read CurrentUser note
 
     let contentHtml = noteContentHtml note
     defaultLayout $(widgetFile "note")
@@ -18,9 +15,7 @@ getNoteR noteId = do
 
 postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
-    userId <- requireAuthId'
-    note <- runDB $ get404 noteId
-    checkUserCanWrite userId note
+    authorize Delete CurrentUser noteId
 
     runDB $ delete noteId
 

@@ -3,9 +3,7 @@
 
 module Handler.NoteEdit where
 
-import Local.Yesod.Auth (requireAuthId')
-
-import AccessControl
+import Access
 import Import
 
 
@@ -33,9 +31,8 @@ noteContentEditPage noteId widget enctype =
 
 getNoteEditR :: NoteId -> Handler Html
 getNoteEditR noteId = do
-    userId <- requireAuthId'
     note <- runDB $ get404 noteId
-    checkUserCanRead userId note
+    authorize Read CurrentUser note
 
     let content = noteContent note
 
@@ -45,9 +42,8 @@ getNoteEditR noteId = do
 
 postNoteR :: NoteId -> Handler ()
 postNoteR noteId = do
-    userId <- requireAuthId'
     note <- runDB $ get404 noteId
-    checkUserCanWrite userId note
+    authorize Access.Update CurrentUser note
 
     ((formResult, _), _) <- runFormPost $ noteContentEditForm Nothing
     NoteContentEditInput{nceContent = Textarea content} <-
