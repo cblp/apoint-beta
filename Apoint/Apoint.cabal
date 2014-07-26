@@ -22,7 +22,6 @@ library
                      Handler.Home
                      Handler.Note
                      Handler.Notes
-                     Handler.NoteNew
 
     other-modules: Local.Data.Text
                    Local.Yesod.Auth

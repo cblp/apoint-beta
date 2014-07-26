@@ -5,12 +5,35 @@
 
 module Handler.Notes where
 
-import Data.Aeson             as Json
-import Data.Text              as Text (pack)
-import GHC.Generics                   (Generic)
 import Local.Yesod.Auth               (requireAuthId')
 
 import Import
+
+
+data NoteNew = NoteNew
+    { nnContent :: Textarea
+    }
+
+noteNewForm :: Html -> MForm Handler (FormResult NoteNew, Widget)
+noteNewForm = renderDivs $ NoteNew
+    <$> areq textareaField "Content" Nothing
+
+noteNewFormPage :: Widget -> Enctype -> Handler Html
+noteNewFormPage widget enctype =
+    defaultLayout
+        [whamlet|
+            <h1>New note
+            <form method=post action=@{NotesR} enctype=#{enctype}>
+                ^{widget}
+                <button>Submit
+        |]
+
+
+getNoteNewR :: Handler Html
+getNoteNewR = do
+    _ <- requireAuthId'
+    (widget, enctype) <- generateFormPost noteNewForm
+    noteNewFormPage widget enctype
 
 
 getNotesR :: Handler Html
@@ -26,34 +49,16 @@ getNotesR = do
         notesOnAPage = 20
 
 
-data CreateNoteRequest = CreateNoteRequest
-    { content :: Text
-    }
-        deriving (Generic)
-
-instance FromJSON CreateNoteRequest
-
-
-data CreateNoteResponse = CreateNoteResponse
-    { noteId :: NoteId
-    }
-        deriving (Generic)
-
-instance ToJSON CreateNoteResponse
-
-
-postNotesR :: Handler Value
+postNotesR :: Handler ()
 postNotesR = do
     userId <- requireAuthId'
 
-    CreateNoteRequest{content} <- do
-        parsedRequest <- parseJsonBody
-        case parsedRequest of
-            Json.Error errorDescription ->
-                invalidArgs [Text.pack errorDescription]
-            Json.Success request ->
-                return request
+    ((formResult, _), _) <- runFormPost noteNewForm
+    content <- case formResult of
+        FormSuccess NoteNew{nnContent} -> return $ unTextarea nnContent
+        FormMissing -> invalidArgs ["FormMissing"]
+        FormFailure errors -> invalidArgs errors
 
     noteId <- runDB $ insert $ Note{noteContent = content, noteAuthor = userId}
-    returnJson $ CreateNoteResponse noteId
-        -- TODO return 201 CREATE + url to created note
+
+    redirect $ NoteR noteId
