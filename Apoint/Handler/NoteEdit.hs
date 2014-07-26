@@ -3,10 +3,9 @@
 
 module Handler.NoteEdit where
 
-import Control.Monad (when)
-
 import Local.Yesod.Auth (requireAuthId')
 
+import AccessControl
 import Import
 
 
@@ -36,9 +35,7 @@ getNoteEditR :: NoteId -> Handler Html
 getNoteEditR noteId = do
     userId <- requireAuthId'
     note <- runDB $ get404 noteId
-
-    when (userId /= noteAuthor note) $
-        permissionDenied "You are not the author of this note"
+    checkUserCanRead userId note
 
     let content = noteContent note
 
@@ -50,9 +47,7 @@ postNoteR :: NoteId -> Handler ()
 postNoteR noteId = do
     userId <- requireAuthId'
     note <- runDB $ get404 noteId
-
-    when (userId /= noteAuthor note) $
-        permissionDenied "You are not the author of this note"
+    checkUserCanWrite userId note
 
     ((formResult, _), _) <- runFormPost $ noteContentEditForm Nothing
     NoteContentEditInput{nceContent = Textarea content} <-

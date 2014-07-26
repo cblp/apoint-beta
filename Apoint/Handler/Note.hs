@@ -1,9 +1,8 @@
 module Handler.Note where
 
-import Control.Monad (when)
-
 import Local.Yesod.Auth (requireAuthId')
 
+import AccessControl
 import Import
 
 
@@ -11,9 +10,7 @@ getNoteR :: NoteId -> Handler Html
 getNoteR noteId = do
     userId <- requireAuthId'
     note <- runDB $ get404 noteId
-
-    when (userId /= noteAuthor note) $
-        permissionDenied "You are not the author of this note"
+    checkUserCanRead userId note
 
     let contentHtml = noteContentHtml note
     defaultLayout $(widgetFile "note")
@@ -23,9 +20,7 @@ postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
     userId <- requireAuthId'
     note <- runDB $ get404 noteId
-
-    when (userId /= noteAuthor note) $
-        permissionDenied "You are not the author of this note"
+    checkUserCanWrite userId note
 
     runDB $ delete noteId
 

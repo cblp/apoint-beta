@@ -12,17 +12,18 @@ Flag library-only
     Default:       False
 
 library
-    exposed-modules: Application
+    exposed-modules: AccessControl
+                     Application
                      Foundation
-                     Import
-                     Model
-                     Settings
-                     Settings.StaticFiles
-                     Settings.Development
                      Handler.Home
                      Handler.Note
                      Handler.NoteEdit
                      Handler.Notes
+                     Import
+                     Model
+                     Settings
+                     Settings.Development
+                     Settings.StaticFiles
 
     other-modules: Local.Data.Text
                    Local.Yesod.Auth
