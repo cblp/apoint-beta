@@ -8,4 +8,5 @@ $else
     <ol>
         $forall Entity noteId note <- notes
             <li>
-                #{show noteId} -> #{show note}
+                <a href=@{NoteR noteId}>
+                    #{noteContent note}
