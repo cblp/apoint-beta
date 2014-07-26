@@ -17,3 +17,16 @@ getNoteR noteId = do
 
     let contentHtml = noteContentHtml note
     defaultLayout $(widgetFile "note")
+
+
+postNoteDeleteR :: NoteId -> Handler ()
+postNoteDeleteR noteId = do
+    userId <- requireAuthId'
+    note <- runDB $ get404 noteId
+
+    when (userId /= noteAuthor note) $
+        permissionDenied "You are not the author of this note"
+
+    runDB $ delete noteId
+
+    redirect $ NotesR
