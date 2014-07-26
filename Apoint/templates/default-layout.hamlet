@@ -2,14 +2,14 @@
     <nav .navbar>
         <div .navbar-inner .nav-tabs>
             <ul .nav>
-                <li>
-                    <a href=@{NoteNewR}>
-                        <.icon-file>
-                        New
                 <li> <!-- TODO .active -->
                     <a href=@{NotesR}>
                         <.icon-list>
                         Next
+                <li>
+                    <a href=@{NoteNewR}>
+                        <.icon-plus>
+                        New
             <ul .nav .pull-right>
                 $maybe user <- maybeUser
                     <li>
