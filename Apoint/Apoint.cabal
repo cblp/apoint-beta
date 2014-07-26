@@ -75,6 +75,7 @@ library
                  , wai-logger                    >= 2.1        && < 2.2
                  , mime-mail
                  , blaze-html
+                 , markdown
 
 executable         Apoint
     if flag(library-only)

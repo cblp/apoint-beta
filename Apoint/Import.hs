@@ -30,4 +30,5 @@ infixr 5 <>
 (<>) = mappend
 #endif
 
+import           Data.Default         as Import (def)
 import           Data.Monoid.Unicode  as Import ((⊕))

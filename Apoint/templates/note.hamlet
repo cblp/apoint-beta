@@ -1,2 +1,2 @@
 <.hero-unit>
-    #{noteContent note}
+    #{contentHtml}

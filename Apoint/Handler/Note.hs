@@ -10,4 +10,5 @@ getNoteR noteId = do
     _ <- requireAuthId'
     -- TODO check acl
     note <- runDB $ get404 noteId
+    let contentHtml = noteContentHtml note
     defaultLayout $(widgetFile "note")
