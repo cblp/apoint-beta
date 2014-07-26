@@ -1,2 +1,11 @@
 <.hero-unit>
+    <.btn-toolbar>
+        <.btn-group>
+            <a .btn>
+                <.icon-edit>
+                Edit
+        <.btn-group .pull-right>
+            <a .btn .btn-danger>
+                <.icon-remove .icon-white>
+                Delete
     #{contentHtml}
