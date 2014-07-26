@@ -10,16 +10,16 @@ import Local.Yesod.Auth               (requireAuthId')
 import Import
 
 
-data NoteNew = NoteNew
+data NoteNewInput = NoteNewInput
     { nnContent :: Textarea
     }
 
-noteNewForm :: Html -> MForm Handler (FormResult NoteNew, Widget)
-noteNewForm = renderDivs $ NoteNew
+noteNewForm :: Html -> MForm Handler (FormResult NoteNewInput, Widget)
+noteNewForm = renderDivs $ NoteNewInput
     <$> areq textareaField "Content" Nothing
 
-noteNewFormPage :: Widget -> Enctype -> Handler Html
-noteNewFormPage widget enctype =
+noteNewPage :: Widget -> Enctype -> Handler Html
+noteNewPage widget enctype =
     defaultLayout
         [whamlet|
             <h1>New note
@@ -33,7 +33,7 @@ getNoteNewR :: Handler Html
 getNoteNewR = do
     _ <- requireAuthId'
     (widget, enctype) <- generateFormPost noteNewForm
-    noteNewFormPage widget enctype
+    noteNewPage widget enctype
 
 
 getNotesR :: Handler Html
@@ -55,7 +55,7 @@ postNotesR = do
 
     ((formResult, _), _) <- runFormPost noteNewForm
     content <- case formResult of
-        FormSuccess NoteNew{nnContent} -> return $ unTextarea nnContent
+        FormSuccess NoteNewInput{nnContent} -> return $ unTextarea nnContent
         FormMissing -> invalidArgs ["FormMissing"]
         FormFailure errors -> invalidArgs errors
 

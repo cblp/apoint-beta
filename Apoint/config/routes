@@ -3,7 +3,8 @@
 
 /                       HomeR       GET POST
 /favicon.ico            FaviconR    GET
-/note/#NoteId           NoteR       GET
+/note/#NoteId           NoteR       GET POST
+/note/#NoteId/edit      NoteEditR   GET
 /note_new               NoteNewR    GET
 /notes                  NotesR      GET POST
 /robots.txt             RobotsR     GET

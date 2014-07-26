@@ -21,6 +21,7 @@ library
                      Settings.Development
                      Handler.Home
                      Handler.Note
+                     Handler.NoteEdit
                      Handler.Notes
 
     other-modules: Local.Data.Text

@@ -1,7 +1,7 @@
 <.hero-unit>
     <.btn-toolbar>
         <.btn-group>
-            <a .btn>
+            <a .btn href=@{NoteEditR noteId}>
                 <.icon-edit>
                 Edit
         <.btn-group .pull-right>
