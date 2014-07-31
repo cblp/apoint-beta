@@ -27,5 +27,6 @@
                             Login/Register
 <div id="main" role="main">
     $maybe msg <- mmsg
-        <div #message>#{msg}
+        <.alert #message>
+            #{msg}
     ^{widget}
