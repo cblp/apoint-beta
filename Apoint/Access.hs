@@ -18,7 +18,7 @@ class UserLocator userLocator where
     getUserId :: userLocator -> Handler UserId
 
 instance UserLocator UserId where
-    getUserId = return . id
+    getUserId = return
 
 data CurrentUser = CurrentUser
 
@@ -30,12 +30,18 @@ class NoteLocator noteLocator where
     getNote :: noteLocator -> Handler Note
 
 instance NoteLocator Note where
-    getNote = return . id
+    getNote = return
 
 instance NoteLocator NoteId where
     getNote = runDB . get404
 
 
+-- | Returns `()` if user has access to the note.
+--   Raises `notFound` if no such noteId exists in the database.
+--   Sends `CurrentUser` to login page and back if he isn't authenticated,
+--     or raises `notAuthenticated` if it's an API client.
+--   Raises `permissionDenied` if note is valid, user is valid,
+--     but he doesn't have such permission.
 authorize ::
     (UserLocator userLocator, NoteLocator noteLocator) =>
     AccessMode -> userLocator -> noteLocator -> Handler ()
