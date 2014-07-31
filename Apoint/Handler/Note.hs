@@ -15,8 +15,10 @@ getNoteR noteId = do
 
 postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
-    authorize Delete CurrentUser noteId
+    note <- runDB $ get404 noteId
+    authorize Delete CurrentUser note
 
     runDB $ delete noteId
 
+    setMessage $ "Deleted \"" <> (toHtml $ noteContentShort note) <> "\""
     redirect $ NotesR
