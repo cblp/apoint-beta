@@ -1,7 +1,13 @@
 module Handler.Note where
 
+import Control.Monad (forM)
+
 import Access
 import Import
+
+
+notesList :: [Entity Note] -> Widget
+notesList notes = $(widgetFile "notes")
 
 
 data NoteDelete = NoteDelete
@@ -10,10 +16,23 @@ noteDeleteForm :: Html -> MForm Handler (FormResult NoteDelete, Widget)
 noteDeleteForm = renderDivs $ pure NoteDelete
 
 
+noteSiblings ::
+    [Filter Notelink] -> (Notelink -> NoteId) -> Handler [Entity Note]
+noteSiblings filters fieldForSelect = runDB $ do
+    links <- selectList filters []
+    let ids = map (entityVal >>> fieldForSelect) links
+    forM ids $ \nid -> do
+        Just n <- get nid
+        return $ Entity nid n
+
+
 getNoteR :: NoteId -> Handler Html
 getNoteR noteId = do
     note <- runDB $ get404 noteId
     authorize Read CurrentUser note
+
+    notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
+    notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
     let contentHtml = noteContentHtml note
     (noteDeleteWidget, noteDeleteEnctype) <- generateFormPost noteDeleteForm
