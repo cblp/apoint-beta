@@ -5,7 +5,8 @@
                 <.icon-edit>
                 Edit
         <.btn-group .pull-right>
-            <form method=post action=@{NoteDeleteR noteId}>
+            <form method=post action=@{NoteDeleteR noteId} enctype=#{noteDeleteEnctype}>
+                ^{noteDeleteWidget}
                 <button .btn .btn-danger type=submit>
                     <.icon-remove .icon-white>
                     Delete
