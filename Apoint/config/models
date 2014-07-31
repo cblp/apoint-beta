@@ -5,6 +5,13 @@ Note
     deriving Show
 
 
+Notelink
+    from NoteId
+    to NoteId
+
+    UniqueNotelink from to
+
+
 User
     email Text
     password Text Maybe

@@ -31,7 +31,10 @@ postNoteDeleteR noteId = do
     note <- runDB $ get404 noteId
     authorize Delete CurrentUser note
 
-    runDB $ delete noteId
+    runDB $ do
+        deleteWhere [NotelinkFrom ==. noteId]
+        deleteWhere [NotelinkTo ==. noteId]
+        delete noteId
 
     setMessage $ "Deleted \"" <> (toHtml $ noteContentShort note) <> "\""
     redirect $ NotesR
