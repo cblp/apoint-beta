@@ -7,7 +7,7 @@ import Import
 
 
 notesList :: [Entity Note] -> Widget
-notesList notes = $(widgetFile "notes")
+notesList notes = $(widgetFile "noteslist")
 
 
 data NoteDelete = NoteDelete
@@ -38,7 +38,7 @@ getNoteR noteId = do
 
     let contentHtml = noteContentHtml note
     (noteDeleteWidget, noteDeleteEnctype) <- generateFormPost noteDeleteForm
-    defaultLayout $(widgetFile "note")
+    defaultLayout $(widgetFile "notesview")
 
 
 postNoteDeleteR :: NoteId -> Handler ()

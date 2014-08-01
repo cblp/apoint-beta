@@ -43,7 +43,7 @@ getNotesR = do
         selectList
             [NoteAuthor ==. userId]
             [LimitTo $ notesOnAPage + 1] -- one for pagination
-    defaultLayout $(widgetFile "notes")
+    defaultLayout $(widgetFile "noteslist")
 
     where
         notesOnAPage = 20
