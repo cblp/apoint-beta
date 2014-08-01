@@ -1,4 +1,6 @@
-<.note-widget>
+<.note-widget .thumbnail>
+    <.note-content .lead>
+        #{noteContentHtml note}
     <.btn-toolbar>
         <.btn-group>
             <a .btn href=@{NoteEditR noteId}>
@@ -12,5 +14,3 @@
                 <button .btn .btn-danger type=submit>
                     <.icon-remove .icon-white>
                     Delete
-    <.note-content>
-        #{noteContentHtml note}

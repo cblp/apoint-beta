@@ -4,8 +4,7 @@
     <.span1 style="text-align: center;">
         <h1>&rarr;
     <.span4>
-        <.hero-unit>
-            ^{centerColumnWidget}
+        ^{centerColumnWidget}
     <.span1 style="text-align: center;">
         <h1>&rarr;
     <.span3>
