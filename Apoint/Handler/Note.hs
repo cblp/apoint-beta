@@ -35,24 +35,7 @@ noteSiblings filters fieldForSelect =
 editableNoteWidget :: Entity Note -> Handler Widget
 editableNoteWidget (Entity noteId note) = do
     (ndfWidget, ndfEnctype) <- generateFormPost noteDeleteForm
-    return [whamlet|
-        <.note-widget>
-            <.btn-toolbar>
-                <.btn-group>
-                    <a .btn href=@{NoteEditR noteId}>
-                        <.icon-edit>
-                        Edit
-                <.btn-group .pull-right>
-                    <form   method=post
-                            action=@{NoteDeleteR noteId}
-                            enctype=#{ndfEnctype}>
-                        ^{ndfWidget}
-                        <button .btn .btn-danger type=submit>
-                            <.icon-remove .icon-white>
-                            Delete
-            <.note-content>
-                #{noteContentHtml note}
-    |]
+    return $(widgetFile "noteview")
 
 
 getNoteR :: NoteId -> Handler Html
@@ -64,8 +47,8 @@ getNoteR noteId = do
     notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
-    let leftColumnWidget   = notesList notesBeforeCurrent "before"
-        rightColumnWidget  = notesList notesAfterCurrent  "after"
+    let leftColumnWidget   = notesList notesBeforeCurrent "Before"
+        rightColumnWidget  = notesList notesAfterCurrent  "After"
     centerColumnWidget <- editableNoteWidget noteEntity
     defaultLayout $(widgetFile "notesview")
 
