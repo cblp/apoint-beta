@@ -18,6 +18,7 @@ library
                      Handler.Home
                      Handler.Note
                      Handler.NoteEdit
+                     Handler.Search
                      Import
                      Model
                      Model.Note

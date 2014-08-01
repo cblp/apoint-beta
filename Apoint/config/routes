@@ -9,3 +9,4 @@
 /note_new               NoteNewR    GET
 /notes                  NotesR      GET POST
 /robots.txt             RobotsR     GET
+/search                 SearchR     GET
