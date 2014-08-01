@@ -1,5 +1,7 @@
 module Widgets.Note where
 
+import Model.Note
+
 import Import
 
 

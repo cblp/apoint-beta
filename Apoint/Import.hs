@@ -7,8 +7,8 @@ import Control.Arrow        as Import ((>>>))
 import Data.Default         as Import (def)
 import Data.Monoid          as Import (Monoid (mappend, mempty, mconcat), (<>))
 import Data.Text            as Import (Text)
-import Prelude              as Import hiding ( head, init, last, readFile, tail
-                                             , writeFile )
+import Prelude              as Import hiding ( head, init, last, lines, readFile
+                                             , tail, writeFile )
 import Yesod                as Import hiding (Route (..))
 
 import Foundation           as Import

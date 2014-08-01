@@ -1,14 +1,9 @@
 module Model where
 
-import Control.Arrow ((>>>))
-import Data.Default (def)
-import Data.Monoid ((<>))
-import Data.Text (Text, lines)
-import Data.Text.Lazy (fromStrict)
+import Data.Text (Text)
 import Data.Typeable (Typeable)
 import Database.Persist.Quasi
-import Prelude (Bool, Show, ($))
-import Text.Markdown (markdown)
+import Prelude (Bool, Show)
 import Yesod
 
 
@@ -18,15 +13,3 @@ import Yesod
 -- http://www.yesodweb.com/book/persistent/
 share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
-
-
-noteContentHtml :: Note -> Html
-noteContentHtml = noteContent >>> fromStrict >>> markdown def
-
-
-noteContentShort :: Note -> Text
-noteContentShort note =
-    case lines $ noteContent note of
-        []           -> "..."
-        firstLine:[] -> firstLine
-        firstLine:_  -> firstLine <> "..."

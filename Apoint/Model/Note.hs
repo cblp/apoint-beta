@@ -1,10 +1,25 @@
 module Model.Note where
 
 import Control.Monad (forM)
+import Data.Text (lines)
+import Data.Text.Lazy (fromStrict)
+import Text.Markdown (markdown)
 
 import Model
 
 import Import
+
+
+noteContentHtml :: Note -> Html
+noteContentHtml = noteContent >>> fromStrict >>> markdown def
+
+
+noteContentShort :: Note -> Text
+noteContentShort note =
+    case lines $ noteContent note of
+        []           -> "..."
+        firstLine:[] -> firstLine
+        firstLine:_  -> firstLine <> "..."
 
 
 noteSiblings ::
