@@ -20,9 +20,11 @@ library
                      Handler.NoteEdit
                      Import
                      Model
+                     Model.Note
                      Settings
                      Settings.Development
                      Settings.StaticFiles
+                     Widgets.Note
 
     other-modules: Local.Data.Text
                    Local.Yesod.Auth

@@ -1,41 +1,12 @@
 module Handler.Note where
 
-import Control.Monad (forM)
-
 import Local.Yesod.Auth (requireAuthId')
 
 import Access
+import Model.Note
+import Widgets.Note
+
 import Import
-
-
-notesList :: [Entity Note] -> Text -> Widget
-notesList notes title = do
-    let mode = LinkedNotes
-    $(widgetFile "noteslist")
-
-
-data NoteDelete = NoteDelete
-
-noteDeleteForm :: Html -> MForm Handler (FormResult NoteDelete, Widget)
-noteDeleteForm = renderDivs $ pure NoteDelete
-
-
-noteSiblings ::
-    [Filter Notelink] -> (Notelink -> NoteId) -> Handler [Entity Note]
-noteSiblings filters fieldForSelect =
-    -- TODO remove runDB from here, replacing Handler with DB monad
-    runDB $ do
-        links <- selectList filters []
-        forM links $ \link -> do
-            let nid = fieldForSelect $ entityVal link
-            Just n <- get nid
-            return $ Entity nid n
-
-
-editableNoteWidget :: Entity Note -> Handler Widget
-editableNoteWidget (Entity noteId note) = do
-    (ndfWidget, ndfEnctype) <- generateFormPost noteDeleteForm
-    return $(widgetFile "noteview")
 
 
 getNoteR :: NoteId -> Handler Html
@@ -55,9 +26,9 @@ getNoteR noteId = do
 
 postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
-    ((formResult, _), _) <- runFormPost noteDeleteForm
+    ((formResult, _), _) <- runFormPost emptyForm
     case formResult of
-        FormSuccess NoteDelete -> return ()
+        FormSuccess () -> return ()
         FormMissing -> invalidArgs ["FormMissing"]
         FormFailure errors -> invalidArgs errors
 
@@ -97,9 +68,6 @@ getNoteNewR = do
     _ <- requireAuthId'
     (widget, enctype) <- generateFormPost noteNewForm
     noteNewPage widget enctype
-
-
-data NoteslistMode = SelectedNotes | LinkedNotes
 
 
 getNotesR :: Handler Html
