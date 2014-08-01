@@ -18,6 +18,6 @@ main = do
                 { csParseExtra = parseExtra
                 }
     foundation <- makeFoundation conf
-    hspec $ do
-        yesodSpec foundation $ do
+    hspec $
+        yesodSpec foundation
             homeSpecs

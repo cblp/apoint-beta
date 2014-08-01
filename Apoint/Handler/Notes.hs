@@ -59,6 +59,6 @@ postNotesR = do
         FormMissing -> invalidArgs ["FormMissing"]
         FormFailure errors -> invalidArgs errors
 
-    noteId <- runDB $ insert $ Note{noteContent = content, noteAuthor = userId}
+    noteId <- runDB $ insert Note{noteContent = content, noteAuthor = userId}
 
     redirect $ NoteR noteId

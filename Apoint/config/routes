@@ -1,7 +1,7 @@
 /auth                   AuthR   Auth    getAuth
 /static                 StaticR Static  getStatic
 
-/                       HomeR       GET POST
+/                       HomeR       GET
 /favicon.ico            FaviconR    GET
 /note/#NoteId           NoteR       GET POST
 /note/#NoteId/delete    NoteDeleteR     POST

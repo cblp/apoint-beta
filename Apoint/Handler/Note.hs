@@ -57,5 +57,5 @@ postNoteDeleteR noteId = do
         deleteWhere [NotelinkTo ==. noteId]
         delete noteId
 
-    setMessage $ "Deleted \"" <> (toHtml $ noteContentShort note) <> "\""
-    redirect $ NotesR
+    setMessage $ "Deleted \"" <> toHtml (noteContentShort note) <> "\""
+    redirect NotesR

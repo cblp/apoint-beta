@@ -1,28 +1,30 @@
 module Foundation where
 
 import Prelude
+
+import Control.Applicative ((<$>))
+import Data.Text.Lazy.Encoding (encodeUtf8)
+import Database.Persist.Sql (SqlPersistT)
+import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
+import Network.Mail.Mime ( Address(Address), Encoding(None), Mail(..), Part(..), emptyMail, renderSendMail )
+import qualified Database.Persist
+import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+import Text.Hamlet (hamletFile)
+import Text.Jasmine (minifym)
+import Text.Shakespeare.Text (stext)
 import Yesod
-import Yesod.Static
 import Yesod.Auth
 import Yesod.Auth.Email
+import Yesod.Core.Types (Logger)
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
-import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
-import Network.Mail.Mime ( Address(Address), Encoding(None), Mail(..), Part(..)
-                         , emptyMail, renderSendMail )
-import qualified Settings
-import Settings.Development (development)
-import qualified Database.Persist
-import Database.Persist.Sql (SqlPersistT)
-import Data.Text.Lazy.Encoding (encodeUtf8)
-import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
+import Yesod.Static
+
 import Model
-import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
-import Text.Jasmine (minifym)
-import Text.Hamlet (hamletFile)
-import Text.Shakespeare.Text (stext)
-import Yesod.Core.Types (Logger)
+import qualified Settings
+import Settings (widgetFile, Extra (..))
+import Settings.Development (development)
+import Settings.StaticFiles
 
 
 (|>) :: a -> (a -> b) -> b
@@ -73,7 +75,7 @@ instance Yesod App where
 
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
-    makeSessionBackend _ = fmap Just $ defaultClientSessionBackend
+    makeSessionBackend _ = Just <$> defaultClientSessionBackend
         120    -- timeout in minutes
         "config/client_session_key.aes"
 
@@ -151,8 +153,8 @@ instance YesodAuth App where
         x <- getBy $ UniqueUser $ credsIdent creds
         case x of
             Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert User
+            Nothing ->
+                Just <$> insert User
                     { userEmail = credsIdent creds
                     , userPassword = Nothing
                     , userVerkey = Nothing
@@ -237,7 +239,7 @@ instance YesodAuthEmail App where
         memail <- getBy $ UniqueUser address
         case memail of
             Nothing -> return Nothing
-            Just (Entity userId user) -> do
+            Just (Entity userId user) ->
                 return $ Just EmailCreds
                     { emailCredsId = userId
                     , emailCredsAuthId = Just userId
