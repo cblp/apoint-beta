@@ -1,13 +1,17 @@
-<h1>
-    Next
-$if null notes
-    No notes.
-    <a href=@{NoteNewR}>
-        Create one!
-$else
-    <ol>
-        $forall Entity noteId note <- notes
-            <li>
-                <p>
-                    <a href=@{NoteR noteId}>
-                        #{noteContentShort note}
+<h2>
+    #{title}
+    <.btn-group style="font-weight: normal;">
+        <a .btn href=@{NoteNewR} title="Create linked">
+            <.icon-plus>
+            Create
+        $case mode
+            $of SelectedNotes
+            $of LinkedNotes
+                <a .btn title="Link to existing">
+                    Link
+<ol>
+    $forall Entity noteId note <- notes
+        <li>
+            <p>
+                <a href=@{NoteR noteId}>
+                    #{noteContentShort note}
