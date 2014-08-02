@@ -48,6 +48,7 @@ library
                 NoMonomorphismRestriction
                 OverloadedStrings
                 QuasiQuotes
+                ScopedTypeVariables
                 TemplateHaskell
                 TypeFamilies
 
