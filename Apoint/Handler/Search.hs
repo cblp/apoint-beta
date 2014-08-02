@@ -25,9 +25,8 @@ getSearchR = do
     userId <- requireAuthId'
     query <- fromMaybe "" <$> lookupGetParam "query"
     notes <- runDB $
-        selectList
-            [NoteAuthor ==. userId, NoteContent `contains_i` query]
-            [LimitTo $ notesOnAPage + 1] -- one for pagination
+        selectList  [NoteAuthor ==. userId, NoteContent `contains_i` query]
+                    [LimitTo $ notesOnAPage + 1] -- one for pagination
 
     selectRep $ do
         provideRep $ do
