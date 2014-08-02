@@ -5,6 +5,8 @@ Default: &defaults
   copyright: © 2013—2014 <a href="http://cblp.su/">Yuriy Syrovetskiy</a>
   #analytics: UA-YOURCODE
 
+  notesOnAPage: 20
+
 Development:
   <<: *defaults
 

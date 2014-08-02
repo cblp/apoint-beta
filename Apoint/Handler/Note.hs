@@ -72,6 +72,7 @@ getNoteNewR = do
 
 getNotesR :: Handler Html
 getNotesR = do
+    notesOnAPage <- extraNotesOnAPage <$> getExtra
     userId <- requireAuthId'
     notes <- runDB $
         selectList
@@ -80,9 +81,6 @@ getNotesR = do
     let mode = SelectedNotes
         title = "Next" :: Text
     defaultLayout $(widgetFile "noteslist")
-
-    where
-        notesOnAPage = 20
 
 
 postNotesR :: Handler ()
