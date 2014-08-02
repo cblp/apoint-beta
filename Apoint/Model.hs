@@ -1,9 +1,10 @@
 module Model where
 
 import Data.Text (Text)
+import Data.Text as Text (concat)
 import Data.Typeable (Typeable)
 import Database.Persist.Quasi
-import Prelude (Bool, Show)
+import Prelude (Bool, Either(Left), Show, ($))
 import Yesod
 
 
@@ -13,3 +14,11 @@ import Yesod
 -- http://www.yesodweb.com/book/persistent/
 share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
+
+
+contains_i :: EntityField record Text -> Text -> Filter record
+contains_i field val =
+    Filter
+        field
+        (Left $ Text.concat ["%", val, "%"])
+        (BackendSpecificFilter "LIKE") -- TODO: ILIKE for Postgres
