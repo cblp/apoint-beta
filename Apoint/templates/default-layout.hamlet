@@ -11,7 +11,9 @@
                         <.icon-plus>
                         New
             <form .navbar-search .pull-left action=@{SearchR}>
-                <input type="text" .search-query placeholder="Search">
+                <input  type="text" .search-query
+                        name=query
+                        placeholder="Search">
             <ul .nav .pull-right>
                 $maybe user <- maybeUser
                     <li>
