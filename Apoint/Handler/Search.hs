@@ -22,4 +22,4 @@ getSearchR = do
 
     let title = [shamlet|Search results for <em>#{query}</em>|]
         mode = SelectedNotes
-    defaultLayout $(widgetFile "noteslist") -- TODO make a function
+    defaultLayout' query $(widgetFile "noteslist") -- TODO make a function

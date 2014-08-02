@@ -3,6 +3,7 @@ module Foundation where
 import Prelude
 
 import Control.Applicative ((<$>))
+import Data.Text as Text (Text, empty)
 import Data.Text.Lazy.Encoding (encodeUtf8)
 import Database.Persist.Sql (SqlPersistT)
 import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
@@ -68,6 +69,33 @@ mkYesodData "App" $(parseRoutesFile "config/routes")
 
 type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
+
+defaultLayout' :: Text -> Widget -> Handler Html
+defaultLayout' searchQuery widget = do
+    master <- getYesod
+    mmsg <- getMessage
+
+    -- We break up the default layout into two components:
+    -- default-layout is the contents of the body tag, and
+    -- default-layout-wrapper is the entire page. Since the final
+    -- value passed to hamletToRepHtml cannot be a widget, this allows
+    -- you to use normal widget features in default-layout.
+
+    let copyright =
+            master |> settings |> appExtra |> extraCopyright
+            |> preEscapedToMarkup
+
+    maybeUser <- entityVal <$$> maybeAuth
+
+    pc <- widgetToPageContent $ do
+        $(combineStylesheets 'StaticR
+            [ css_normalize_css
+            , css_bootstrap_css
+            ])
+        $(widgetFile "default-layout")
+    giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+
+
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
 instance Yesod App where
@@ -79,29 +107,7 @@ instance Yesod App where
         120    -- timeout in minutes
         "config/client_session_key.aes"
 
-    defaultLayout widget = do
-        master <- getYesod
-        mmsg <- getMessage
-
-        -- We break up the default layout into two components:
-        -- default-layout is the contents of the body tag, and
-        -- default-layout-wrapper is the entire page. Since the final
-        -- value passed to hamletToRepHtml cannot be a widget, this allows
-        -- you to use normal widget features in default-layout.
-
-        let copyright =
-                master |> settings |> appExtra |> extraCopyright
-                |> preEscapedToMarkup
-
-        maybeUser <- entityVal <$$> maybeAuth
-
-        pc <- widgetToPageContent $ do
-            $(combineStylesheets 'StaticR
-                [ css_normalize_css
-                , css_bootstrap_css
-                ])
-            $(widgetFile "default-layout")
-        giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+    defaultLayout = defaultLayout' Text.empty
 
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
