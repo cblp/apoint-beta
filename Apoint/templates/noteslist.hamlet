@@ -1,12 +1,12 @@
 <h2>
     #{title}
     <.btn-group style="font-weight: normal;">
-        <a .btn href=@{NoteNewR} title="Create linked">
-            <.icon-plus>
-            Create
         $case mode
             $of SelectedNotes
             $of LinkedNotes
+                <a .btn href=@{NoteNewR} title="Create linked">
+                    <.icon-plus>
+                    Create
                 <a .btn title="Link to existing">
                     Link
 <ol>
