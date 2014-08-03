@@ -1,17 +1,20 @@
 <h2>
     #{title}
-    <.btn-group style="font-weight: normal;">
-        $case mode
-            $of SelectedNotes
-            $of LinkedNotes
+    $case mode
+        $of LinkedNotes
+            <.btn-group style="font-weight: normal;">
                 <a .btn href=@{NoteNewR} title="Create linked">
                     <.icon-plus>
                     Create
-                <a .btn title="Link to existing">
-                    Link
-<ol>
+        $of SelectedNotes
+<ul>
     $forall Entity noteId note <- notes
         <li>
             <p>
                 <a href=@{NoteR noteId}>
                     #{noteContentShort note}
+    $case mode
+        $of LinkedNotes
+            <li>
+                ^{linkWidget}
+        $of SelectedNotes

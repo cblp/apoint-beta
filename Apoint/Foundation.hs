@@ -19,6 +19,7 @@ import Yesod.Auth.Email
 import Yesod.Core.Types (Logger)
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
+import Yesod.Form.Jquery
 import Yesod.Static
 
 import Model
@@ -257,6 +258,11 @@ instance YesodAuthEmail App where
     getEmail uid = runDB $ do
         mu <- get uid
         return $ fmap userEmail mu
+
+
+-- Tells where to find the jQuery libraries. We'll just use the defaults,
+-- which point to the Google CDN.
+instance YesodJquery App
 
 
 -- This instance is required to use forms. You can modify renderMessage to
