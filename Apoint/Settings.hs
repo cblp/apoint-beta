@@ -69,6 +69,7 @@ data Extra = Extra
     { extraCopyright :: Text
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
     , extraNotesOnAPage :: Int
+    , extraNoteSuggestSize :: Int
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
@@ -76,3 +77,4 @@ parseExtra _ o = Extra
     <$> o .:  "copyright"
     <*> o .:? "analytics"
     <*> o .:  "notesOnAPage"
+    <*> o .:  "noteSuggestSize"

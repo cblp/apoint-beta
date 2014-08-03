@@ -6,6 +6,7 @@ Default: &defaults
   #analytics: UA-YOURCODE
 
   notesOnAPage: 20
+  noteSuggestSize: 10
 
 Development:
   <<: *defaults
