@@ -58,8 +58,5 @@ getSearchSuggestR :: Handler Value
 getSearchSuggestR = do
     noteSuggestSize <- extraNoteSuggestSize <$> getExtra
     (_, notes) <- getSearchI "term" noteSuggestSize
-    returnJson  [ NoteSearchSuggest
-                    { nss_value = toPathPiece noteId
-                    , nss_label = noteContentShort note
-                    }
+    returnJson  [ noteContentShort note <> " [" <> toPathPiece noteId <> "]"
                 | Entity noteId note <- notes ]
