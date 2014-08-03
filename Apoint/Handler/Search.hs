@@ -29,10 +29,11 @@ getSearchR = do
                     [LimitTo $ notesOnAPage + 1] -- one for pagination
 
     selectRep $ do
-        provideRep $ do
-            let title = [shamlet|Search results for <em>#{query}</em>|]
-                mode = SelectedNotes
-            defaultLayout' query $(widgetFile "noteslist") -- TODO make a function
+        provideRep $
+            defaultLayout' query $
+                notesListWidget SelectedNotes
+                    [shamlet|Search results for <em>#{query}</em>|]
+                    notes
         provideRep $
             returnJson  [ NoteSearchResult
                             { nsr_id            = toPathPiece noteId

@@ -18,7 +18,5 @@ editableNoteWidget (Entity noteId note) = do
     return $(widgetFile "noteview")
 
 
-notesList :: [Entity Note] -> Text -> Widget
-notesList notes title = do
-    let mode = LinkedNotes
-    $(widgetFile "noteslist")
+notesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Widget
+notesListWidget mode title notes = $(widgetFile "noteslist")

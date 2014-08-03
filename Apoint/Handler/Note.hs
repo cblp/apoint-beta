@@ -18,8 +18,10 @@ getNoteR noteId = do
     notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
-    let leftColumnWidget   = notesList notesBeforeCurrent "Before"
-        rightColumnWidget  = notesList notesAfterCurrent  "After"
+    let leftColumnWidget =
+            notesListWidget LinkedNotes "Before" notesBeforeCurrent
+        rightColumnWidget =
+            notesListWidget LinkedNotes "After"  notesAfterCurrent
     centerColumnWidget <- editableNoteWidget noteEntity
     defaultLayout $(widgetFile "notesview")
 
@@ -78,9 +80,7 @@ getNotesR = do
         selectList
             [NoteAuthor ==. userId]
             [LimitTo $ notesOnAPage + 1] -- one for pagination
-    let mode = SelectedNotes
-        title = "Next" :: Text
-    defaultLayout $(widgetFile "noteslist")
+    defaultLayout $ notesListWidget SelectedNotes "Next" notes
 
 
 postNotesR :: Handler ()
