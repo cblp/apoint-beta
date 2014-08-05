@@ -16,6 +16,7 @@ library
                      Application
                      Foundation
                      Handler.Home
+                     Handler.Link
                      Handler.Note
                      Handler.NoteEdit
                      Handler.Search

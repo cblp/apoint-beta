@@ -1,13 +1,15 @@
-/auth                   AuthR   Auth    getAuth
-/static                 StaticR Static  getStatic
+/auth                       AuthR   Auth    getAuth
+/static                     StaticR Static  getStatic
 
-/                       HomeR           GET
-/favicon.ico            FaviconR        GET
-/note/#NoteId           NoteR           GET POST
-/note/#NoteId/delete    NoteDeleteR         POST
-/note/#NoteId/edit      NoteEditR       GET
-/note_new               NoteNewR        GET
-/notes                  NotesR          GET POST
-/robots.txt             RobotsR         GET
-/search                 SearchR         GET
-/search_suggest         SearchSuggestR  GET
+/                           HomeR           GET
+/favicon.ico                FaviconR        GET
+/link_from/#NoteId/create   LinkFromCreateR     POST
+/link_to/#NoteId/create     LinkToCreateR       POST
+/note/#NoteId               NoteR           GET POST
+/note/#NoteId/delete        NoteDeleteR         POST
+/note/#NoteId/edit          NoteEditR       GET
+/note_new                   NoteNewR        GET
+/notes                      NotesR          GET POST
+/robots.txt                 RobotsR         GET
+/search                     SearchR         GET
+/search_suggest             SearchSuggestR  GET

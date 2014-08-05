@@ -1,20 +1,26 @@
 <h2>
-    #{title}
+    #{title} #
     $case mode
-        $of LinkedNotes
+        $of NotesLinkedTo _
             <.btn-group style="font-weight: normal;">
                 <a .btn href=@{NoteNewR} title="Create linked">
                     <.icon-plus>
                     Create
-        $of SelectedNotes
+        $of NotesLinkedFrom _
+            <.btn-group style="font-weight: normal;">
+                <a .btn href=@{NoteNewR} title="Create linked">
+                    <.icon-plus>
+                    Create
+        $of _
 <ul>
     $forall Entity noteId note <- notes
         <li>
             <p>
                 <a href=@{NoteR noteId}>
                     #{noteContentShort note}
-    $case mode
-        $of LinkedNotes
-            <li>
+    $maybe linkRoute <- mLinkRoute
+        <li>
+            <form method=post action=@{linkRoute} enctype=#{enctype}>
                 ^{linkWidget}
-        $of SelectedNotes
+                <button type=submit .btn>
+                    Make a link

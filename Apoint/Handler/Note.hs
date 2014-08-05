@@ -18,8 +18,12 @@ getNoteR noteId = do
     notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
-    leftColumnWidget  <- notesListWidget LinkedNotes "Before" notesBeforeCurrent
-    rightColumnWidget <- notesListWidget LinkedNotes "After"  notesAfterCurrent
+    leftColumnWidget  <- notesListWidget  (NotesLinkedTo    noteId)
+                                          "Before"
+                                          notesBeforeCurrent
+    rightColumnWidget <- notesListWidget  (NotesLinkedFrom  noteId)
+                                          "After"
+                                          notesAfterCurrent
     centerColumnWidget <- editableNoteWidget noteEntity
     defaultLayout $(widgetFile "notesview")
 
