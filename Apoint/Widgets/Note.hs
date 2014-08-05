@@ -24,10 +24,13 @@ editableNoteWidget (Entity noteId note) = do
 notesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Handler Widget
 notesListWidget mode title notes = do
     (linkWidget, enctype) <- generateFormPost noteLinkForm
-    let mLinkRoute = case mode of
-            NotesLinkedFrom noteId  -> Just $ LinkFromCreateR noteId
-            NotesLinkedTo   noteId  -> Just $ LinkToCreateR   noteId
-            _                       -> Nothing
+    let mRoutes = case mode of
+            NotesLinkedFrom noteId  ->
+                Just (LinkFromCreateR noteId, NoteNewFromR noteId)
+            NotesLinkedTo   noteId  ->
+                Just (LinkToCreateR   noteId, NoteNewToR   noteId)
+            _                       ->
+                Nothing
     linkWidgetShowerId <- newIdent
     linkWidgetFormId <- newIdent
     return $(widgetFile "noteslist")

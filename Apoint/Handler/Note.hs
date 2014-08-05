@@ -74,6 +74,18 @@ getNoteNewR = do
     noteNewPage widget enctype
 
 
+getNoteNewFromR :: NoteId -> Handler Html
+getNoteNewFromR _ =
+    -- TODO UNIMPLEMENTED
+    getNoteNewR
+
+
+getNoteNewToR :: NoteId -> Handler Html
+getNoteNewToR _ =
+    -- TODO UNIMPLEMENTED
+    getNoteNewR
+
+
 getNotesR :: Handler Html
 getNotesR = do
     notesOnAPage <- extraNotesOnAPage <$> getExtra
