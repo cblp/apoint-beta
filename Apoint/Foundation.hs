@@ -6,7 +6,10 @@ import Control.Applicative ((<$>))
 import Data.Text as Text (Text, empty)
 import Data.Text.Lazy.Encoding (encodeUtf8)
 import Database.Persist.Sql (SqlPersistT)
-import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
+import Network.HTTP.Conduit -- TODO(Ubuntu16) Network.HTTP.Client.Conduit
+    ( Manager
+    -- TODO(Ubuntu16) , HasHttpManager (getHttpManager)
+    )
 import Network.Mail.Mime ( Address(Address), Encoding(None), Mail(..), Part(..), emptyMail, renderSendMail )
 import qualified Database.Persist
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
@@ -16,7 +19,8 @@ import Text.Shakespeare.Text (stext)
 import Yesod
 import Yesod.Auth
 import Yesod.Auth.Email
-import Yesod.Core.Types (Logger)
+import System.Log.FastLogger -- TODO(Ubuntu16) Yesod.Core.Types
+    (Logger)
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Yesod.Static
@@ -52,8 +56,10 @@ data App = App
     , appLogger :: Logger
     }
 
+{- TODO(Ubuntu16)
 instance HasHttpManager App where
     getHttpManager = httpManager
+-}
 
 -- Set up i18n messages. See the message folder.
 mkMessage "App" "messages" "en"

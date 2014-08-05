@@ -52,35 +52,38 @@ library
                 TemplateHaskell
                 TypeFamilies
 
-    build-depends: base                          >= 4          && < 5
-                 , yesod                         >= 1.2.5      && < 1.3
-                 , yesod-core                    >= 1.2.12     && < 1.3
-                 , yesod-auth                    >= 1.3        && < 1.4
-                 , yesod-static                  >= 1.2        && < 1.3
-                 , yesod-form                    >= 1.3        && < 1.4
-                 , bytestring                    >= 0.9        && < 0.11
-                 , text                          >= 0.11       && < 2.0
-                 , persistent                    >= 1.3        && < 1.4
-                 , persistent-sqlite             >= 1.3        && < 1.4
-                 , persistent-template           >= 1.3        && < 1.4
-                 , template-haskell
-                 , shakespeare                   >= 2.0        && < 2.1
-                 , hjsmin                        >= 0.1        && < 0.2
-                 , monad-control                 >= 0.3        && < 0.4
-                 , wai-extra                     >= 3.0        && < 3.1
-                 , yaml                          >= 0.8        && < 0.9
-                 , http-conduit                  >= 2.1        && < 2.2
-                 , directory                     >= 1.1        && < 1.3
-                 , warp                          >= 3.0        && < 3.1
-                 , data-default
-                 , aeson                         >= 0.6        && < 0.8
-                 , conduit                       >= 1.0        && < 2.0
-                 , monad-logger                  >= 0.3        && < 0.4
-                 , fast-logger                   >= 2.1.4      && < 2.2
-                 , wai-logger                    >= 2.1        && < 2.2
-                 , mime-mail
+    build-depends: aeson
+                 , base
                  , blaze-html
+                 , bytestring
+                 , conduit
+                 , data-default
+                 , directory
+                 , fast-logger
+                 , hamlet
+                 , hjsmin
+                 , http-conduit
                  , markdown
+                 , mime-mail
+                 , monad-control
+                 , monad-logger
+                 , persistent
+                 , persistent-sqlite
+                 , persistent-template
+                 , shakespeare
+                 , shakespeare-text
+                 , template-haskell
+                 , text
+                 , wai
+                 , wai-extra
+                 , wai-logger
+                 , warp
+                 , yaml
+                 , yesod
+                 , yesod-auth
+                 , yesod-core
+                 , yesod-form
+                 , yesod-static
 
 executable         Apoint
     if flag(library-only)

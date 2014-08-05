@@ -3,7 +3,12 @@
 import "Apoint" Application (getApplicationDev)
 
 import Control.Concurrent (forkIO, threadDelay)
-import Network.Wai.Handler.Warp (runSettings, defaultSettings, setPort)
+import Network.Wai.Handler.Warp
+    ( runSettings
+    , defaultSettings
+    -- , setPort -- TODO(Ubuntu16)
+    , settingsPort -- TODO(Ubuntu16) REMOVE
+    )
 import System.Directory (doesFileExist, removeFile)
 import System.Exit (exitSuccess)
 
@@ -13,6 +18,10 @@ main = do
     (port, app) <- getApplicationDev
     forkIO $ runSettings (setPort port defaultSettings) app
     loop
+
+    where
+        setPort port settings = settings{settingsPort = port}
+
 
 loop :: IO ()
 loop = do
