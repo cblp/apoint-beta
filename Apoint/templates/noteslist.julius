@@ -1,0 +1,7 @@
+function showLinkWidget(self, linkWidgetFormId) {
+    $(self).hide();
+    $('#' + linkWidgetFormId).show();
+}
+
+$(#{jsIdSelector linkWidgetFormId}).hide();
+$(#{jsIdSelector linkWidgetShowerId}).show();
