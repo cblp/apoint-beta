@@ -20,7 +20,10 @@
                     #{noteContentShort note}
     $maybe linkRoute <- mLinkRoute
         <li>
-            <form method=post action=@{linkRoute} enctype=#{enctype}>
+            <button .btn onClick="showLinkWidget(this, '#{linkWidgetFormId}')">
+                Link
+            <form method=post action=@{linkRoute} enctype=#{enctype}
+                    ##{linkWidgetFormId}>
                 ^{linkWidget}
                 <button type=submit .btn>
-                    Make a link
+                    Link

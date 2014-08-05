@@ -28,4 +28,10 @@ notesListWidget mode title notes = do
             NotesLinkedFrom noteId  -> Just $ LinkFromCreateR noteId
             NotesLinkedTo   noteId  -> Just $ LinkToCreateR   noteId
             _                       -> Nothing
+    linkWidgetShowerId <- newIdent
+    linkWidgetFormId <- newIdent
     return $(widgetFile "noteslist")
+
+
+jsIdSelector :: Text -> Value
+jsIdSelector = toJSON . ("#" <>)
