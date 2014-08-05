@@ -35,6 +35,7 @@ getNoteIdOutOfLinkForm = do
         FormMissing               -> invalidArgs ["FormMissing"]
         FormFailure errors        -> invalidArgs errors
         FormSuccess noteSelector  -> return noteSelector
+    -- getting last digit cluster
     let noteIdList =  noteSelector
                       |> Text.split (not . isDigit)
                       |> filter (not . Text.null)
