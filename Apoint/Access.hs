@@ -4,8 +4,6 @@
 
 module Access where
 
-import Control.Monad (when)
-
 import Local.Yesod.Auth (requireAuthId')
 
 import Import
