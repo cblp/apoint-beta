@@ -4,6 +4,7 @@ module Import
 
 import Control.Applicative  as Import (pure, (<$>), (<*>))
 import Control.Arrow        as Import ((>>>))
+import Control.Monad        as Import (when)
 import Data.Default         as Import (def)
 import Data.Monoid          as Import (Monoid (mappend, mempty, mconcat), (<>))
 import Data.Text            as Import (Text)
