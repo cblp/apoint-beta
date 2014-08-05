@@ -8,7 +8,7 @@ import Control.Monad        as Import (when)
 import Data.Default         as Import (def)
 import Data.Monoid          as Import (Monoid (mappend, mempty, mconcat), (<>))
 import Data.Text            as Import (Text)
-import Prelude              as Import hiding ( init, last, lines, readFile
+import Prelude              as Import hiding ( init, lines, readFile
                                              , tail, writeFile )
 import Yesod                as Import hiding (Route (..))
 
