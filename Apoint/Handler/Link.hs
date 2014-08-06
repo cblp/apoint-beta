@@ -39,7 +39,7 @@ getNoteIdOutOfLinkForm = do
     let noteIdList =  noteSelector
                       |> Text.split (not . isDigit)
                       |> filter (not . Text.null)
-    noteIdMaybe <- if (null noteIdList)
+    noteIdMaybe <- if null noteIdList
         then invalidArgs ["cannot find noteId"]
         else return $ fromPathPiece $ last noteIdList
     case noteIdMaybe of
