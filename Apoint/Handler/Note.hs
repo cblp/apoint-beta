@@ -1,7 +1,5 @@
 module Handler.Note where
 
-import Control.Monad (join, liftM3)
-
 import Local.Yesod.Auth (requireAuthId')
 
 import Access
@@ -20,10 +18,11 @@ getNoteR noteId = do
     notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
-    join $ defaultLayout <$> workareaWidget <$> liftM3 (,,)
-        (notesListWidget (NotesLinkedTo   noteId) "Before" notesBeforeCurrent)
-        (editableNoteWidget noteEntity)
-        (notesListWidget (NotesLinkedFrom noteId) "After"  notesAfterCurrent)
+    w <- curry3 workareaWidget
+        <$> notesListWidget (NotesLinkedTo   noteId) "Before" notesBeforeCurrent
+        <*> editableNoteWidget noteEntity
+        <*> notesListWidget (NotesLinkedFrom noteId) "After"  notesAfterCurrent
+    defaultLayout w
 
 
 postNoteDeleteR :: NoteId -> Handler ()
@@ -108,3 +107,7 @@ postNotesR = do
     noteId <- runDB $ insert Note{noteContent = content, noteAuthor = userId}
 
     redirect $ NoteR noteId
+
+
+curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
+curry3 f a b c = f (a, b, c)
