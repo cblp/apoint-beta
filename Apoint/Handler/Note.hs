@@ -25,6 +25,23 @@ getNoteR noteId = do
     defaultLayout w
 
 
+postNoteArchiveR :: NoteId -> Handler ()
+postNoteArchiveR noteId = do
+    ((formResult, _), _) <- runFormPost emptyForm
+    case formResult of
+        FormSuccess () -> return ()
+        FormMissing -> invalidArgs ["FormMissing"]
+        FormFailure errors -> invalidArgs errors
+
+    note <- runDB $ get404 noteId
+    authorize Access.Update CurrentUser note
+
+    runDB $ update noteId [NoteArchived =. True]
+
+    setMessage $ "Archived \"" <> toHtml (noteContentShort note) <> "\""
+    redirect NotesR
+
+
 postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
     ((formResult, _), _) <- runFormPost emptyForm
@@ -104,7 +121,11 @@ postNotesR = do
         FormMissing -> invalidArgs ["FormMissing"]
         FormFailure errors -> invalidArgs errors
 
-    noteId <- runDB $ insert Note{noteContent = content, noteAuthor = userId}
+    noteId <- runDB $ insert Note
+        { noteContent = content
+        , noteAuthor = userId
+        , noteArchived = False
+        }
 
     redirect $ NoteR noteId
 

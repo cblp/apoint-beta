@@ -8,9 +8,8 @@
                 Edit
         <.btn-group .pull-right>
             <form   method=post
-                    action=@{NoteDeleteR noteId}
+                    action=@{NoteArchiveR noteId}
                     enctype=#{ndfEnctype}>
                 ^{ndfWidget}
-                <button .btn .btn-danger type=submit>
-                    <i.icon-remove .icon-white>
-                    Delete
+                <button .btn .btn-primary type=submit>
+                    Archive

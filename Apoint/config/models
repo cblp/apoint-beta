@@ -1,6 +1,7 @@
 Note
     content Text
     author UserId
+    archived Bool default=false
 
     deriving Show
 
