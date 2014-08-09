@@ -13,8 +13,8 @@ data NoteslistMode  = SelectedNotes
                     | NotesLinkedFrom NoteId
 
 
-notesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Handler Widget
-notesListWidget mode title notes = do
+makeNotesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Handler Widget
+makeNotesListWidget mode title notes = do
     (linkWidget, enctype) <- generateFormPost noteLinkForm
     let mRoutes = case mode of
             NotesLinkedFrom noteId  ->

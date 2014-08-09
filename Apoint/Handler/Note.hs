@@ -76,7 +76,7 @@ getNotesR = do
         selectList
             [NoteAuthor ==. userId, NoteArchived ==. False]
             [LimitTo $ notesOnAPage + 1] -- one for pagination
-    defaultLayout =<< notesListWidget SelectedNotes "Next" notes
+    defaultLayout =<< makeNotesListWidget SelectedNotes "Next" notes
 
 
 postNotesR :: Handler ()
@@ -121,11 +121,11 @@ notePage userIntent' =
             notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
             w <- curry3 workareaWidget
-                <$> notesListWidget (NotesLinkedTo   noteId)
+                <$> makeNotesListWidget (NotesLinkedTo   noteId)
                                     "Before →"
                                     notesBeforeCurrent
                 <*> makeCurrentNoteWidget (Entity noteId note)
-                <*> notesListWidget (NotesLinkedFrom noteId)
+                <*> makeNotesListWidget (NotesLinkedFrom noteId)
                                     "→ After"
                                     notesAfterCurrent
             defaultLayout w
@@ -137,11 +137,11 @@ notePage userIntent' =
                         CreateFree -> ([], [])
 
             w <- curry3 workareaWidget
-                <$> notesListWidget SelectedNotes -- TODO (NotesLinkedToNew)
+                <$> makeNotesListWidget SelectedNotes -- TODO (NotesLinkedToNew)
                                     "Before →"
                                     notesBeforeCurrent
                 <*> makeNewNoteWidget
-                <*> notesListWidget SelectedNotes -- TODO (NotesLinkedFromNew)
+                <*> makeNotesListWidget SelectedNotes -- TODO (NotesLinkedFromNew)
                                     "→ After"
                                     notesAfterCurrent
             defaultLayout w

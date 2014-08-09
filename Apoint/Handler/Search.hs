@@ -46,7 +46,7 @@ getSearchR = do
     selectRep $ do
         provideRep $
             defaultLayout' query =<<
-                notesListWidget SelectedNotes
+                makeNotesListWidget SelectedNotes
                     [shamlet|Search results for <em>#{query}</em>|]
                     notes
         provideRep $
