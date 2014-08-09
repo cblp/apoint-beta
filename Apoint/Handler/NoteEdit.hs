@@ -18,26 +18,25 @@ noteContentEditForm mContentOld =
     renderDivs $ NoteContentEditInput
         <$> areq textareaField  "" (Textarea <$> mContentOld)
 
-noteContentEditPage :: NoteId -> Widget -> Enctype -> Handler Html
-noteContentEditPage noteId widget enctype =
-    defaultLayout
-        [whamlet|
-            <h1>Editing note
-            <form method=post action=@{NoteR noteId} enctype=#{enctype}>
-                ^{widget}
-                <button>Submit
-        |]
+noteContentEditWidget :: Entity Note -> Handler Widget
+noteContentEditWidget (Entity noteId note) = do
+    let content = noteContent note
+    (formWidget, enctype) <-
+        generateFormPost $ noteContentEditForm (Just content)
+    return [whamlet|
+        <h1>Editing note
+        <form method=post action=@{NoteR noteId} enctype=#{enctype}>
+            ^{formWidget}
+            <button>Submit
+    |]
 
 
 getNoteEditR :: NoteId -> Handler Html
 getNoteEditR noteId = do
     note <- runDB $ get404 noteId
     authorize Read CurrentUser note
-
-    let content = noteContent note
-
-    (widget, enctype) <- generateFormPost $ noteContentEditForm (Just content)
-    noteContentEditPage noteId widget enctype
+    w <- noteContentEditWidget (Entity noteId note)
+    defaultLayout w
 
 
 postNoteR :: NoteId -> Handler ()
