@@ -1,1 +1,0 @@
-cancelLinkWidget(#{jsId linkWidgetShowerId}, #{jsId linkWidgetFormId});

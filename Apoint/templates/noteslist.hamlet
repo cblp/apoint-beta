@@ -12,7 +12,7 @@
                     onClick="showLinkWidget('#{linkWidgetShowerId}', '#{linkWidgetFormId}')">
                 Link
             <form method=post action=@{linkR} enctype=#{enctype}
-                    ##{linkWidgetFormId}>
+                    ##{linkWidgetFormId} style="display: none;">
                 ^{linkWidget}
                 <a .btn onClick="cancelLinkWidget('#{linkWidgetShowerId}', '#{linkWidgetFormId}')">
                     <i.icon-remove>
