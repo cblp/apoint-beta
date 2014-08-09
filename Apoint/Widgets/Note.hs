@@ -37,7 +37,7 @@ notesListWidget mode title notes = do
 
 
 workareaWidget :: (Widget, Widget, Widget) -> Widget
-workareaWidget (leftColumnWidget, centerColumnWidget, rightColumnWidget) =
+workareaWidget (leftWidget, centerWidget, rightWidget) =
     $(widgetFile "workarea")
 
 

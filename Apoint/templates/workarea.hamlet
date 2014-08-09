@@ -1,11 +1,11 @@
 <.row>
     <.span3>
-        ^{leftColumnWidget}
+        ^{leftWidget}
     <.span1 style="text-align: center;">
         <h1>&rarr;
     <.span4>
-        ^{centerColumnWidget}
+        ^{centerWidget}
     <.span1 style="text-align: center;">
         <h1>&rarr;
     <.span3>
-        ^{rightColumnWidget}
+        ^{rightWidget}
