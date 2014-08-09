@@ -4,7 +4,7 @@ import Local.Yesod.Auth (requireAuthId')
 
 import Access
 import Model.Note
-import Widgets.Note
+import Widget.Note
 
 import Import
 

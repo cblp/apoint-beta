@@ -1,4 +1,4 @@
-module Widgets.Note where
+module Widget.Note where
 
 import Handler.Link
 import Model.Note

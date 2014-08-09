@@ -6,7 +6,7 @@ import Data.Maybe (fromMaybe)
 import Local.Yesod.Auth (requireAuthId')
 
 import Model.Note
-import Widgets.Note
+import Widget.Note
 
 import Import
 
