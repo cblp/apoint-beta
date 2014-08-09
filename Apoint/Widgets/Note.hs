@@ -36,6 +36,11 @@ notesListWidget mode title notes = do
     return $(widgetFile "noteslist")
 
 
+workareaWidget :: (Widget, Widget, Widget) -> Widget
+workareaWidget (leftColumnWidget, centerColumnWidget, rightColumnWidget) =
+    $(widgetFile "workarea")
+
+
 jsIdSelector :: Text -> Value
 jsIdSelector = toJSON . ("#" <>)
 

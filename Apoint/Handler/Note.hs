@@ -25,7 +25,8 @@ getNoteR noteId = do
                                           "After"
                                           notesAfterCurrent
     centerColumnWidget <- editableNoteWidget noteEntity
-    defaultLayout $(widgetFile "notesview")
+
+    defaultLayout $ workareaWidget (leftColumnWidget, centerColumnWidget, rightColumnWidget)
 
 
 postNoteDeleteR :: NoteId -> Handler ()
