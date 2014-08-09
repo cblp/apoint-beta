@@ -1,5 +1,7 @@
 module Widget.Note where
 
+import Data.Maybe (isJust)
+
 import Form
 import Form.Note
 import Handler.Link
@@ -31,8 +33,12 @@ makeNotesListWidget mode notes = do
             NotesLinkedTo _     -> "Before →"
             NotesLinkedFrom _   -> "→ After"
             FoundNotes query    -> [shamlet|Search results for <em>#{query}<em>|]
-            NotesLinkedToNew    -> maybe "" (const "Before →") mRoutes
-            NotesLinkedFromNew  -> maybe "" (const "→ After") mRoutes
+            NotesLinkedToNew    ->
+                if isJust mRoutes || not (null notes) then "Before →"
+                                                      else ""
+            NotesLinkedFromNew  ->
+                if isJust mRoutes || not (null notes) then "→ After"
+                                                      else ""
     linkWidgetShowerId <- newIdent
     linkWidgetFormId <- newIdent
     return $(widgetFile "noteslist")
@@ -52,9 +58,7 @@ jsId = toJSON
 
 
 data UserIntentExisting = View NoteId | Edit NoteId
-data UserIntentNew      = CreateFree
-                        -- | CreateAfter NoteId
-                        -- | CreateBefore NoteId
+data UserIntentNew      = CreateFree | CreateAfter NoteId | CreateBefore NoteId
 data UserIntent         = UserIntentExisting  UserIntentExisting
                         | UserIntentNew       UserIntentNew
 
@@ -74,9 +78,9 @@ makeNoteContentEditWidget (Entity noteId note) = do
     return $(widgetFile "noteedit")
 
 
-makeNewNoteWidget :: Handler Widget
-makeNewNoteWidget = do
+makeNewNoteWidget :: Maybe (NoteId) -> Handler Widget
+makeNewNoteWidget mReturnNote = do
     let saveR = NotesR
-        cancelR = NotesR
+        cancelR = maybe NotesR NoteR mReturnNote
     (formWidget, enctype) <- generateFormPost $ noteContentForm Nothing
     return $(widgetFile "noteedit")

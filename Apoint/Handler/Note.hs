@@ -57,15 +57,11 @@ getNoteNewR = notePage $ UserIntentNew CreateFree
 
 
 getNoteNewFromR :: NoteId -> Handler Html
-getNoteNewFromR _ =
-    -- TODO UNIMPLEMENTED
-    getNoteNewR
+getNoteNewFromR = notePage . UserIntentNew . CreateAfter
 
 
 getNoteNewToR :: NoteId -> Handler Html
-getNoteNewToR _ =
-    -- TODO UNIMPLEMENTED
-    getNoteNewR
+getNoteNewToR = notePage . UserIntentNew . CreateBefore
 
 
 getNotesR :: Handler Html
@@ -129,14 +125,29 @@ notePage userIntent' =
 
         notePageNew :: UserIntentNew -> Handler Html
         notePageNew userIntent = do
-            let (notesBeforeCurrent, notesAfterCurrent) =
-                    case userIntent of
-                        CreateFree -> ([], [])
+            let mNoteId = case userIntent of
+                    CreateFree          -> Nothing
+                    CreateBefore noteId -> Just noteId
+                    CreateAfter noteId  -> Just noteId
+            (notesBeforeCurrent, notesAfterCurrent) <- case userIntent of
+                CreateFree          ->
+                    return ([], [])
+                CreateBefore noteId -> do
+                    e <- getEntity noteId
+                    return ([e], [])
+                CreateAfter noteId  -> do
+                    e <- getEntity noteId
+                    return ([], [e])
 
             defaultLayout =<< curry3 workareaWidget
                 <$> makeNotesListWidget NotesLinkedToNew    notesBeforeCurrent
-                <*> makeNewNoteWidget
+                <*> makeNewNoteWidget mNoteId
                 <*> makeNotesListWidget NotesLinkedFromNew  notesAfterCurrent
+
+        getEntity :: NoteId -> Handler (Entity Note)
+        getEntity noteId = do
+            note <- runDB $ get404 noteId
+            return $ Entity noteId note
 
 
 getNoteEditR :: NoteId -> Handler Html
