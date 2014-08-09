@@ -19,9 +19,13 @@ getNoteR noteId = do
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
     w <- curry3 workareaWidget
-        <$> notesListWidget (NotesLinkedTo   noteId) "Before" notesBeforeCurrent
+        <$> notesListWidget (NotesLinkedTo   noteId)
+                            "Before →"
+                            notesBeforeCurrent
         <*> editableNoteWidget noteEntity
-        <*> notesListWidget (NotesLinkedFrom noteId) "After"  notesAfterCurrent
+        <*> notesListWidget (NotesLinkedFrom noteId)
+                            "→ After"
+                            notesAfterCurrent
     defaultLayout w
 
 

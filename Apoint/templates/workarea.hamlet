@@ -1,11 +1,8 @@
-<.row>
-    <.span3>
-        ^{leftWidget}
-    <.span1 style="text-align: center;">
-        <h1>&rarr;
-    <.span4>
-        ^{centerWidget}
-    <.span1 style="text-align: center;">
-        <h1>&rarr;
-    <.span3>
-        ^{rightWidget}
+<table width="100%">
+    <tr>
+        <td>
+            ^{leftWidget}
+        <td>
+            ^{centerWidget}
+        <td>
+            ^{rightWidget}
