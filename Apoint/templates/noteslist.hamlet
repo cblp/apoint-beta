@@ -8,12 +8,16 @@
                     #{noteContentShort note}
     $maybe (linkR, createR) <- mRoutes
         <li>
-            <button .btn onClick="showLinkWidget(this, '#{linkWidgetFormId}')">
+            <button .btn ##{linkWidgetShowerId}
+                    onClick="showLinkWidget('#{linkWidgetShowerId}', '#{linkWidgetFormId}')">
                 Link
             <form method=post action=@{linkR} enctype=#{enctype}
                     ##{linkWidgetFormId}>
                 ^{linkWidget}
-                <button type=submit .btn>
+                <a .btn onClick="cancelLinkWidget('#{linkWidgetShowerId}', '#{linkWidgetFormId}')">
+                    <i.icon-remove>
+                    Cancel
+                <button type=submit .btn .btn-primary>
                     Link
         <li>
             <a .btn href=@{createR} title="Create linked">

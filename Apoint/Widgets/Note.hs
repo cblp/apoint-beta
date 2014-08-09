@@ -38,3 +38,7 @@ notesListWidget mode title notes = do
 
 jsIdSelector :: Text -> Value
 jsIdSelector = toJSON . ("#" <>)
+
+
+jsId :: Text -> Value
+jsId = toJSON
