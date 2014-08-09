@@ -1,5 +1,7 @@
 module Handler.Note where
 
+import Control.Monad (join, liftM3)
+
 import Local.Yesod.Auth (requireAuthId')
 
 import Access
@@ -18,15 +20,10 @@ getNoteR noteId = do
     notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
-    leftColumnWidget  <- notesListWidget  (NotesLinkedTo    noteId)
-                                          "Before"
-                                          notesBeforeCurrent
-    rightColumnWidget <- notesListWidget  (NotesLinkedFrom  noteId)
-                                          "After"
-                                          notesAfterCurrent
-    centerColumnWidget <- editableNoteWidget noteEntity
-
-    defaultLayout $ workareaWidget (leftColumnWidget, centerColumnWidget, rightColumnWidget)
+    join $ defaultLayout <$> workareaWidget <$> liftM3 (,,)
+        (notesListWidget (NotesLinkedTo   noteId) "Before" notesBeforeCurrent)
+        (editableNoteWidget noteEntity)
+        (notesListWidget (NotesLinkedFrom noteId) "After"  notesAfterCurrent)
 
 
 postNoteDeleteR :: NoteId -> Handler ()
