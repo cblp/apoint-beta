@@ -12,7 +12,7 @@ import Import
 
 
 getNoteR :: NoteId -> Handler Html
-getNoteR noteId = notePage ViewMode noteId
+getNoteR noteId = notePage $ View noteId
 
 
 postNoteArchiveR :: NoteId -> Handler ()
@@ -52,30 +52,8 @@ postNoteDeleteR noteId = do
     redirect NotesR
 
 
-data NoteNewInput = NoteNewInput
-    { nnContent :: Textarea
-    }
-
-noteNewForm :: Html -> MForm Handler (FormResult NoteNewInput, Widget)
-noteNewForm = renderDivs $ NoteNewInput
-    <$> areq textareaField "Content" Nothing
-
-noteNewPage :: Widget -> Enctype -> Handler Html
-noteNewPage widget enctype =
-    defaultLayout
-        [whamlet|
-            <h1>New note
-            <form method=post action=@{NotesR} enctype=#{enctype}>
-                ^{widget}
-                <button>Submit
-        |]
-
-
 getNoteNewR :: Handler Html
-getNoteNewR = do
-    _ <- requireAuthId'
-    (widget, enctype) <- generateFormPost noteNewForm
-    noteNewPage widget enctype
+getNoteNewR = notePage CreateFree
 
 
 getNoteNewFromR :: NoteId -> Handler Html
@@ -105,9 +83,9 @@ postNotesR :: Handler ()
 postNotesR = do
     userId <- requireAuthId'
 
-    ((formResult, _), _) <- runFormPost noteNewForm
+    ((formResult, _), _) <- runFormPost $ noteContentForm Nothing
     content <- case formResult of
-        FormSuccess NoteNewInput{nnContent} -> return $ unTextarea nnContent
+        FormSuccess (Textarea content) -> return content
         FormMissing -> invalidArgs ["FormMissing"]
         FormFailure errors -> invalidArgs errors
 
@@ -120,17 +98,18 @@ postNotesR = do
     redirect $ NoteR noteId
 
 
-notePage :: UiMode -> NoteId -> Handler Html
-notePage uiMode noteId = do
+notePage :: UserIntent -> Handler Html
+notePage userIntent = do
+    let (accessMode, noteId) = case userIntent of
+            View nid -> (Access.Read,   nid)
+            Edit nid -> (Access.Update, nid)
     note <- runDB $ get404 noteId
-    let accessMode = case uiMode of
-            ViewMode -> Read
-            EditMode -> Access.Update
     authorize accessMode CurrentUser note
 
-    let makeCurrentNoteWidget = case uiMode of
-            ViewMode -> makeNoteContentViewWidget
-            EditMode -> makeNoteContentEditWidget
+    let makeCurrentNoteWidget = case userIntent of
+            View _      -> makeNoteContentViewWidget
+            Edit _      -> makeNoteContentEditWidget
+            CreateFree  -> makeNoteContentEditWidget
 
     notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
     notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
@@ -147,7 +126,7 @@ notePage uiMode noteId = do
 
 
 getNoteEditR :: NoteId -> Handler Html
-getNoteEditR noteId = notePage EditMode noteId
+getNoteEditR noteId = notePage $ Edit noteId
 
 
 postNoteR :: NoteId -> Handler ()

@@ -41,7 +41,11 @@ jsId :: Text -> Value
 jsId = toJSON
 
 
-data UiMode = ViewMode | EditMode -- | CreateMode
+data UserIntent = View NoteId
+                | Edit NoteId
+                | CreateFree
+                -- | CreateAfter NoteId
+                -- | CreateBefore NoteId
 
 
 makeNoteContentViewWidget :: Entity Note -> Handler Widget
