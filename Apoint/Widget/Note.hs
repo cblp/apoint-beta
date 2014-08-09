@@ -11,10 +11,13 @@ import Import
 data NoteslistMode  = SelectedNotes
                     | NotesLinkedTo NoteId
                     | NotesLinkedFrom NoteId
+                    | NotesLinkedToNew
+                    | NotesLinkedFromNew
+                    | FoundNotes Text -- search query
 
 
-makeNotesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Handler Widget
-makeNotesListWidget mode title notes = do
+makeNotesListWidget :: NoteslistMode -> [Entity Note] -> Handler Widget
+makeNotesListWidget mode notes = do
     (linkWidget, enctype) <- generateFormPost noteLinkForm
     let mRoutes = case mode of
             NotesLinkedFrom noteId  ->
@@ -23,6 +26,13 @@ makeNotesListWidget mode title notes = do
                 Just (LinkToCreateR   noteId, NoteNewToR   noteId)
             _                       ->
                 Nothing
+        title = case mode of
+            SelectedNotes       -> "Notes"
+            NotesLinkedTo _     -> "Before →"
+            NotesLinkedFrom _   -> "→ After"
+            FoundNotes query    -> [shamlet|Search results for <em>#{query}<em>|]
+            NotesLinkedToNew    -> maybe "" (const "Before →") mRoutes
+            NotesLinkedFromNew  -> maybe "" (const "→ After") mRoutes
     linkWidgetShowerId <- newIdent
     linkWidgetFormId <- newIdent
     return $(widgetFile "noteslist")

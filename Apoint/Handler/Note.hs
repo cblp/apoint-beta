@@ -76,7 +76,7 @@ getNotesR = do
         selectList
             [NoteAuthor ==. userId, NoteArchived ==. False]
             [LimitTo $ notesOnAPage + 1] -- one for pagination
-    defaultLayout =<< makeNotesListWidget SelectedNotes "Next" notes
+    defaultLayout =<< makeNotesListWidget SelectedNotes notes
 
 
 postNotesR :: Handler ()
@@ -120,15 +120,12 @@ notePage userIntent' =
             notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
             notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
 
-            w <- curry3 workareaWidget
+            defaultLayout =<< curry3 workareaWidget
                 <$> makeNotesListWidget (NotesLinkedTo   noteId)
-                                    "Before →"
-                                    notesBeforeCurrent
+                                        notesBeforeCurrent
                 <*> makeCurrentNoteWidget (Entity noteId note)
                 <*> makeNotesListWidget (NotesLinkedFrom noteId)
-                                    "→ After"
-                                    notesAfterCurrent
-            defaultLayout w
+                                        notesAfterCurrent
 
         notePageNew :: UserIntentNew -> Handler Html
         notePageNew userIntent = do
@@ -136,15 +133,10 @@ notePage userIntent' =
                     case userIntent of
                         CreateFree -> ([], [])
 
-            w <- curry3 workareaWidget
-                <$> makeNotesListWidget SelectedNotes -- TODO (NotesLinkedToNew)
-                                    "Before →"
-                                    notesBeforeCurrent
+            defaultLayout =<< curry3 workareaWidget
+                <$> makeNotesListWidget NotesLinkedToNew    notesBeforeCurrent
                 <*> makeNewNoteWidget
-                <*> makeNotesListWidget SelectedNotes -- TODO (NotesLinkedFromNew)
-                                    "→ After"
-                                    notesAfterCurrent
-            defaultLayout w
+                <*> makeNotesListWidget NotesLinkedFromNew  notesAfterCurrent
 
 
 getNoteEditR :: NoteId -> Handler Html
