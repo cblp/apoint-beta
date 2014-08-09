@@ -4,11 +4,11 @@
             <ul .nav>
                 <li> <!-- TODO .active -->
                     <a href=@{NotesR}>
-                        <.icon-list>
+                        <i.icon-list>
                         Next
                 <li>
                     <a href=@{NoteNewR}>
-                        <.icon-plus>
+                        <i.icon-plus>
                         New
             <form .navbar-search .pull-left action=@{SearchR}>
                 <input  type="text" .search-query
@@ -19,16 +19,16 @@
                 $maybe user <- maybeUser
                     <li>
                         <a>
-                            <.icon-user>
+                            <i.icon-user>
                             #{userEmail user}
                     <li>
                         <a href=@{AuthR LogoutR}>
-                            <.icon-off>
+                            <i.icon-off>
                             Logout
                 $nothing
                     <li>
                         <a href=@{AuthR LoginR}>
-                            <.icon-user>
+                            <i.icon-user>
                             Login/Register
 <div id="main" role="main">
     $maybe msg <- mmsg

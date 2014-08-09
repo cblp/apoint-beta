@@ -4,7 +4,7 @@
     <.btn-toolbar>
         <.btn-group>
             <a .btn href=@{NoteEditR noteId}>
-                <.icon-edit>
+                <i.icon-edit>
                 Edit
         <.btn-group .pull-right>
             <form   method=post
@@ -12,5 +12,5 @@
                     enctype=#{ndfEnctype}>
                 ^{ndfWidget}
                 <button .btn .btn-danger type=submit>
-                    <.icon-remove .icon-white>
+                    <i.icon-remove .icon-white>
                     Delete
