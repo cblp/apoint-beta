@@ -110,7 +110,7 @@ getNotesR = do
     userId <- requireAuthId'
     notes <- runDB $
         selectList
-            [NoteAuthor ==. userId]
+            [NoteAuthor ==. userId, NoteArchived ==. False]
             [LimitTo $ notesOnAPage + 1] -- one for pagination
     defaultLayout =<< notesListWidget SelectedNotes "Next" notes
 
