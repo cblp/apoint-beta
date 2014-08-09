@@ -7,19 +7,19 @@
                 <a href=@{NoteR noteId}>
                     #{noteContentShort note}
     $maybe (linkR, createR) <- mRoutes
-        <li>
-            <button .btn ##{linkWidgetShowerId}
+        <li ##{linkWidgetShowerId} .unstyled>
+            <button .btn
                     onClick="showLinkWidget('#{linkWidgetShowerId}', '#{linkWidgetFormId}')">
                 Link
-            <form method=post action=@{linkR} enctype=#{enctype}
-                    ##{linkWidgetFormId} style="display: none;">
+        <li ##{linkWidgetFormId} style="display: none;">
+            <form method=post action=@{linkR} enctype=#{enctype}>
                 ^{linkWidget}
                 <a .btn onClick="cancelLinkWidget('#{linkWidgetShowerId}', '#{linkWidgetFormId}')">
                     <i.icon-remove>
                     Cancel
                 <button type=submit .btn .btn-primary>
                     Link
-        <li>
+        <li .unstyled>
             <a .btn href=@{createR} title="Create linked">
                 <i.icon-plus>
                 Create

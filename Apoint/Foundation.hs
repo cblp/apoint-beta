@@ -90,7 +90,8 @@ defaultLayout' searchQuery widget = do
 
     pc <- widgetToPageContent $ do
         $(combineStylesheets 'StaticR
-            [ css_normalize_css
+            [ css_apoint_css
+            , css_normalize_css
             , css_bootstrap_css
             ])
         $(widgetFile "default-layout")
