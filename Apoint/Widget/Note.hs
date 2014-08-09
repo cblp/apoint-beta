@@ -41,11 +41,12 @@ jsId :: Text -> Value
 jsId = toJSON
 
 
-data UserIntent = View NoteId
-                | Edit NoteId
-                | CreateFree
-                -- | CreateAfter NoteId
-                -- | CreateBefore NoteId
+data UserIntentExisting = View NoteId | Edit NoteId
+data UserIntentNew      = CreateFree
+                        -- | CreateAfter NoteId
+                        -- | CreateBefore NoteId
+data UserIntent         = UserIntentExisting  UserIntentExisting
+                        | UserIntentNew       UserIntentNew
 
 
 makeNoteContentViewWidget :: Entity Note -> Handler Widget
@@ -57,6 +58,15 @@ makeNoteContentViewWidget (Entity noteId note) = do
 makeNoteContentEditWidget :: Entity Note -> Handler Widget
 makeNoteContentEditWidget (Entity noteId note) = do
     let content = noteContent note
-    (formWidget, enctype) <-
-        generateFormPost $ noteContentForm (Just content)
+        saveR = NoteR noteId
+        cancelR = NoteR noteId
+    (formWidget, enctype) <- generateFormPost $ noteContentForm (Just content)
+    return $(widgetFile "noteedit")
+
+
+makeNewNoteWidget :: Handler Widget
+makeNewNoteWidget = do
+    let saveR = NotesR
+        cancelR = NotesR
+    (formWidget, enctype) <- generateFormPost $ noteContentForm Nothing
     return $(widgetFile "noteedit")

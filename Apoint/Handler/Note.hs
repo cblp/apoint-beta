@@ -12,7 +12,7 @@ import Import
 
 
 getNoteR :: NoteId -> Handler Html
-getNoteR noteId = notePage $ View noteId
+getNoteR noteId = notePage $ UserIntentExisting $ View noteId
 
 
 postNoteArchiveR :: NoteId -> Handler ()
@@ -53,7 +53,7 @@ postNoteDeleteR noteId = do
 
 
 getNoteNewR :: Handler Html
-getNoteNewR = notePage CreateFree
+getNoteNewR = notePage $ UserIntentNew CreateFree
 
 
 getNoteNewFromR :: NoteId -> Handler Html
@@ -99,34 +99,56 @@ postNotesR = do
 
 
 notePage :: UserIntent -> Handler Html
-notePage userIntent = do
-    let (accessMode, noteId) = case userIntent of
-            View nid -> (Access.Read,   nid)
-            Edit nid -> (Access.Update, nid)
-    note <- runDB $ get404 noteId
-    authorize accessMode CurrentUser note
+notePage userIntent' =
+    case userIntent' of
+        UserIntentExisting  userIntent -> notePageExisting  userIntent
+        UserIntentNew       userIntent -> notePageNew       userIntent
 
-    let makeCurrentNoteWidget = case userIntent of
-            View _      -> makeNoteContentViewWidget
-            Edit _      -> makeNoteContentEditWidget
-            CreateFree  -> makeNoteContentEditWidget
+    where
+        notePageExisting :: UserIntentExisting -> Handler Html
+        notePageExisting userIntent = do
+            let (accessMode, noteId) = case userIntent of
+                    View nid -> (Access.Read,   nid)
+                    Edit nid -> (Access.Update, nid)
+            note <- runDB $ get404 noteId
+            authorize accessMode CurrentUser note
 
-    notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
-    notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
+            let makeCurrentNoteWidget = case userIntent of
+                    View _      -> makeNoteContentViewWidget
+                    Edit _      -> makeNoteContentEditWidget
 
-    w <- curry3 workareaWidget
-        <$> notesListWidget (NotesLinkedTo   noteId)
-                            "Before →"
-                            notesBeforeCurrent
-        <*> makeCurrentNoteWidget (Entity noteId note)
-        <*> notesListWidget (NotesLinkedFrom noteId)
-                            "→ After"
-                            notesAfterCurrent
-    defaultLayout w
+            notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
+            notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
+
+            w <- curry3 workareaWidget
+                <$> notesListWidget (NotesLinkedTo   noteId)
+                                    "Before →"
+                                    notesBeforeCurrent
+                <*> makeCurrentNoteWidget (Entity noteId note)
+                <*> notesListWidget (NotesLinkedFrom noteId)
+                                    "→ After"
+                                    notesAfterCurrent
+            defaultLayout w
+
+        notePageNew :: UserIntentNew -> Handler Html
+        notePageNew userIntent = do
+            let (notesBeforeCurrent, notesAfterCurrent) =
+                    case userIntent of
+                        CreateFree -> ([], [])
+
+            w <- curry3 workareaWidget
+                <$> notesListWidget SelectedNotes -- TODO (NotesLinkedToNew)
+                                    "Before →"
+                                    notesBeforeCurrent
+                <*> makeNewNoteWidget
+                <*> notesListWidget SelectedNotes -- TODO (NotesLinkedFromNew)
+                                    "→ After"
+                                    notesAfterCurrent
+            defaultLayout w
 
 
 getNoteEditR :: NoteId -> Handler Html
-getNoteEditR noteId = notePage $ Edit noteId
+getNoteEditR noteId = notePage $ UserIntentExisting $ Edit noteId
 
 
 postNoteR :: NoteId -> Handler ()
