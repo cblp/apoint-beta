@@ -31,7 +31,10 @@ getSearchI paramName limit = do
     userId <- requireAuthId'
     query <- fromMaybe "" <$> lookupGetParam paramName
     notes <- runDB $
-        selectList  [NoteAuthor ==. userId, NoteContent `contains_i` query]
+        selectList  [ NoteAuthor ==. userId
+                    , NoteArchived ==. False
+                    , NoteContent `contains_i` query
+                    ]
                     [LimitTo limit]
     return (query, notes)
 
