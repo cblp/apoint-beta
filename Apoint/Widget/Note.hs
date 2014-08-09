@@ -1,5 +1,7 @@
 module Widget.Note where
 
+import Form
+import Form.Note
 import Handler.Link
 import Model.Note
 
@@ -9,16 +11,6 @@ import Import
 data NoteslistMode  = SelectedNotes
                     | NotesLinkedTo NoteId
                     | NotesLinkedFrom NoteId
-
-
-emptyForm :: Html -> MForm Handler (FormResult (), Widget)
-emptyForm = renderDivs $ pure ()
-
-
-editableNoteWidget :: Entity Note -> Handler Widget
-editableNoteWidget (Entity noteId note) = do
-    (ndfWidget, ndfEnctype) <- generateFormPost emptyForm
-    return $(widgetFile "noteview")
 
 
 notesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Handler Widget
@@ -47,3 +39,20 @@ jsIdSelector = toJSON . ("#" <>)
 
 jsId :: Text -> Value
 jsId = toJSON
+
+
+data UiMode = ViewMode | EditMode -- | CreateMode
+
+
+makeNoteContentViewWidget :: Entity Note -> Handler Widget
+makeNoteContentViewWidget (Entity noteId note) = do
+    (ndfWidget, ndfEnctype) <- generateFormPost emptyForm
+    return $(widgetFile "noteview")
+
+
+makeNoteContentEditWidget :: Entity Note -> Handler Widget
+makeNoteContentEditWidget (Entity noteId note) = do
+    let content = noteContent note
+    (formWidget, enctype) <-
+        generateFormPost $ noteContentForm (Just content)
+    return $(widgetFile "noteedit")

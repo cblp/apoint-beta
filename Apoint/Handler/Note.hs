@@ -3,6 +3,8 @@ module Handler.Note where
 import Local.Yesod.Auth (requireAuthId')
 
 import Access
+import Form
+import Form.Note
 import Model.Note
 import Widget.Note
 
@@ -10,23 +12,7 @@ import Import
 
 
 getNoteR :: NoteId -> Handler Html
-getNoteR noteId = do
-    note <- runDB $ get404 noteId
-    let noteEntity = Entity noteId note
-    authorize Read CurrentUser note
-
-    notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
-    notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
-
-    w <- curry3 workareaWidget
-        <$> notesListWidget (NotesLinkedTo   noteId)
-                            "Before →"
-                            notesBeforeCurrent
-        <*> editableNoteWidget noteEntity
-        <*> notesListWidget (NotesLinkedFrom noteId)
-                            "→ After"
-                            notesAfterCurrent
-    defaultLayout w
+getNoteR noteId = notePage ViewMode noteId
 
 
 postNoteArchiveR :: NoteId -> Handler ()
@@ -134,5 +120,51 @@ postNotesR = do
     redirect $ NoteR noteId
 
 
-curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
-curry3 f a b c = f (a, b, c)
+notePage :: UiMode -> NoteId -> Handler Html
+notePage uiMode noteId = do
+    note <- runDB $ get404 noteId
+    let accessMode = case uiMode of
+            ViewMode -> Read
+            EditMode -> Access.Update
+    authorize accessMode CurrentUser note
+
+    let makeCurrentNoteWidget = case uiMode of
+            ViewMode -> makeNoteContentViewWidget
+            EditMode -> makeNoteContentEditWidget
+
+    notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
+    notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
+
+    w <- curry3 workareaWidget
+        <$> notesListWidget (NotesLinkedTo   noteId)
+                            "Before →"
+                            notesBeforeCurrent
+        <*> makeCurrentNoteWidget (Entity noteId note)
+        <*> notesListWidget (NotesLinkedFrom noteId)
+                            "→ After"
+                            notesAfterCurrent
+    defaultLayout w
+
+
+getNoteEditR :: NoteId -> Handler Html
+getNoteEditR noteId = notePage EditMode noteId
+
+
+postNoteR :: NoteId -> Handler ()
+postNoteR noteId = do
+    note <- runDB $ get404 noteId
+    authorize Access.Update CurrentUser note
+
+    ((formResult, _), _) <- runFormPost $ noteContentForm Nothing
+    Textarea content <-
+        case formResult of
+            FormSuccess textarea ->
+                return textarea
+            FormMissing ->
+                invalidArgs ["FormMissing"]
+            FormFailure errors ->
+                invalidArgs errors
+
+    runDB $ update noteId [NoteContent =. content]
+
+    redirect $ NoteR noteId

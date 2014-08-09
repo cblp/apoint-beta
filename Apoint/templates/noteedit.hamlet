@@ -1,0 +1,9 @@
+<.note-widget .thumbnail>
+    <form method=post action=@{NoteR noteId} enctype=#{enctype}>
+        <.note-content .lead>
+            ^{formWidget}
+        <.btn-toolbar>
+            <.btn-group>
+                <a .btn href="@{NoteR noteId}">Cancel
+            <.btn-group .pull-right>
+                <button type=submit .btn .btn-primary>Save

@@ -29,7 +29,6 @@ import Yesod.Core.Types (loggerSet, Logger (Logger))
 import Handler.Home
 import Handler.Link
 import Handler.Note
-import Handler.NoteEdit
 import Handler.Search
 
 -- This line actually creates our YesodDispatch instance. It is the second half
