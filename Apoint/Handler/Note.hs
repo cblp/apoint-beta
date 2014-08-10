@@ -123,9 +123,9 @@ notePage userIntent' =
 
         notePageNew :: UserIntentNew -> Handler Html
         notePageNew userIntent = do
-            let mRelNoteId = case userIntent of
+            let mNoteId = case userIntent of
                     CreateFree            -> Nothing
-                    CreateRel rel noteId  -> Just (rel, noteId)
+                    CreateRel _ noteId    -> Just noteId
                 saveR = case userIntent of
                     CreateFree            -> NotesR
                     CreateRel rel noteId  -> NoteNewRelR rel noteId
@@ -138,7 +138,7 @@ notePage userIntent' =
 
             defaultLayout =<< curry3 workareaWidget
                 <$> makeNotesListWidget NotesLinkedToNew    notesBeforeCurrent
-                <*> makeNewNoteWidget saveR (snd <$> mRelNoteId) -- TODO snd? rel?
+                <*> makeNewNoteWidget saveR mNoteId
                 <*> makeNotesListWidget NotesLinkedFromNew  notesAfterCurrent
 
         getEntity :: NoteId -> Handler (Entity Note)
