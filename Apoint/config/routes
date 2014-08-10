@@ -3,8 +3,7 @@
 
 /                           HomeR           GET
 /favicon.ico                FaviconR        GET
-/link_from/#NoteId/create   LinkFromCreateR     POST
-/link_to/#NoteId/create     LinkToCreateR       POST
+/link/#Rel/#NoteId/create   LinkCreateR         POST
 /note/#NoteId               NoteR           GET POST
 /note/#NoteId/archive       NoteArchiveR        POST
 /note/#NoteId/delete        NoteDeleteR         POST

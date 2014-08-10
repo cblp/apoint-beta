@@ -40,6 +40,17 @@ x |> f = f x
 {-# INLINE (<$$>) #-}
 
 
+-- | Relation from one note to another
+data Rel = RelFrom | RelTo
+    deriving (Eq, Read, Show)
+instance PathPiece Rel where
+    toPathPiece RelFrom = "from"
+    toPathPiece RelTo   = "to"
+    fromPathPiece "from"  = Just RelFrom
+    fromPathPiece "to"    = Just RelTo
+    fromPathPiece _       = Nothing
+
+
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have

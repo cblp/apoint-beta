@@ -47,15 +47,11 @@ getNoteIdOutOfLinkForm = do
         Just noteId -> return noteId
 
 
-postLinkFromCreateR :: NoteId -> Handler ()
-postLinkFromCreateR noteIdFrom = do
-    noteIdTo <- getNoteIdOutOfLinkForm
-    createLink noteIdFrom noteIdTo
-    redirect $ NoteR noteIdFrom
-
-
-postLinkToCreateR :: NoteId -> Handler ()
-postLinkToCreateR noteIdTo = do
-    noteIdFrom <- getNoteIdOutOfLinkForm
-    createLink noteIdFrom noteIdTo
-    redirect $ NoteR noteIdTo
+postLinkCreateR :: Rel -> NoteId -> Handler ()
+postLinkCreateR rel thisNoteId = do
+    thatNoteId <- getNoteIdOutOfLinkForm
+    let (nFrom, nTo) = case rel of
+            RelFrom -> (thisNoteId, thatNoteId)
+            RelTo   -> (thatNoteId, thisNoteId)
+    createLink nFrom nTo
+    redirect $ NoteR thisNoteId
