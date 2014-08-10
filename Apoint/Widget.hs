@@ -5,7 +5,7 @@ import Form
 import Import
 
 
-makePostButton :: Route App -> Text -> Handler Widget
+makePostButton :: Route App -> Html -> Handler Widget
 makePostButton route label = do
     (formWidget, enctype) <- generateFormPost emptyForm
     formId <- newIdent
