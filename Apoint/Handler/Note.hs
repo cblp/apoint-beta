@@ -17,11 +17,7 @@ getNoteR noteId = notePage $ UserIntentExisting $ View noteId
 
 postNoteArchiveR :: NoteId -> Handler ()
 postNoteArchiveR noteId = do
-    ((formResult, _), _) <- runFormPost emptyForm
-    case formResult of
-        FormSuccess () -> return ()
-        FormMissing -> invalidArgs ["FormMissing"]
-        FormFailure errors -> invalidArgs errors
+    _ <- runFormPostChecked emptyForm
 
     note <- runDB $ get404 noteId
     authorize Access.Update CurrentUser note
@@ -34,11 +30,7 @@ postNoteArchiveR noteId = do
 
 postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
-    ((formResult, _), _) <- runFormPost emptyForm
-    case formResult of
-        FormSuccess () -> return ()
-        FormMissing -> invalidArgs ["FormMissing"]
-        FormFailure errors -> invalidArgs errors
+    _ <- runFormPostChecked emptyForm
 
     note <- runDB $ get404 noteId
     authorize Delete CurrentUser note
@@ -83,11 +75,7 @@ postNotesR' :: Maybe (Rel, NoteId) -> Handler ()
 postNotesR' mRelNoteId = do
     userId <- requireAuthId'
 
-    ((formResult, _), _) <- runFormPost $ noteContentForm Nothing
-    content <- case formResult of
-        FormSuccess (Textarea content) -> return content
-        FormMissing -> invalidArgs ["FormMissing"]
-        FormFailure errors -> invalidArgs errors
+    Textarea content <- runFormPostChecked $ noteContentForm Nothing
 
     noteId <- runDB $ do
         noteId <- insert Note
@@ -167,17 +155,6 @@ postNoteR :: NoteId -> Handler ()
 postNoteR noteId = do
     note <- runDB $ get404 noteId
     authorize Access.Update CurrentUser note
-
-    ((formResult, _), _) <- runFormPost $ noteContentForm Nothing
-    Textarea content <-
-        case formResult of
-            FormSuccess textarea ->
-                return textarea
-            FormMissing ->
-                invalidArgs ["FormMissing"]
-            FormFailure errors ->
-                invalidArgs errors
-
+    Textarea content  <- runFormPostChecked $ noteContentForm Nothing
     runDB $ update noteId [NoteContent =. content]
-
     redirect $ NoteR noteId

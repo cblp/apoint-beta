@@ -4,6 +4,8 @@ import            Data.Char (isDigit)
 import qualified  Data.Text as Text
 import            Yesod.Form.Jquery
 
+import            Form
+
 import            Import
 
 
@@ -30,11 +32,7 @@ createLink noteIdFrom noteIdTo = runDB $ do
 
 getNoteIdOutOfLinkForm :: Handler NoteId
 getNoteIdOutOfLinkForm = do
-    ((formResult, _), _) <- runFormPost noteLinkForm
-    noteSelector <- case formResult of
-        FormMissing               -> invalidArgs ["FormMissing"]
-        FormFailure errors        -> invalidArgs errors
-        FormSuccess noteSelector  -> return noteSelector
+    noteSelector <- runFormPostChecked noteLinkForm
     -- getting last digit cluster
     let noteIdList =  noteSelector
                       |> Text.split (not . isDigit)
