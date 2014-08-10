@@ -23,9 +23,9 @@ makeNotesListWidget mode notes = do
     (linkWidget, enctype) <- generateFormPost noteLinkForm
     let mRoutes = case mode of
             NotesLinkedFrom noteId  ->
-                Just (LinkCreateR RelFrom noteId, NoteNewFromR noteId)
+                Just (LinkCreateR RelFrom noteId, NoteNewRelR RelFrom noteId)
             NotesLinkedTo   noteId  ->
-                Just (LinkCreateR RelTo   noteId, NoteNewToR   noteId)
+                Just (LinkCreateR RelTo   noteId, NoteNewRelR RelTo   noteId)
             _                       ->
                 Nothing
         title = case mode of
@@ -58,7 +58,7 @@ jsId = toJSON
 
 
 data UserIntentExisting = View NoteId | Edit NoteId
-data UserIntentNew      = CreateFree | CreateAfter NoteId | CreateBefore NoteId
+data UserIntentNew      = CreateFree | CreateRel Rel NoteId
 data UserIntent         = UserIntentExisting  UserIntentExisting
                         | UserIntentNew       UserIntentNew
 

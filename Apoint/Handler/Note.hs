@@ -56,20 +56,12 @@ getNoteNewR :: Handler Html
 getNoteNewR = notePage $ UserIntentNew CreateFree
 
 
-getNoteNewFromR :: NoteId -> Handler Html
-getNoteNewFromR = notePage . UserIntentNew . CreateAfter
+getNoteNewRelR :: Rel -> NoteId -> Handler Html
+getNoteNewRelR rel noteId = notePage $ UserIntentNew $ CreateRel rel noteId
 
 
-postNoteNewFromR :: NoteId -> Handler ()
-postNoteNewFromR noteId = postNotesR' Nothing (Just noteId)
-
-
-getNoteNewToR :: NoteId -> Handler Html
-getNoteNewToR = notePage . UserIntentNew . CreateBefore
-
-
-postNoteNewToR :: NoteId -> Handler ()
-postNoteNewToR noteId = postNotesR' (Just noteId) Nothing
+postNoteNewRelR :: Rel -> NoteId -> Handler ()
+postNoteNewRelR rel noteId = postNotesR' $ Just (rel, noteId)
 
 
 getNotesR :: Handler Html
@@ -84,11 +76,11 @@ getNotesR = do
 
 
 postNotesR :: Handler ()
-postNotesR = postNotesR' Nothing Nothing
+postNotesR = postNotesR' Nothing
 
 
-postNotesR' :: Maybe NoteId -> Maybe NoteId -> Handler ()
-postNotesR' mNoteLinkTo mNoteLinkFrom = do
+postNotesR' :: Maybe (Rel, NoteId) -> Handler ()
+postNotesR' mRelNoteId = do
     userId <- requireAuthId'
 
     ((formResult, _), _) <- runFormPost $ noteContentForm Nothing
@@ -103,14 +95,10 @@ postNotesR' mNoteLinkTo mNoteLinkFrom = do
             , noteAuthor = userId
             , noteArchived = False
             }
-        case mNoteLinkTo of
-            Nothing -> return ()
-            Just noteTo ->
-                insert_ $ Notelink noteId noteTo
-        case mNoteLinkFrom of
-            Nothing -> return ()
-            Just noteFrom ->
-                insert_ $ Notelink noteFrom noteId
+        case mRelNoteId of
+            Nothing                 -> return ()
+            Just (RelFrom,  fromId) -> insert_ $ Notelink fromId noteId
+            Just (RelTo,    toId)   -> insert_ $ Notelink noteId toId
         return noteId
 
     redirect $ NoteR noteId
@@ -147,24 +135,22 @@ notePage userIntent' =
 
         notePageNew :: UserIntentNew -> Handler Html
         notePageNew userIntent = do
-            let mNoteId = case userIntent of
-                    CreateFree          -> Nothing
-                    CreateBefore noteId -> Just noteId
-                    CreateAfter  noteId -> Just noteId
+            let mRelNoteId = case userIntent of
+                    CreateFree            -> Nothing
+                    CreateRel rel noteId  -> Just (rel, noteId)
                 saveR = case userIntent of
-                    CreateFree          -> NotesR
-                    CreateBefore noteId -> NoteNewToR   noteId
-                    CreateAfter  noteId -> NoteNewFromR noteId
+                    CreateFree            -> NotesR
+                    CreateRel rel noteId  -> NoteNewRelR rel noteId
             (notesBeforeCurrent, notesAfterCurrent) <- case userIntent of
-                    CreateFree          ->    return ([], [])
-                    CreateBefore noteId -> do e <- getEntity noteId
-                                              return ([], [e])
-                    CreateAfter  noteId -> do e <- getEntity noteId
-                                              return ([e], [])
+                    CreateFree            ->    return ([], [])
+                    CreateRel rel noteId  -> do note <- getEntity noteId
+                                                return $ case rel of
+                                                    RelFrom -> ([note], [])
+                                                    RelTo   -> ([], [note])
 
             defaultLayout =<< curry3 workareaWidget
                 <$> makeNotesListWidget NotesLinkedToNew    notesBeforeCurrent
-                <*> makeNewNoteWidget saveR mNoteId
+                <*> makeNewNoteWidget saveR (snd <$> mRelNoteId) -- TODO snd? rel?
                 <*> makeNotesListWidget NotesLinkedFromNew  notesAfterCurrent
 
         getEntity :: NoteId -> Handler (Entity Note)
