@@ -60,8 +60,16 @@ getNoteNewFromR :: NoteId -> Handler Html
 getNoteNewFromR = notePage . UserIntentNew . CreateAfter
 
 
+postNoteNewFromR :: NoteId -> Handler ()
+postNoteNewFromR noteId = postNotesR' Nothing (Just noteId)
+
+
 getNoteNewToR :: NoteId -> Handler Html
 getNoteNewToR = notePage . UserIntentNew . CreateBefore
+
+
+postNoteNewToR :: NoteId -> Handler ()
+postNoteNewToR noteId = postNotesR' (Just noteId) Nothing
 
 
 getNotesR :: Handler Html
@@ -76,7 +84,11 @@ getNotesR = do
 
 
 postNotesR :: Handler ()
-postNotesR = do
+postNotesR = postNotesR' Nothing Nothing
+
+
+postNotesR' :: Maybe NoteId -> Maybe NoteId -> Handler ()
+postNotesR' mNoteLinkTo mNoteLinkFrom = do
     userId <- requireAuthId'
 
     ((formResult, _), _) <- runFormPost $ noteContentForm Nothing
@@ -85,11 +97,21 @@ postNotesR = do
         FormMissing -> invalidArgs ["FormMissing"]
         FormFailure errors -> invalidArgs errors
 
-    noteId <- runDB $ insert Note
-        { noteContent = content
-        , noteAuthor = userId
-        , noteArchived = False
-        }
+    noteId <- runDB $ do
+        noteId <- insert Note
+            { noteContent = content
+            , noteAuthor = userId
+            , noteArchived = False
+            }
+        case mNoteLinkTo of
+            Nothing -> return ()
+            Just noteTo ->
+                insert_ $ Notelink noteId noteTo
+        case mNoteLinkFrom of
+            Nothing -> return ()
+            Just noteFrom ->
+                insert_ $ Notelink noteFrom noteId
+        return noteId
 
     redirect $ NoteR noteId
 
@@ -128,20 +150,21 @@ notePage userIntent' =
             let mNoteId = case userIntent of
                     CreateFree          -> Nothing
                     CreateBefore noteId -> Just noteId
-                    CreateAfter noteId  -> Just noteId
+                    CreateAfter  noteId -> Just noteId
+                saveR = case userIntent of
+                    CreateFree          -> NotesR
+                    CreateBefore noteId -> NoteNewToR   noteId
+                    CreateAfter  noteId -> NoteNewFromR noteId
             (notesBeforeCurrent, notesAfterCurrent) <- case userIntent of
-                CreateFree          ->
-                    return ([], [])
-                CreateBefore noteId -> do
-                    e <- getEntity noteId
-                    return ([e], [])
-                CreateAfter noteId  -> do
-                    e <- getEntity noteId
-                    return ([], [e])
+                    CreateFree          ->    return ([], [])
+                    CreateBefore noteId -> do e <- getEntity noteId
+                                              return ([], [e])
+                    CreateAfter  noteId -> do e <- getEntity noteId
+                                              return ([e], [])
 
             defaultLayout =<< curry3 workareaWidget
                 <$> makeNotesListWidget NotesLinkedToNew    notesBeforeCurrent
-                <*> makeNewNoteWidget mNoteId
+                <*> makeNewNoteWidget saveR mNoteId
                 <*> makeNotesListWidget NotesLinkedFromNew  notesAfterCurrent
 
         getEntity :: NoteId -> Handler (Entity Note)
