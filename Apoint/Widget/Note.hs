@@ -2,10 +2,10 @@ module Widget.Note where
 
 import Data.Maybe (isJust)
 
-import Form
 import Form.Note
 import Handler.Link
 import Model.Note
+import Widget
 
 import Import
 
@@ -65,7 +65,7 @@ data UserIntent         = UserIntentExisting  UserIntentExisting
 
 makeNoteContentViewWidget :: Entity Note -> Handler Widget
 makeNoteContentViewWidget (Entity noteId note) = do
-    (ndfWidget, ndfEnctype) <- generateFormPost emptyForm
+    archiveButton <- makePostButton (NoteArchiveR noteId) "Archive"
     return $(widgetFile "noteview")
 
 

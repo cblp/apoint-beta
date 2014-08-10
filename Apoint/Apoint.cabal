@@ -27,6 +27,7 @@ library
                      Settings
                      Settings.Development
                      Settings.StaticFiles
+                     Widget
                      Widget.Note
 
     other-modules: Local.Data.Text
