@@ -45,10 +45,8 @@ getSearchR = do
     (query, notes) <- getSearchI "query" (notesOnAPage + 1) -- one for pagination
     selectRep $ do
         provideRep $
-            defaultLayout' query =<<
-                notesListWidget SelectedNotes
-                    [shamlet|Search results for <em>#{query}</em>|]
-                    notes
+            defaultLayout' query =<< makeNotesListWidget  (FoundNotes query)
+                                                          notes
         provideRep $
             returnJson  [ NoteSearchResult
                             { nsr_id            = toPathPiece noteId

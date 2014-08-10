@@ -1,5 +1,7 @@
 module Widget.Note where
 
+import Data.Maybe (isJust)
+
 import Form
 import Form.Note
 import Handler.Link
@@ -11,10 +13,13 @@ import Import
 data NoteslistMode  = SelectedNotes
                     | NotesLinkedTo NoteId
                     | NotesLinkedFrom NoteId
+                    | NotesLinkedToNew
+                    | NotesLinkedFromNew
+                    | FoundNotes Text -- search query
 
 
-notesListWidget :: NoteslistMode -> Html -> [Entity Note] -> Handler Widget
-notesListWidget mode title notes = do
+makeNotesListWidget :: NoteslistMode -> [Entity Note] -> Handler Widget
+makeNotesListWidget mode notes = do
     (linkWidget, enctype) <- generateFormPost noteLinkForm
     let mRoutes = case mode of
             NotesLinkedFrom noteId  ->
@@ -23,6 +28,17 @@ notesListWidget mode title notes = do
                 Just (LinkToCreateR   noteId, NoteNewToR   noteId)
             _                       ->
                 Nothing
+        title = case mode of
+            SelectedNotes       -> "Notes"
+            NotesLinkedTo _     -> "Before →"
+            NotesLinkedFrom _   -> "→ After"
+            FoundNotes query    -> [shamlet|Search results for <em>#{query}<em>|]
+            NotesLinkedToNew    ->
+                if isJust mRoutes || not (null notes) then "Before →"
+                                                      else ""
+            NotesLinkedFromNew  ->
+                if isJust mRoutes || not (null notes) then "→ After"
+                                                      else ""
     linkWidgetShowerId <- newIdent
     linkWidgetFormId <- newIdent
     return $(widgetFile "noteslist")
@@ -41,7 +57,10 @@ jsId :: Text -> Value
 jsId = toJSON
 
 
-data UiMode = ViewMode | EditMode -- | CreateMode
+data UserIntentExisting = View NoteId | Edit NoteId
+data UserIntentNew      = CreateFree | CreateAfter NoteId | CreateBefore NoteId
+data UserIntent         = UserIntentExisting  UserIntentExisting
+                        | UserIntentNew       UserIntentNew
 
 
 makeNoteContentViewWidget :: Entity Note -> Handler Widget
@@ -53,6 +72,14 @@ makeNoteContentViewWidget (Entity noteId note) = do
 makeNoteContentEditWidget :: Entity Note -> Handler Widget
 makeNoteContentEditWidget (Entity noteId note) = do
     let content = noteContent note
-    (formWidget, enctype) <-
-        generateFormPost $ noteContentForm (Just content)
+        saveR = NoteR noteId
+        cancelR = NoteR noteId
+    (formWidget, enctype) <- generateFormPost $ noteContentForm (Just content)
+    return $(widgetFile "noteedit")
+
+
+makeNewNoteWidget :: Route App -> Maybe (NoteId) -> Handler Widget
+makeNewNoteWidget saveR mReturnNote = do
+    let cancelR = maybe NotesR NoteR mReturnNote
+    (formWidget, enctype) <- generateFormPost $ noteContentForm Nothing
     return $(widgetFile "noteedit")
