@@ -7,4 +7,9 @@
                 <i.icon-edit>
                 Edit
         <.btn-group .pull-right>
-            ^{archiveButton}
+            ^{archiveBtn}
+            <button .btn .dropdown-toggle data-toggle=dropdown>
+                &#9679;&#9679;&#9679;
+            <ul .dropdown-menu role=menu>
+                <li>
+                    ^{deleteBtn}

@@ -65,7 +65,9 @@ data UserIntent         = UserIntentExisting  UserIntentExisting
 
 makeNoteContentViewWidget :: Entity Note -> Handler Widget
 makeNoteContentViewWidget (Entity noteId note) = do
-    archiveButton <- makePostButton (NoteArchiveR noteId) "Archive"
+    archiveBtn <- makePostButton (NoteArchiveR noteId) "Archive"
+    deleteBtn <- makePostButton (NoteDeleteR noteId)
+        [shamlet|<i.icon-remove></i>Delete permanently|]
     return $(widgetFile "noteview")
 
 
