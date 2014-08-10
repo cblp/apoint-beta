@@ -105,6 +105,11 @@ defaultLayout' searchQuery widget = do
             , css_normalize_css
             , css_bootstrap_css
             ])
+        $(combineScripts 'StaticR
+            [ js_jquery_min_js
+            , js_jquery_ui_min_js
+            , js_bootstrap_min_js
+            ])
         $(widgetFile "default-layout")
     giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
