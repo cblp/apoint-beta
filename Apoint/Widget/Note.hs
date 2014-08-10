@@ -78,7 +78,7 @@ makeNoteContentEditWidget (Entity noteId note) = do
     return $(widgetFile "noteedit")
 
 
-makeNewNoteWidget :: Route App -> Maybe (NoteId) -> Handler Widget
+makeNewNoteWidget :: Route App -> Maybe NoteId -> Handler Widget
 makeNewNoteWidget saveR mReturnNote = do
     let cancelR = maybe NotesR NoteR mReturnNote
     (formWidget, enctype) <- generateFormPost $ noteContentForm Nothing
