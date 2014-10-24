@@ -4,13 +4,12 @@
     <.btn-toolbar>
         <.btn-group>
             <a .btn href=@{NoteEditR noteId}>
-                <.icon-edit>
+                <i.icon-edit>
                 Edit
         <.btn-group .pull-right>
-            <form   method=post
-                    action=@{NoteDeleteR noteId}
-                    enctype=#{ndfEnctype}>
-                ^{ndfWidget}
-                <button .btn .btn-danger type=submit>
-                    <.icon-remove .icon-white>
-                    Delete
+            ^{archiveBtn}
+            <button .btn .dropdown-toggle data-toggle=dropdown>
+                &#9679;&#9679;&#9679;
+            <ul .dropdown-menu role=menu>
+                <li>
+                    ^{deleteBtn}

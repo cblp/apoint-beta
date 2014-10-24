@@ -4,6 +4,8 @@ import            Data.Char (isDigit)
 import qualified  Data.Text as Text
 import            Yesod.Form.Jquery
 
+import            Form
+
 import            Import
 
 
@@ -30,16 +32,12 @@ createLink noteIdFrom noteIdTo = runDB $ do
 
 getNoteIdOutOfLinkForm :: Handler NoteId
 getNoteIdOutOfLinkForm = do
-    ((formResult, _), _) <- runFormPost noteLinkForm
-    noteSelector <- case formResult of
-        FormMissing               -> invalidArgs ["FormMissing"]
-        FormFailure errors        -> invalidArgs errors
-        FormSuccess noteSelector  -> return noteSelector
+    noteSelector <- runFormPostChecked noteLinkForm
     -- getting last digit cluster
     let noteIdList =  noteSelector
                       |> Text.split (not . isDigit)
                       |> filter (not . Text.null)
-    noteIdMaybe <- if (null noteIdList)
+    noteIdMaybe <- if null noteIdList
         then invalidArgs ["cannot find noteId"]
         else return $ fromPathPiece $ last noteIdList
     case noteIdMaybe of
@@ -47,15 +45,11 @@ getNoteIdOutOfLinkForm = do
         Just noteId -> return noteId
 
 
-postLinkFromCreateR :: NoteId -> Handler ()
-postLinkFromCreateR noteIdFrom = do
-    noteIdTo <- getNoteIdOutOfLinkForm
-    createLink noteIdFrom noteIdTo
-    redirect $ NoteR noteIdFrom
-
-
-postLinkToCreateR :: NoteId -> Handler ()
-postLinkToCreateR noteIdTo = do
-    noteIdFrom <- getNoteIdOutOfLinkForm
-    createLink noteIdFrom noteIdTo
-    redirect $ NoteR noteIdTo
+postLinkCreateR :: Rel -> NoteId -> Handler ()
+postLinkCreateR rel thisNoteId = do
+    thatNoteId <- getNoteIdOutOfLinkForm
+    let (nFrom, nTo) = case rel of
+            RelFrom -> (thisNoteId, thatNoteId)
+            RelTo   -> (thatNoteId, thisNoteId)
+    createLink nFrom nTo
+    redirect $ NoteR thisNoteId

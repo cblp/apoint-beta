@@ -1,0 +1,8 @@
+<table width="100%">
+    <tr>
+        <td>
+            ^{leftWidget}
+        <td>
+            ^{centerWidget}
+        <td>
+            ^{rightWidget}

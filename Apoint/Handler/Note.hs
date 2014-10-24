@@ -3,38 +3,34 @@ module Handler.Note where
 import Local.Yesod.Auth (requireAuthId')
 
 import Access
+import Form
+import Form.Note
 import Model.Note
-import Widgets.Note
+import Widget.Note
 
 import Import
 
 
 getNoteR :: NoteId -> Handler Html
-getNoteR noteId = do
+getNoteR noteId = notePage $ UserIntentExisting $ View noteId
+
+
+postNoteArchiveR :: NoteId -> Handler ()
+postNoteArchiveR noteId = do
+    _ <- runFormPostChecked emptyForm
+
     note <- runDB $ get404 noteId
-    let noteEntity = Entity noteId note
-    authorize Read CurrentUser note
+    authorize Access.Update CurrentUser note
 
-    notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
-    notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
+    runDB $ update noteId [NoteArchived =. True]
 
-    leftColumnWidget  <- notesListWidget  (NotesLinkedTo    noteId)
-                                          "Before"
-                                          notesBeforeCurrent
-    rightColumnWidget <- notesListWidget  (NotesLinkedFrom  noteId)
-                                          "After"
-                                          notesAfterCurrent
-    centerColumnWidget <- editableNoteWidget noteEntity
-    defaultLayout $(widgetFile "notesview")
+    setMessage $ "Archived \"" <> toHtml (noteContentShort note) <> "\""
+    redirect NotesR
 
 
 postNoteDeleteR :: NoteId -> Handler ()
 postNoteDeleteR noteId = do
-    ((formResult, _), _) <- runFormPost emptyForm
-    case formResult of
-        FormSuccess () -> return ()
-        FormMissing -> invalidArgs ["FormMissing"]
-        FormFailure errors -> invalidArgs errors
+    _ <- runFormPostChecked emptyForm
 
     note <- runDB $ get404 noteId
     authorize Delete CurrentUser note
@@ -48,42 +44,16 @@ postNoteDeleteR noteId = do
     redirect NotesR
 
 
-data NoteNewInput = NoteNewInput
-    { nnContent :: Textarea
-    }
-
-noteNewForm :: Html -> MForm Handler (FormResult NoteNewInput, Widget)
-noteNewForm = renderDivs $ NoteNewInput
-    <$> areq textareaField "Content" Nothing
-
-noteNewPage :: Widget -> Enctype -> Handler Html
-noteNewPage widget enctype =
-    defaultLayout
-        [whamlet|
-            <h1>New note
-            <form method=post action=@{NotesR} enctype=#{enctype}>
-                ^{widget}
-                <button>Submit
-        |]
-
-
 getNoteNewR :: Handler Html
-getNoteNewR = do
-    _ <- requireAuthId'
-    (widget, enctype) <- generateFormPost noteNewForm
-    noteNewPage widget enctype
+getNoteNewR = notePage $ UserIntentNew CreateFree
 
 
-getNoteNewFromR :: NoteId -> Handler Html
-getNoteNewFromR _ =
-    -- TODO UNIMPLEMENTED
-    getNoteNewR
+getNoteNewRelR :: Rel -> NoteId -> Handler Html
+getNoteNewRelR rel noteId = notePage $ UserIntentNew $ CreateRel rel noteId
 
 
-getNoteNewToR :: NoteId -> Handler Html
-getNoteNewToR _ =
-    -- TODO UNIMPLEMENTED
-    getNoteNewR
+postNoteNewRelR :: Rel -> NoteId -> Handler ()
+postNoteNewRelR rel noteId = postNotesR' $ Just (rel, noteId)
 
 
 getNotesR :: Handler Html
@@ -92,21 +62,99 @@ getNotesR = do
     userId <- requireAuthId'
     notes <- runDB $
         selectList
-            [NoteAuthor ==. userId]
+            [NoteAuthor ==. userId, NoteArchived ==. False]
             [LimitTo $ notesOnAPage + 1] -- one for pagination
-    defaultLayout =<< notesListWidget SelectedNotes "Next" notes
+    defaultLayout =<< makeNotesListWidget SelectedNotes notes
 
 
 postNotesR :: Handler ()
-postNotesR = do
+postNotesR = postNotesR' Nothing
+
+
+postNotesR' :: Maybe (Rel, NoteId) -> Handler ()
+postNotesR' mRelNoteId = do
     userId <- requireAuthId'
 
-    ((formResult, _), _) <- runFormPost noteNewForm
-    content <- case formResult of
-        FormSuccess NoteNewInput{nnContent} -> return $ unTextarea nnContent
-        FormMissing -> invalidArgs ["FormMissing"]
-        FormFailure errors -> invalidArgs errors
+    Textarea content <- runFormPostChecked $ noteContentForm Nothing
 
-    noteId <- runDB $ insert Note{noteContent = content, noteAuthor = userId}
+    noteId <- runDB $ do
+        noteId <- insert Note
+            { noteContent = content
+            , noteAuthor = userId
+            , noteArchived = False
+            }
+        case mRelNoteId of
+            Nothing                 -> return ()
+            Just (RelFrom,  fromId) -> insert_ $ Notelink fromId noteId
+            Just (RelTo,    toId)   -> insert_ $ Notelink noteId toId
+        return noteId
 
+    redirect $ NoteR noteId
+
+
+notePage :: UserIntent -> Handler Html
+notePage userIntent' =
+    case userIntent' of
+        UserIntentExisting  userIntent -> notePageExisting  userIntent
+        UserIntentNew       userIntent -> notePageNew       userIntent
+
+    where
+        notePageExisting :: UserIntentExisting -> Handler Html
+        notePageExisting userIntent = do
+            let (accessMode, noteId) = case userIntent of
+                    View nid -> (Access.Read,   nid)
+                    Edit nid -> (Access.Update, nid)
+            note <- runDB $ get404 noteId
+            authorize accessMode CurrentUser note
+
+            let makeCurrentNoteWidget = case userIntent of
+                    View _      -> makeNoteContentViewWidget
+                    Edit _      -> makeNoteContentEditWidget
+
+            notesBeforeCurrent <- noteSiblings [NotelinkTo   ==. noteId] notelinkFrom
+            notesAfterCurrent  <- noteSiblings [NotelinkFrom ==. noteId] notelinkTo
+
+            defaultLayout =<< curry3 workareaWidget
+                <$> makeNotesListWidget (NotesLinkedTo   noteId)
+                                        notesBeforeCurrent
+                <*> makeCurrentNoteWidget (Entity noteId note)
+                <*> makeNotesListWidget (NotesLinkedFrom noteId)
+                                        notesAfterCurrent
+
+        notePageNew :: UserIntentNew -> Handler Html
+        notePageNew userIntent = do
+            let mNoteId = case userIntent of
+                    CreateFree            -> Nothing
+                    CreateRel _ noteId    -> Just noteId
+                saveR = case userIntent of
+                    CreateFree            -> NotesR
+                    CreateRel rel noteId  -> NoteNewRelR rel noteId
+            (notesBeforeCurrent, notesAfterCurrent) <- case userIntent of
+                    CreateFree            ->    return ([], [])
+                    CreateRel rel noteId  -> do note <- getEntity noteId
+                                                return $ case rel of
+                                                    RelFrom -> ([note], [])
+                                                    RelTo   -> ([], [note])
+
+            defaultLayout =<< curry3 workareaWidget
+                <$> makeNotesListWidget NotesLinkedToNew    notesBeforeCurrent
+                <*> makeNewNoteWidget saveR mNoteId
+                <*> makeNotesListWidget NotesLinkedFromNew  notesAfterCurrent
+
+        getEntity :: NoteId -> Handler (Entity Note)
+        getEntity noteId = do
+            note <- runDB $ get404 noteId
+            return $ Entity noteId note
+
+
+getNoteEditR :: NoteId -> Handler Html
+getNoteEditR noteId = notePage $ UserIntentExisting $ Edit noteId
+
+
+postNoteR :: NoteId -> Handler ()
+postNoteR noteId = do
+    note <- runDB $ get404 noteId
+    authorize Access.Update CurrentUser note
+    Textarea content  <- runFormPostChecked $ noteContentForm Nothing
+    runDB $ update noteId [NoteContent =. content]
     redirect $ NoteR noteId

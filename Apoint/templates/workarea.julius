@@ -1,0 +1,9 @@
+function showLinkWidget(linkWidgetShowerId, linkWidgetFormId) {
+    $('#' + linkWidgetShowerId).hide();
+    $('#' + linkWidgetFormId).show();
+}
+
+function cancelLinkWidget(linkWidgetShowerId, linkWidgetFormId) {
+    $('#' + linkWidgetShowerId).show();
+    $('#' + linkWidgetFormId).hide();
+}

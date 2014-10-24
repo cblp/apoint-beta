@@ -6,7 +6,7 @@ import Data.Maybe (fromMaybe)
 import Local.Yesod.Auth (requireAuthId')
 
 import Model.Note
-import Widgets.Note
+import Widget.Note
 
 import Import
 
@@ -31,7 +31,10 @@ getSearchI paramName limit = do
     userId <- requireAuthId'
     query <- fromMaybe "" <$> lookupGetParam paramName
     notes <- runDB $
-        selectList  [NoteAuthor ==. userId, NoteContent `contains_i` query]
+        selectList  [ NoteAuthor ==. userId
+                    , NoteArchived ==. False
+                    , NoteContent `contains_i` query
+                    ]
                     [LimitTo limit]
     return (query, notes)
 
@@ -42,10 +45,8 @@ getSearchR = do
     (query, notes) <- getSearchI "query" (notesOnAPage + 1) -- one for pagination
     selectRep $ do
         provideRep $
-            defaultLayout' query =<<
-                notesListWidget SelectedNotes
-                    [shamlet|Search results for <em>#{query}</em>|]
-                    notes
+            defaultLayout' query =<< makeNotesListWidget  (FoundNotes query)
+                                                          notes
         provideRep $
             returnJson  [ NoteSearchResult
                             { nsr_id            = toPathPiece noteId

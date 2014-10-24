@@ -44,6 +44,17 @@ x |> f = f x
 {-# INLINE (<$$>) #-}
 
 
+-- | Relation from one note to another
+data Rel = RelFrom | RelTo
+    deriving (Eq, Read, Show)
+instance PathPiece Rel where
+    toPathPiece RelFrom = "from"
+    toPathPiece RelTo   = "to"
+    fromPathPiece "from"  = Just RelFrom
+    fromPathPiece "to"    = Just RelTo
+    fromPathPiece _       = Nothing
+
+
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
@@ -96,8 +107,14 @@ defaultLayout' searchQuery widget = do
 
     pc <- widgetToPageContent $ do
         $(combineStylesheets 'StaticR
-            [ css_normalize_css
+            [ css_apoint_css
+            , css_normalize_css
             , css_bootstrap_css
+            ])
+        $(combineScripts 'StaticR
+            [ js_jquery_min_js
+            , js_jquery_ui_min_js
+            , js_bootstrap_min_js
             ])
         $(widgetFile "default-layout")
     giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
@@ -158,7 +175,7 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = HomeR
+    loginDest _ = NotesR
     -- Where to send a user after logout
     logoutDest _ = HomeR
 
@@ -286,3 +303,7 @@ getExtra = fmap (appExtra . settings) getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
+
+
+curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
+curry3 f a b c = f (a, b, c)
