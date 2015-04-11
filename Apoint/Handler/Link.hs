@@ -1,7 +1,8 @@
 module Handler.Link where
 
-import            Data.Char (isDigit)
-import qualified  Data.Text as Text
+import            Control.Lens  ( (&) )
+import            Data.Char     ( isDigit )
+import qualified  Data.Text     as Text
 import            Yesod.Form.Jquery
 
 import            Form
@@ -35,8 +36,8 @@ getNoteIdOutOfLinkForm = do
     noteSelector <- runFormPostChecked noteLinkForm
     -- getting last digit cluster
     let noteIdList =  noteSelector
-                      |> Text.split (not . isDigit)
-                      |> filter (not . Text.null)
+                      & Text.split (not . isDigit)
+                      & filter (not . Text.null)
     noteIdMaybe <- if null noteIdList
         then invalidArgs ["cannot find noteId"]
         else return $ fromPathPiece $ last noteIdList

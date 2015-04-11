@@ -3,6 +3,7 @@ module Foundation where
 import Prelude
 
 import Control.Applicative ((<$>))
+import Control.Lens ((&))
 import Data.Text as Text (Text, empty)
 import Data.Text.Lazy.Encoding (encodeUtf8)
 import Database.Persist.Sql (SqlPersistT)
@@ -28,10 +29,6 @@ import Settings (widgetFile, Extra (..))
 import Settings.Development (development)
 import Settings.StaticFiles
 
-
-(|>) :: a -> (a -> b) -> b
-x |> f = f x
-{-# INLINE (|>) #-}
 
 (<$$>) ::
     (Functor f, Functor g) =>
@@ -93,9 +90,8 @@ defaultLayout' searchQuery widget = do
     -- value passed to hamletToRepHtml cannot be a widget, this allows
     -- you to use normal widget features in default-layout.
 
-    let copyright =
-            master |> settings |> appExtra |> extraCopyright
-            |> preEscapedToMarkup
+    let copyright = master & settings & appExtra & extraCopyright
+                    & preEscapedToMarkup
 
     maybeUser <- entityVal <$$> maybeAuth
 
