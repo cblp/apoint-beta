@@ -1,7 +1,8 @@
 exec: ../dist/build/Apoint/Apoint
 args:
     - production
-host: <<HOST-NOT-SET>>
+host: next.cblp.su
+copy-to: next@188.166.119.37:next.tgz
 
 # Use the following to automatically copy your bundle upon creation via `yesod
 # keter`. Uses `scp` internally, so you can set it to a remote destination
