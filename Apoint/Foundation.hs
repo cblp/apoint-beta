@@ -4,11 +4,14 @@ import Prelude
 
 import Control.Applicative ((<$>))
 import Control.Lens ((&))
+import Data.Monoid        ( mconcat )
 import Data.Text as Text (Text, empty)
 import Data.Text.Lazy.Encoding (encodeUtf8)
 import Database.Persist.Sql (SqlPersistT)
 import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
-import Network.Mail.Mime ( Address(Address), Encoding(None), Mail(..), Part(..), emptyMail, renderSendMail )
+import Network.Mail.Mime  ( Address(Address), Encoding(None), Mail(..), Part(..)
+                          , emptyMail, renderSendMail
+                          )
 import qualified Database.Persist
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import Text.Hamlet (hamletFile)
@@ -196,7 +199,8 @@ instance YesodAuthEmail App where
     addUnverified email verkey =
         runDB $ insert $ User email Nothing (Just verkey) False
 
-    sendVerifyEmail email _ verurl =
+    sendVerifyEmail email _ verurl = do
+        $logInfo $ mconcat ["email = ", email, ", verurl = ", verurl]
         liftIO $ renderSendMail (emptyMail $ Address Nothing "noreply")
             { mailTo = [Address Nothing email]
             , mailHeaders =
