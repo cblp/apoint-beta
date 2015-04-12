@@ -2,7 +2,7 @@ Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://next.cblp.su"
-  copyright: © 2013—2014 <a href="http://cblp.su/">Yuriy Syrovetskiy</a>
+  copyright: © 2013—2015 <a href="http://cblp.su/">Yuriy Syrovetskiy</a>
   #analytics: UA-YOURCODE
 
   notesOnAPage: 20
