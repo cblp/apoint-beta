@@ -1,7 +1,7 @@
 Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
-  approot: "http://localhost:3000"
+  approot: "http://next.cblp.su"
   copyright: © 2013—2014 <a href="http://cblp.su/">Yuriy Syrovetskiy</a>
   #analytics: UA-YOURCODE
 
@@ -10,6 +10,7 @@ Default: &defaults
 
 Development:
   <<: *defaults
+  approot: "http://localhost:3000"
 
 Testing:
   <<: *defaults
@@ -18,5 +19,4 @@ Staging:
   <<: *defaults
 
 Production:
-  #approot: "http://www.example.com"
   <<: *defaults
