@@ -1,15 +1,16 @@
-module Settings.StaticFiles where
+module            Settings.StaticFiles where
 
-import Prelude (IO)
-import Yesod.Static
-import qualified Yesod.Static as Static
-import Settings (staticDir)
-import Settings.Development
-import Language.Haskell.TH (Q, Exp, Name)
-import Data.Default (def)
+import            Data.Default        ( def )
+import            Language.Haskell.TH ( Q, Exp, Name )
+import            Prelude
+import            Yesod.Static        -- implicit for $staticFiles
+import qualified  Yesod.Static        as Static
+
+import            Settings            ( staticDir )
+import            Settings.Development
 
 -- | use this to create your static file serving site
-staticSite :: IO Static.Static
+staticSite :: IO Static
 staticSite = if development then Static.staticDevel staticDir
                             else Static.static      staticDir
 
