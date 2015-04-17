@@ -1,12 +1,12 @@
 module Widget.Note where
 
-import Data.Maybe ( isJust )
+import Data.Maybe   ( isJust )
 
-import Form.Note
-import Handler.Link
+import Form.Note    ( noteContentForm )
+import Handler.Link ( noteLinkForm )
 import Import
-import Model.Note
-import Widget
+import Model.Note   ( noteContentHtml, noteContentShort )
+import Widget       ( makePostButton )
 
 
 data NoteslistMode  = SelectedNotes
