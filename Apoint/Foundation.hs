@@ -40,26 +40,18 @@ import            Yesod.Auth                    ( Auth
                                                 , Route ( LoginR, LogoutR )
                                                 )
 import qualified  Yesod.Auth.Email              as YesodAuth
-import qualified  Yesod.Core                    as Yesod
-import            Yesod.Core                    ( Yesod )
-import            Yesod.Core.Handler            ( getMessage
-                                                , getYesod
-                                                , giveUrlRenderer
+import qualified  Yesod                         as Yesod
+import            Yesod                         ( AuthResult ( Authorized )
+                                                , Yesod
                                                 )
-import            Yesod.Core.Types              ( Approot ( ApprootMaster )
-                                                , AuthResult ( Authorized )
-                                                , HandlerT
-                                                , Logger
-                                                , PageContent ( pageBody
+import qualified  Yesod.Core.Types              as Yesod
+import            Yesod.Core.Types              ( PageContent ( pageBody
                                                               , pageHead
                                                               , pageTitle
                                                               )
-                                                , ScriptLoadPosition
-                                                  ( BottomOfBody )
                                                 )
 import            Yesod.Default.Config          ( AppConfig, DefaultEnv
-                                                , appExtra
-                                                , appRoot
+                                                , appExtra, appRoot
                                                 )
 import            Yesod.Default.Util            ( addStaticContentExternal )
 import            Yesod.Form                    ( FormMessage
@@ -122,7 +114,7 @@ data App = App
       -- ^ Database connection pool.
     , httpManager :: HTTP.Manager
     , persistConfig :: Settings.PersistConf
-    , appLogger :: Logger
+    , appLogger :: Yesod.Logger
     }
 
 instance HTTP.HasHttpManager App where
@@ -140,13 +132,13 @@ mkMessage "App" "messages" "en"
 -- explanation for this split.
 Yesod.mkYesodData "App" $(parseRoutesFile "config/routes")
 
-type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
+type Form x = Html -> MForm (Yesod.HandlerT App IO) (FormResult x, Widget)
 
 
 defaultLayout' :: Text -> Widget -> Handler Html
 defaultLayout' searchQuery widget = do
-    master <- getYesod
-    mmsg <- getMessage
+    master <- Yesod.getYesod
+    mmsg <- Yesod.getMessage
 
     -- We break up the default layout into two components:
     -- default-layout is the contents of the body tag, and
@@ -171,13 +163,14 @@ defaultLayout' searchQuery widget = do
             , js_bootstrap_min_js
             ])
         $(widgetFile "default-layout")
-    giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+    Yesod.giveUrlRenderer
+        $(hamletFile "templates/default-layout-wrapper.hamlet")
 
 
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
 instance Yesod App where
-    approot = ApprootMaster $ appRoot . settings
+    approot = Yesod.ApprootMaster $ appRoot . settings
 
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
@@ -218,7 +211,7 @@ instance Yesod App where
             | otherwise   = base64md5 lbs
 
     -- Place Javascript at bottom of the body tag so the rest of the page loads first
-    jsLoader _ = BottomOfBody
+    jsLoader _ = Yesod.BottomOfBody
 
     -- What messages should be logged. The following includes all messages when
     -- in development, and warnings and errors in production.
@@ -357,7 +350,7 @@ instance RenderMessage App FormMessage where
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
-getExtra = fmap (appExtra . settings) getYesod
+getExtra = appExtra . settings <$> Yesod.getYesod
 
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to
@@ -367,5 +360,6 @@ getExtra = fmap (appExtra . settings) getYesod
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
 
 
+-- | TODO Prelude.Extended
 curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
 curry3 f a b c = f (a, b, c)
