@@ -23,9 +23,9 @@
 
 module DevelMain where
 
-import Application (getApplicationDev)
+import Application        ( getApplicationDev )
 
-import Control.Exception (finally)
+import Control.Exception  ( finally )
 import Control.Concurrent
 import Data.IORef
 import Foreign.Store
