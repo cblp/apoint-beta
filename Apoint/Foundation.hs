@@ -21,13 +21,7 @@ import            Database.Persist              ( (=.)
                                                 )
 import            Database.Persist.Sql          ( SqlPersistT )
 import qualified  Network.HTTP.Client.Conduit   as HTTP
-import            Network.Mail.Mime             ( Address ( Address )
-                                                , Encoding ( None )
-                                                , Mail (..)
-                                                , Part (..)
-                                                , emptyMail
-                                                , renderSendMail
-                                                )
+import qualified  Network.Mail.Mime             as Mail
 import            Prelude
 import            Text.Blaze                    ( preEscapedToMarkup )
 import            Text.Blaze.Html               ( Html )
@@ -314,19 +308,18 @@ instance YesodAuthEmail App where
 
     sendVerifyEmail email _ verurl = do
         $logInfo $ mconcat ["email = ", email, ", verurl = ", verurl]
-        liftIO $ renderSendMail (emptyMail $ Address Nothing "noreply")
-            { mailTo = [Address Nothing email]
-            , mailHeaders =
-                [ ("Subject", "Verify your email address")
-                ]
-            , mailParts = [[textPart, htmlPart]]
-            }
+        liftIO $ Mail.renderSendMail
+            (Mail.emptyMail $ Mail.Address Nothing "noreply")
+                { Mail.mailTo = [Mail.Address Nothing email]
+                , Mail.mailHeaders = [("Subject", "Verify your email address")]
+                , Mail.mailParts = [[textPart, htmlPart]]
+                }
         where
-            textPart = Part
-                { partType = "text/plain; charset=utf-8"
-                , partEncoding = None
-                , partFilename = Nothing
-                , partContent = Data.Text.Lazy.Encoding.encodeUtf8
+            textPart = Mail.Part
+                { Mail.partType = "text/plain; charset=utf-8"
+                , Mail.partEncoding = Mail.None
+                , Mail.partFilename = Nothing
+                , Mail.partContent = Data.Text.Lazy.Encoding.encodeUtf8
                     [stext|
                         Please confirm your email address by clicking on the link below.
 
@@ -334,20 +327,20 @@ instance YesodAuthEmail App where
 
                         Thank you
                     |]
-                , partHeaders = []
+                , Mail.partHeaders = []
                 }
-            htmlPart = Part
-                { partType = "text/html; charset=utf-8"
-                , partEncoding = None
-                , partFilename = Nothing
-                , partContent = renderHtml
+            htmlPart = Mail.Part
+                { Mail.partType = "text/html; charset=utf-8"
+                , Mail.partEncoding = Mail.None
+                , Mail.partFilename = Nothing
+                , Mail.partContent = renderHtml
                     [shamlet|
                         <p>Please confirm your email address by clicking on the link below.
                         <p>
                             <a href=#{verurl}>#{verurl}
                         <p>Thank you
                     |]
-                , partHeaders = []
+                , Mail.partHeaders = []
                 }
 
     getVerifyKey uid = runDB $ do
