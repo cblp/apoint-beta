@@ -6,7 +6,15 @@ import            Data.Monoid                   ( mconcat )
 import qualified  Data.Text                     as Text
 import            Data.Text                     ( Text )
 import            Data.Text.Lazy.Encoding       ( encodeUtf8 )
-import qualified  Database.Persist
+import qualified  Database.Persist              as Persist
+import            Database.Persist              ( (=.)
+                                                , Entity (..)
+                                                , entityVal
+                                                , get
+                                                , getBy
+                                                , insert
+                                                , update
+                                                )
 import            Database.Persist.Sql          ( SqlPersistT )
 import            Network.HTTP.Client.Conduit   ( Manager
                                                 , HasHttpManager
@@ -24,20 +32,111 @@ import            Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
 import            Text.Hamlet                   ( hamletFile )
 import            Text.Jasmine                  ( minifym )
 import            Text.Shakespeare.Text         ( stext )
-import            Yesod
-import            Yesod.Auth
-import            Yesod.Auth.Email
+import            Yesod                         ( Approot ( ApprootMaster )
+                                                , AuthResult ( Authorized )
+                                                , FormMessage
+                                                , FormResult
+                                                , HandlerT
+                                                , Html
+                                                , LogLevel
+                                                  ( LevelError, LevelWarn )
+                                                , MForm
+                                                , PathPiece (..)
+                                                , RenderMessage
+                                                  ( renderMessage )
+                                                , RenderRoute ( renderRoute )
+                                                , ScriptLoadPosition
+                                                  ( BottomOfBody )
+                                                , Yesod ( addStaticContent
+                                                        , approot
+                                                        , authRoute
+                                                        , defaultLayout
+                                                        , isAuthorized
+                                                        , jsLoader
+                                                        , makeLogger
+                                                        , makeSessionBackend
+                                                        , shouldLog
+                                                        , urlRenderOverride
+                                                        )
+                                                , YesodPersist
+                                                , YesodPersistBackend
+                                                , YesodPersistRunner
+                                                  ( getDBRunner )
+                                                , defaultClientSessionBackend
+                                                , defaultFormMessage
+                                                , defaultGetDBRunner
+                                                , defaultRunDB
+                                                , getYesod
+                                                , getMessage
+                                                , giveUrlRenderer
+                                                , joinPath
+                                                , liftIO
+                                                , logInfo
+                                                , mkMessage
+                                                , mkYesodData
+                                                , pageBody
+                                                , pageHead
+                                                , pageTitle
+                                                , parseRoutesFile
+                                                , preEscapedToMarkup
+                                                , runDB
+                                                , shamlet
+                                                , widgetToPageContent
+                                                )
+import            Yesod.Auth                    ( Auth
+                                                , AuthId
+                                                , Route ( LoginR, LogoutR )
+                                                , YesodAuth ( authHttpManager
+                                                            , authPlugins
+                                                            , getAuthId
+                                                            , loginDest
+                                                            , logoutDest
+                                                            )
+                                                , credsIdent
+                                                , maybeAuth
+                                                )
+import            Yesod.Auth.Email              ( AuthEmailId
+                                                , EmailCreds (..)
+                                                , YesodAuthEmail
+                                                  ( addUnverified
+                                                  , afterPasswordRoute
+                                                  , getEmail
+                                                  , getEmailCreds
+                                                  , getPassword, setPassword
+                                                  , getVerifyKey, setVerifyKey
+                                                  , sendVerifyEmail
+                                                  , verifyAccount
+                                                  )
+                                                , authEmail
+                                                )
 import            Yesod.Core.Types              ( Logger )
-import            Yesod.Default.Config
+import            Yesod.Default.Config          ( AppConfig, DefaultEnv
+                                                , appExtra
+                                                , appRoot
+                                                )
 import            Yesod.Default.Util            ( addStaticContentExternal )
-import            Yesod.Form.Jquery
-import            Yesod.Static
+import            Yesod.Form.Jquery             ( YesodJquery )
+import            Yesod.Static                  ( Route (StaticRoute)
+                                                , Static
+                                                , base64md5
+                                                )
 
 import            Model
-import qualified  Settings
+                  -- ^ TODO explicit import UniqueUser
+import qualified  Settings                      ( PersistConf
+                                                , staticDir, staticRoot
+                                                )
 import            Settings                      ( Extra (..), widgetFile )
 import            Settings.Development          ( development )
-import            Settings.StaticFiles
+import            Settings.StaticFiles          ( combineScripts
+                                                , combineStylesheets
+                                                , css_apoint_css
+                                                , css_bootstrap_css
+                                                , css_normalize_css
+                                                , js_bootstrap_min_js
+                                                , js_jquery_min_js
+                                                , js_jquery_ui_min_js
+                                                )
 
 
 (<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
@@ -63,7 +162,8 @@ instance PathPiece Rel where
 data App = App
     { settings :: AppConfig DefaultEnv Extra
     , getStatic :: Static -- ^ Settings for static file serving.
-    , connPool :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
+    , connPool :: Persist.PersistConfigPool Settings.PersistConf
+      -- ^ Database connection pool.
     , httpManager :: Manager
     , persistConfig :: Settings.PersistConf
     , appLogger :: Logger
