@@ -1,6 +1,6 @@
 module Widget where
 
-import Form
+import Form ( emptyForm )
 import Import
 
 
