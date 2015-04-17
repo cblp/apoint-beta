@@ -1,11 +1,21 @@
 module            Model where
 
-import            Data.Text      ( Text )
-import qualified  Data.Text      as Text
-import            Data.Typeable  ( Typeable )
-import            Database.Persist.Quasi
-import            Prelude        ( ($), Bool, Either(Left), Show )
-import            Yesod
+import qualified  Data.Text               as Text
+import            Data.Text               ( Text )
+import            Data.Typeable           ( Typeable )
+import            Database.Persist        ( PersistFilter
+                                            ( BackendSpecificFilter )
+                                          , EntityField
+                                          , Filter (Filter)
+                                          )
+import            Database.Persist.Quasi  ( lowerCaseSettings )
+import            Database.Persist.TH     ( mkMigrate
+                                          , mkPersist
+                                          , persistFileWith
+                                          , share
+                                          , sqlOnlySettings
+                                          )
+import            Prelude                 ( ($), Bool, Either(Left), Show )
 
 
 -- You can define all of your database entities in the entities file.
