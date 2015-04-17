@@ -1,10 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module            Application                           ( makeApplication
                                                         , getApplicationDev
                                                         , makeFoundation
                                                         ) where
 
 import            Control.Monad.Logger                  ( runLoggingT )
+import            Data.Default                          ( def )
 import qualified  Database.Persist                      as Persist
 import            Database.Persist.Sql                  ( runMigration )
 import            Network.HTTP.Client.Conduit           ( newManager )
