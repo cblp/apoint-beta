@@ -19,8 +19,8 @@ import            System.Log.FastLogger           ( newStdoutLoggerSet
                                                   , defaultBufSize
                                                   )
 import            Yesod.Auth                      ( getAuth )
-import            Yesod.Core                      ( defaultMiddlewaresNoLogging
-                                                  , messageLoggerSource
+import            Yesod.Core                      ( messageLoggerSource )
+import            Yesod.Core.Dispatch             ( defaultMiddlewaresNoLogging
                                                   , mkYesodDispatch
                                                   , toWaiAppPlain
                                                   )
