@@ -2,6 +2,9 @@ module Foundation where
 
 import            Control.Applicative           ( (<$>) )
 import            Control.Lens                  ( (&) )
+import            Control.Monad.Logger          ( LogLevel
+                                                  ( LevelError, LevelWarn )
+                                                )
 import            Data.Monoid                   ( mconcat )
 import qualified  Data.Text                     as Text
 import            Data.Text                     ( Text )
@@ -28,24 +31,16 @@ import            Network.Mail.Mime             ( Address ( Address )
                                                 , renderSendMail
                                                 )
 import            Prelude
+import            Text.Blaze.Html               ( Html )
 import            Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
 import            Text.Hamlet                   ( hamletFile )
 import            Text.Jasmine                  ( minifym )
 import            Text.Shakespeare.Text         ( stext )
-import            Yesod                         ( Approot ( ApprootMaster )
-                                                , AuthResult ( Authorized )
-                                                , FormMessage
-                                                , FormResult
-                                                , HandlerT
-                                                , Html
-                                                , LogLevel
-                                                  ( LevelError, LevelWarn )
-                                                , MForm
-                                                , PathPiece (..)
-                                                , RenderMessage
+import            Text.Shakespeare.I18N         ( RenderMessage
                                                   ( renderMessage )
-                                                , RenderRoute ( renderRoute )
-                                                , ScriptLoadPosition
+                                                )
+import            Web.PathPieces                ( PathPiece (..) )
+import            Yesod                         ( ScriptLoadPosition
                                                   ( BottomOfBody )
                                                 , Yesod ( addStaticContent
                                                         , approot
@@ -109,13 +104,22 @@ import            Yesod.Auth.Email              ( AuthEmailId
                                                   )
                                                 , authEmail
                                                 )
-import            Yesod.Core.Types              ( Logger )
+import            Yesod.Core.Types              ( Approot ( ApprootMaster )
+                                                , AuthResult ( Authorized )
+                                                , HandlerT
+                                                , Logger
+                                                )
 import            Yesod.Default.Config          ( AppConfig, DefaultEnv
                                                 , appExtra
                                                 , appRoot
                                                 )
 import            Yesod.Default.Util            ( addStaticContentExternal )
+import            Yesod.Form                    ( FormMessage
+                                                , FormResult
+                                                , MForm
+                                                )
 import            Yesod.Form.Jquery             ( YesodJquery )
+import            Yesod.Routes.Class            ( RenderRoute ( renderRoute ) )
 import            Yesod.Static                  ( Route (StaticRoute)
                                                 , Static
                                                 , base64md5
