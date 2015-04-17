@@ -2,8 +2,9 @@ module Foundation where
 
 import            Control.Applicative           ( (<$>) )
 import            Control.Lens                  ( (&) )
-import            Control.Monad.Logger          ( LogLevel
-                                                  ( LevelError, LevelWarn )
+import            Control.Monad.IO.Class        ( liftIO )
+import            Control.Monad.Logger          ( LogLevel ( LevelWarn )
+                                                , logInfo
                                                 )
 import            Data.Monoid                   ( mconcat )
 import qualified  Data.Text                     as Text
@@ -31,36 +32,18 @@ import            Network.Mail.Mime             ( Address ( Address )
                                                 , renderSendMail
                                                 )
 import            Prelude
+import            Text.Blaze                    ( preEscapedToMarkup )
 import            Text.Blaze.Html               ( Html )
 import            Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
-import            Text.Hamlet                   ( hamletFile )
+import            Text.Hamlet                   ( hamletFile
+                                                , shamlet
+                                                )
 import            Text.Jasmine                  ( minifym )
 import            Text.Shakespeare.Text         ( stext )
-import            Text.Shakespeare.I18N         ( RenderMessage
-                                                  ( renderMessage )
+import            Text.Shakespeare.I18N         ( RenderMessage (..)
+                                                , mkMessage
                                                 )
 import            Web.PathPieces                ( PathPiece (..) )
-import            Yesod                         ( defaultClientSessionBackend
-                                                , defaultFormMessage
-                                                , defaultGetDBRunner
-                                                , defaultRunDB
-                                                , getYesod
-                                                , getMessage
-                                                , giveUrlRenderer
-                                                , joinPath
-                                                , liftIO
-                                                , logInfo
-                                                , mkMessage
-                                                , mkYesodData
-                                                , pageBody
-                                                , pageHead
-                                                , pageTitle
-                                                , parseRoutesFile
-                                                , preEscapedToMarkup
-                                                , runDB
-                                                , shamlet
-                                                , widgetToPageContent
-                                                )
 import            Yesod.Auth                    ( Auth
                                                 , AuthId
                                                 , Route ( LoginR, LogoutR )
@@ -92,17 +75,29 @@ import            Yesod.Core                    ( Yesod ( addStaticContent
                                                         , authRoute
                                                         , defaultLayout
                                                         , isAuthorized
+                                                        , joinPath
                                                         , jsLoader
                                                         , makeLogger
                                                         , makeSessionBackend
                                                         , shouldLog
                                                         , urlRenderOverride
                                                         )
+                                                , defaultClientSessionBackend
+                                                , mkYesodData
+                                                , widgetToPageContent
+                                                )
+import            Yesod.Core.Handler            ( getMessage
+                                                , getYesod
+                                                , giveUrlRenderer
                                                 )
 import            Yesod.Core.Types              ( Approot ( ApprootMaster )
                                                 , AuthResult ( Authorized )
                                                 , HandlerT
                                                 , Logger
+                                                , PageContent ( pageBody
+                                                              , pageHead
+                                                              , pageTitle
+                                                              )
                                                 , ScriptLoadPosition
                                                   ( BottomOfBody )
                                                 )
@@ -114,13 +109,17 @@ import            Yesod.Default.Util            ( addStaticContentExternal )
 import            Yesod.Form                    ( FormMessage
                                                 , FormResult
                                                 , MForm
+                                                , defaultFormMessage
                                                 )
 import            Yesod.Form.Jquery             ( YesodJquery )
-import            Yesod.Persist                 ( YesodPersist
+import            Yesod.Persist                 ( YesodPersist ( runDB )
                                                 , YesodPersistBackend
                                                 , YesodPersistRunner
                                                   ( getDBRunner )
+                                                , defaultGetDBRunner
+                                                , defaultRunDB
                                                 )
+import            Yesod.Routes.Parse            ( parseRoutesFile )
 import            Yesod.Routes.Class            ( RenderRoute ( renderRoute ) )
 import            Yesod.Static                  ( Route (StaticRoute)
                                                 , Static
@@ -270,8 +269,7 @@ instance Yesod App where
 
     -- What messages should be logged. The following includes all messages when
     -- in development, and warnings and errors in production.
-    shouldLog _ _source level =
-        development || level == LevelWarn || level == LevelError
+    shouldLog _ _source level = development || level >= LevelWarn
 
     makeLogger = return . appLogger
 
