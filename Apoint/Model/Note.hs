@@ -1,15 +1,15 @@
 module            Model.Note where
 
-import            Control.Monad  ( forM)
+import            Control.Monad  ( forM )
 import qualified  Data.Text      as Text
-import            Data.Text.Lazy ( fromStrict)
-import            Text.Markdown  ( markdown)
+import            Data.Text.Lazy ( fromStrict )
+import            Text.Markdown  ( markdown )
 
 import            Import
 
 
 noteContentHtml :: Note -> Html
-noteContentHtml = noteContent >>> fromStrict >>> markdown def
+noteContentHtml = markdown def . fromStrict . noteContent
 
 
 noteContentShort :: Note -> Text

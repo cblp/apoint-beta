@@ -2,7 +2,6 @@ module Import
     ( module Import
     ) where
 
-import Control.Arrow        as Import ((>>>))
 import Control.Monad        as Import (when)
 import Data.Default         as Import (def)
 import Data.Monoid          as Import (Monoid (mappend, mempty, mconcat), (<>))
