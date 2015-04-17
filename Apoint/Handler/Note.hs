@@ -25,6 +25,7 @@ import Form                 ( emptyForm, runFormPostChecked )
 import Form.Note            ( noteContentForm )
 import Import
 import Model.Note           ( noteContentShort, noteSiblings )
+import Settings             ( extraNotesOnAPage )
 import Widget.Note          ( NoteslistMode ( NotesLinkedFrom
                                             , NotesLinkedFromNew
                                             , NotesLinkedTo

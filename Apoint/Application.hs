@@ -37,7 +37,9 @@ import            Yesod.Default.Handlers          ( getFaviconR, getRobotsR )
 import            Yesod.Default.Main              ( LogFunc, defaultDevelApp )
 
 import            Import
-import            Settings                        ( PersistConf )
+import            Settings                        ( Extra, PersistConf
+                                                  , parseExtra
+                                                  )
 import            Settings.Development            ( development )
 import qualified  Settings.StaticFiles            as StaticFiles
 
