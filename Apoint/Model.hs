@@ -15,7 +15,7 @@ import            Database.Persist.TH     ( mkMigrate
                                           , share
                                           , sqlOnlySettings
                                           )
-import            Prelude                 ( ($), Bool, Either(Left), Show )
+import            Prelude
 
 
 -- You can define all of your database entities in the entities file.
