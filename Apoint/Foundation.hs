@@ -1,41 +1,46 @@
 module Foundation where
 
-import Prelude
+import            Control.Applicative           ( (<$>) )
+import            Control.Lens                  ( (&) )
+import            Data.Monoid                   ( mconcat )
+import qualified  Data.Text                     as Text
+import            Data.Text                     ( Text )
+import            Data.Text.Lazy.Encoding       ( encodeUtf8 )
+import qualified  Database.Persist
+import            Database.Persist.Sql          ( SqlPersistT )
+import            Network.HTTP.Client.Conduit   ( Manager
+                                                , HasHttpManager
+                                                  ( getHttpManager )
+                                                )
+import            Network.Mail.Mime             ( Address ( Address )
+                                                , Encoding ( None )
+                                                , Mail (..)
+                                                , Part (..)
+                                                , emptyMail
+                                                , renderSendMail
+                                                )
+import            Prelude
+import            Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
+import            Text.Hamlet                   ( hamletFile )
+import            Text.Jasmine                  ( minifym )
+import            Text.Shakespeare.Text         ( stext )
+import            Yesod
+import            Yesod.Auth
+import            Yesod.Auth.Email
+import            Yesod.Core.Types              ( Logger )
+import            Yesod.Default.Config
+import            Yesod.Default.Util            ( addStaticContentExternal )
+import            Yesod.Form.Jquery
+import            Yesod.Static
 
-import Control.Applicative ((<$>))
-import Control.Lens ((&))
-import Data.Monoid        ( mconcat )
-import Data.Text as Text (Text, empty)
-import Data.Text.Lazy.Encoding (encodeUtf8)
-import Database.Persist.Sql (SqlPersistT)
-import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
-import Network.Mail.Mime  ( Address(Address), Encoding(None), Mail(..), Part(..)
-                          , emptyMail, renderSendMail
-                          )
-import qualified Database.Persist
-import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
-import Text.Hamlet (hamletFile)
-import Text.Jasmine (minifym)
-import Text.Shakespeare.Text (stext)
-import Yesod
-import Yesod.Auth
-import Yesod.Auth.Email
-import Yesod.Core.Types (Logger)
-import Yesod.Default.Config
-import Yesod.Default.Util (addStaticContentExternal)
-import Yesod.Form.Jquery
-import Yesod.Static
-
-import Model
-import qualified Settings
-import Settings (widgetFile, Extra (..))
-import Settings.Development (development)
-import Settings.StaticFiles
+import            Model
+import qualified  Settings
+import            Settings                      ( Extra (..), widgetFile )
+import            Settings.Development          ( development )
+import            Settings.StaticFiles
 
 
-(<$$>) ::
-    (Functor f, Functor g) =>
-    (a -> b) -> f (g a) -> f (g b)
+(<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
 (<$$>) = fmap . fmap
 {-# INLINE (<$$>) #-}
 

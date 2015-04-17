@@ -1,14 +1,13 @@
 module Handler.Note where
 
-import Local.Yesod.Auth (requireAuthId')
+import Local.Yesod.Auth ( requireAuthId' )
 
 import Access
 import Form
 import Form.Note
+import Import
 import Model.Note
 import Widget.Note
-
-import Import
 
 
 getNoteR :: NoteId -> Handler Html

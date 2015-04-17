@@ -5,18 +5,19 @@
 -- declared in the Foundation.hs file.
 module Settings where
 
-import Prelude
-import Text.Shakespeare.Text (st)
+import Control.Applicative
+import Data.Default             ( def )
+import Data.Text                ( Text )
+import Data.Yaml
+import Database.Persist.Sqlite  ( SqliteConf )
 import Language.Haskell.TH.Syntax
-import Database.Persist.Sqlite (SqliteConf)
+import Prelude
+import Text.Hamlet
+import Text.Shakespeare.Text    ( st )
 import Yesod.Default.Config
 import Yesod.Default.Util
-import Data.Text (Text)
-import Data.Yaml
-import Control.Applicative
+
 import Settings.Development
-import Data.Default (def)
-import Text.Hamlet
 
 -- | Which Persistent backend this site is using.
 type PersistConf = SqliteConf

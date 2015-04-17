@@ -1,7 +1,7 @@
 module Local.Data.Text where
 
-import Control.Arrow ((>>>))
-import Data.Text as Text
+import Control.Arrow  ( (>>>) )
+import Data.Text      as Text
 import Prelude
 
 

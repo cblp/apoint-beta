@@ -1,11 +1,14 @@
 {-# LANGUAGE PackageImports #-}
 
-import "Apoint" Application (getApplicationDev)
+import          Control.Concurrent        ( forkIO, threadDelay )
+import          Network.Wai.Handler.Warp  ( defaultSettings
+                                          , runSettings
+                                          , setPort
+                                          )
+import          System.Directory          ( doesFileExist, removeFile )
+import          System.Exit               ( exitSuccess )
 
-import Control.Concurrent (forkIO, threadDelay)
-import Network.Wai.Handler.Warp (runSettings, defaultSettings, setPort)
-import System.Directory (doesFileExist, removeFile)
-import System.Exit (exitSuccess)
+import "Apoint" Application               ( getApplicationDev )
 
 main :: IO ()
 main = do

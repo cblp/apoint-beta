@@ -1,11 +1,11 @@
-module Model where
+module            Model where
 
-import Data.Text (Text)
-import Data.Text as Text (concat)
-import Data.Typeable (Typeable)
-import Database.Persist.Quasi
-import Prelude (Bool, Either(Left), Show, ($))
-import Yesod
+import            Data.Text      ( Text )
+import qualified  Data.Text      as Text
+import            Data.Typeable  ( Typeable )
+import            Database.Persist.Quasi
+import            Prelude        ( ($), Bool, Either(Left), Show )
+import            Yesod
 
 
 -- You can define all of your database entities in the entities file.

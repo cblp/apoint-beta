@@ -1,34 +1,41 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Application
-    ( makeApplication
-    , getApplicationDev
-    , makeFoundation
-    ) where
+module            Application                           ( makeApplication
+                                                        , getApplicationDev
+                                                        , makeFoundation
+                                                        ) where
 
-import Import
-import Settings
-import Yesod.Auth
-import Yesod.Default.Config
-import Yesod.Default.Main
-import Yesod.Default.Handlers
-import Network.Wai.Middleware.RequestLogger
-    ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
-    )
-import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
-import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
-import Network.HTTP.Client.Conduit (newManager)
-import Control.Monad.Logger (runLoggingT)
-import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
-import Network.Wai.Logger (clockDateCacher)
-import Yesod.Core.Types (loggerSet, Logger (Logger))
+import            Control.Monad.Logger                  ( runLoggingT )
+import qualified  Database.Persist
+import            Database.Persist.Sql                  ( runMigration )
+import            Network.HTTP.Client.Conduit           ( newManager )
+import            Network.Wai.Logger                    ( clockDateCacher )
+import qualified  Network.Wai.Middleware.RequestLogger  as RequestLogger
+import            Network.Wai.Middleware.RequestLogger  ( IPAddrSource (..)
+                                                        , OutputFormat (..)
+                                                        , destination
+                                                        , mkRequestLogger
+                                                        , outputFormat
+                                                        )
+import            System.Log.FastLogger                 ( newStdoutLoggerSet
+                                                        , defaultBufSize
+                                                        )
+import            Yesod.Auth
+import            Yesod.Core.Types                      ( loggerSet
+                                                        , Logger (Logger)
+                                                        )
+import            Yesod.Default.Config
+import            Yesod.Default.Handlers
+import            Yesod.Default.Main
+
+import            Import
+import            Settings
 
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
-import Handler.Home
-import Handler.Link
-import Handler.Note
-import Handler.Search
+import            Handler.Home
+import            Handler.Link
+import            Handler.Note
+import            Handler.Search
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
