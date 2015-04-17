@@ -19,8 +19,8 @@ import            Yesod.Persist             ( (==.)
                                             )
 
 import            Form                      ( runFormPostChecked )
+import            Foundation
 import            Model
-import            Import
 
 
 noteLinkForm :: Html -> MForm Handler (FormResult Text, Widget)

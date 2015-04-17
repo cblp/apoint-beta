@@ -8,7 +8,7 @@ import Yesod.Form       ( FormResult, MForm, Textarea (..)
                         , areq, renderDivs, textareaField
                         )
 
-import Import
+import Foundation       ( Handler, Widget )
 
 
 noteContentForm ::

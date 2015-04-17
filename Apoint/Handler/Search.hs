@@ -17,7 +17,7 @@ import Yesod.Persist        ( (==.)
                             , runDB, selectList
                             )
 
-import Import
+import Foundation           ( Handler, defaultLayout', getExtra )
 import Model
 import Model.Note           ( noteContentShort )
 import Settings             ( extraNoteSuggestSize, extraNotesOnAPage )

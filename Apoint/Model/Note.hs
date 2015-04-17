@@ -13,7 +13,7 @@ import            Yesod.Persist     ( Entity (..), Filter
                                     , entityVal, get, runDB, selectList
                                     )
 
-import            Import
+import            Foundation        ( Handler )
 import            Model             ( Note (..), NoteId
                                     , Notelink
                                     )

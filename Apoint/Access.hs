@@ -10,7 +10,7 @@ import Yesod.Auth.Extended  ( requireAuthId' )
 import Yesod.Core           ( permissionDenied )
 import Yesod.Persist        ( get404, runDB )
 
-import Import
+import Foundation           ( Handler )
 import Model                ( Note (..), NoteId
                             , UserId
                             )

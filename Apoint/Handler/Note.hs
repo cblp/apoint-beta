@@ -23,7 +23,7 @@ import Access               ( AccessMode (Delete, Read, Update)
                             )
 import Form                 ( emptyForm, runFormPostChecked )
 import Form.Note            ( noteContentForm )
-import Import
+import Foundation
 import Model
 import Model.Note           ( noteContentShort, noteSiblings )
 import Settings             ( extraNotesOnAPage )

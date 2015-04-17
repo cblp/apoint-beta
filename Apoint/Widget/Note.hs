@@ -12,8 +12,8 @@ import Yesod.Persist      ( Entity (..) )
 import Yesod.Routes.Class ( Route )
 
 import Form.Note          ( noteContentForm )
+import Foundation
 import Handler.Link       ( noteLinkForm )
-import Import
 import Model              ( Note (..), NoteId )
 import Model.Note         ( noteContentHtml, noteContentShort )
 import Settings           ( widgetFile )

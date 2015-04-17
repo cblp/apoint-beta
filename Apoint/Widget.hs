@@ -7,7 +7,7 @@ import Yesod.Form         ( generateFormPost )
 import Yesod.Routes.Class ( Route )
 
 import Form               ( emptyForm )
-import Import
+import Foundation         ( App, Handler, Widget )
 
 
 makePostButton :: Route App -> Html -> Handler Widget

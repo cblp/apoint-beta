@@ -3,7 +3,7 @@ module Handler.Home where
 import Text.Blaze.Html  ( Html )
 import Yesod.Core       ( defaultLayout )
 
-import Import
+import Foundation       ( Handler )
 import Settings         ( widgetFile )
 
 

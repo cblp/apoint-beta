@@ -36,7 +36,7 @@ import            Yesod.Default.Config            ( AppConfig
 import            Yesod.Default.Handlers          ( getFaviconR, getRobotsR )
 import            Yesod.Default.Main              ( LogFunc, defaultDevelApp )
 
-import            Import
+import            Foundation
 import            Model                           ( migrateAll )
 import            Settings                        ( Extra, PersistConf
                                                   , parseExtra

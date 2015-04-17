@@ -14,7 +14,7 @@ import Yesod.Form             ( FormMessage
                               , renderDivs, runFormPost
                               )
 
-import Import
+import Foundation             ( Handler, Widget )
 
 
 emptyForm :: Html -> MForm Handler (FormResult (), Widget)
