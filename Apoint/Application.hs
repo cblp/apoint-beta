@@ -24,24 +24,17 @@ import            Yesod.Core.Dispatch             ( defaultMiddlewaresNoLogging
                                                   , mkYesodDispatch
                                                   , toWaiAppPlain
                                                   )
-import            Yesod.Core.Types                ( loggerSet
-                                                  , Logger (Logger)
-                                                  )
+import            Yesod.Core.Types                ( Logger (Logger), loggerSet )
 import            Yesod.Default.Config            ( AppConfig
-                                                  , DefaultEnv
-                                                    ( Development )
+                                                  , DefaultEnv ( Development )
                                                   , appEnv
                                                   , configSettings
                                                   , csParseExtra
                                                   , loadConfig
                                                   , withYamlEnvironment
                                                   )
-import            Yesod.Default.Handlers          ( getFaviconR
-                                                  , getRobotsR
-                                                  )
-import            Yesod.Default.Main              ( LogFunc
-                                                  , defaultDevelApp
-                                                  )
+import            Yesod.Default.Handlers          ( getFaviconR, getRobotsR )
+import            Yesod.Default.Main              ( LogFunc, defaultDevelApp )
 
 import            Import
 import            Settings                        ( PersistConf )
