@@ -39,20 +39,7 @@ import qualified  Yesod.Auth                    as YesodAuth
 import            Yesod.Auth                    ( Auth
                                                 , Route ( LoginR, LogoutR )
                                                 )
-import            Yesod.Auth.Email              ( AuthEmailId
-                                                , EmailCreds (..)
-                                                , YesodAuthEmail
-                                                  ( addUnverified
-                                                  , afterPasswordRoute
-                                                  , getEmail
-                                                  , getEmailCreds
-                                                  , getPassword, setPassword
-                                                  , getVerifyKey, setVerifyKey
-                                                  , sendVerifyEmail
-                                                  , verifyAccount
-                                                  )
-                                                , authEmail
-                                                )
+import qualified  Yesod.Auth.Email              as YesodAuth
 import            Yesod.Core                    ( Yesod ( addStaticContent
                                                         , approot
                                                         , authRoute
@@ -279,13 +266,13 @@ instance YesodAuth.YesodAuth App where
                     }
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authEmail]
+    authPlugins _ = [YesodAuth.authEmail]
 
     authHttpManager = httpManager
 
 
 -- Here's all of the email-specific code
-instance YesodAuthEmail App where
+instance YesodAuth.YesodAuthEmail App where
     type AuthEmailId App = UserId
 
     afterPasswordRoute _ = HomeR
@@ -357,12 +344,12 @@ instance YesodAuthEmail App where
         case memail of
             Nothing -> return Nothing
             Just (Entity userId user) ->
-                return $ Just EmailCreds
-                    { emailCredsId = userId
-                    , emailCredsAuthId = Just userId
-                    , emailCredsStatus = userVerified user
-                    , emailCredsVerkey = userVerkey user
-                    , emailCredsEmail = address
+                return $ Just YesodAuth.EmailCreds
+                    { YesodAuth.emailCredsId      = userId
+                    , YesodAuth.emailCredsAuthId  = Just userId
+                    , YesodAuth.emailCredsStatus  = userVerified user
+                    , YesodAuth.emailCredsVerkey  = userVerkey user
+                    , YesodAuth.emailCredsEmail   = address
                     }
 
     getEmail uid = runDB $ do
