@@ -2,6 +2,7 @@ module Handler.Link where
 
 import            Control.Lens      ( (&) )
 import            Data.Char         ( isDigit )
+import            Data.Monoid       ( (<>) )
 import qualified  Data.Text         as Text
 import            Yesod.Form.Jquery ( jqueryAutocompleteField )
 

@@ -1,5 +1,6 @@
 module Widget.Note where
 
+import Data.Monoid  ( (<>) )
 import Data.Maybe   ( isJust )
 
 import Form.Note    ( noteContentForm )
