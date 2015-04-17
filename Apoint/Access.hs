@@ -4,7 +4,8 @@
 
 module Access where
 
-import Yesod.Auth.Extended ( requireAuthId' )
+import Control.Monad        ( when )
+import Yesod.Auth.Extended  ( requireAuthId' )
 
 import Import
 
