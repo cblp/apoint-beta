@@ -1,15 +1,21 @@
 module Widget.Note where
 
-import Data.Monoid  ( (<>) )
-import Data.Maybe   ( isJust )
-import Data.Text    ( Text )
+import Data.Aeson         ( Value, toJSON )
+import Data.Monoid        ( (<>) )
+import Data.Maybe         ( isJust )
+import Data.Text          ( Text )
 import Prelude
+import Text.Hamlet        ( shamlet )
+import Yesod.Core         ( newIdent )
+import Yesod.Form         ( generateFormPost )
+import Yesod.Persist      ( Entity (..) )
+import Yesod.Routes.Class ( Route )
 
-import Form.Note    ( noteContentForm )
-import Handler.Link ( noteLinkForm )
+import Form.Note          ( noteContentForm )
+import Handler.Link       ( noteLinkForm )
 import Import
-import Model.Note   ( noteContentHtml, noteContentShort )
-import Widget       ( makePostButton )
+import Model.Note         ( noteContentHtml, noteContentShort )
+import Widget             ( makePostButton )
 
 
 data NoteslistMode  = SelectedNotes

@@ -1,14 +1,24 @@
-module Handler.Link where
+module            Handler.Link where
 
-import            Control.Lens      ( (&) )
-import            Data.Char         ( isDigit )
-import            Data.Monoid       ( (<>) )
-import qualified  Data.Text         as Text
-import            Data.Text         ( Text )
+import            Control.Lens              ( (&) ) -- TODO to Prelude.Extended
+import            Control.Monad.Trans.Class ( lift ) -- TODO to Prelude.Extended
+import            Data.Char                 ( isDigit )
+import            Data.Monoid               ( (<>) ) -- TODO to Prelude.Extended
+import qualified  Data.Text                 as Text
+import            Data.Text                 ( Text ) -- TODO to Prelude.Extended
 import            Prelude
-import            Yesod.Form.Jquery ( jqueryAutocompleteField )
+import            Text.Blaze.Html           ( Html )
+import            Web.PathPieces            ( PathPiece (..) )
+import            Yesod.Core                ( invalidArgs, redirect )
+import            Yesod.Form                ( FormResult, MForm
+                                            , areq, renderDivsNoLabels
+                                            )
+import            Yesod.Form.Jquery         ( jqueryAutocompleteField )
+import            Yesod.Persist             ( (==.)
+                                            , count, insertUnique, runDB
+                                            )
 
-import            Form              ( runFormPostChecked )
+import            Form                      ( runFormPostChecked )
 import            Import
 
 

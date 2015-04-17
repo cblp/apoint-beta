@@ -1,13 +1,17 @@
 module            Model.Note where
 
-import            Control.Monad   ( forM )
-import            Data.Default    ( def )
-import            Data.Monoid     ( (<>) )
-import qualified  Data.Text       as Text
-import            Data.Text       ( Text )
-import            Data.Text.Lazy  ( fromStrict )
+import            Control.Monad     ( forM )
+import            Data.Default      ( def )
+import            Data.Monoid       ( (<>) )
+import qualified  Data.Text         as Text
+import            Data.Text         ( Text )
+import            Data.Text.Lazy    ( fromStrict )
 import            Prelude
-import            Text.Markdown   ( markdown )
+import            Text.Blaze.Html   ( Html )
+import            Text.Markdown     ( markdown )
+import            Yesod.Persist     ( Entity (..), Filter
+                                    , entityVal, get, runDB, selectList
+                                    )
 
 import            Import
 

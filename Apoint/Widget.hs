@@ -1,8 +1,12 @@
 module Widget where
 
 import Prelude
+import Text.Blaze.Html    ( Html )
+import Yesod.Core         ( newIdent, whamlet )
+import Yesod.Form         ( generateFormPost )
+import Yesod.Routes.Class ( Route )
 
-import Form ( emptyForm )
+import Form               ( emptyForm )
 import Import
 
 

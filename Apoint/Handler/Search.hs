@@ -1,12 +1,21 @@
 module Handler.Search where
 
+import Data.Aeson           ( Value )
 import Data.Aeson.TH        ( defaultOptions, deriveToJSON, fieldLabelModifier )
 import Data.Functor         ( (<$>) )
 import Data.Maybe           ( fromMaybe )
 import Data.Monoid          ( (<>) )
 import Data.Text            ( Text )
 import Prelude
+import Web.PathPieces       ( PathPiece (..) )
 import Yesod.Auth.Extended  ( requireAuthId' )
+import Yesod.Core           ( TypedContent
+                            , lookupGetParam, provideRep, returnJson, selectRep
+                            )
+import Yesod.Persist        ( (==.)
+                            , Entity (..), SelectOpt (LimitTo)
+                            , runDB, selectList
+                            )
 
 import Import
 import Model.Note           ( noteContentShort )

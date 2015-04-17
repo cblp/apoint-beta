@@ -2,8 +2,6 @@ module Import
     ( module Import
     ) where
 
-import Yesod                as Import
-
 import Foundation           as Import
 import Model                as Import
 import Settings             as Import
