@@ -35,17 +35,9 @@ import            Text.Shakespeare.I18N         ( RenderMessage (..)
                                                 , mkMessage
                                                 )
 import            Web.PathPieces                ( PathPiece (..) )
+import qualified  Yesod.Auth                    as YesodAuth
 import            Yesod.Auth                    ( Auth
-                                                , AuthId
                                                 , Route ( LoginR, LogoutR )
-                                                , YesodAuth ( authHttpManager
-                                                            , authPlugins
-                                                            , getAuthId
-                                                            , loginDest
-                                                            , logoutDest
-                                                            )
-                                                , credsIdent
-                                                , maybeAuth
                                                 )
 import            Yesod.Auth.Email              ( AuthEmailId
                                                 , EmailCreds (..)
@@ -197,7 +189,7 @@ defaultLayout' searchQuery widget = do
     let copyright = master & settings & appExtra & extraCopyright
                     & preEscapedToMarkup
 
-    maybeUser <- entityVal <$$> maybeAuth
+    maybeUser <- entityVal <$$> YesodAuth.maybeAuth
 
     pc <- widgetToPageContent $ do
         $(combineStylesheets 'StaticR
@@ -271,7 +263,7 @@ instance YesodPersist App where
 instance YesodPersistRunner App where
     getDBRunner = defaultGetDBRunner connPool
 
-instance YesodAuth App where
+instance YesodAuth.YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
@@ -280,12 +272,12 @@ instance YesodAuth App where
     logoutDest _ = HomeR
 
     getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
+        x <- getBy $ UniqueUser $ YesodAuth.credsIdent creds
         case x of
             Just (Entity uid _) -> return $ Just uid
             Nothing ->
                 Just <$> insert User
-                    { userEmail = credsIdent creds
+                    { userEmail = YesodAuth.credsIdent creds
                     , userPassword = Nothing
                     , userVerkey = Nothing
                     , userVerified = False
