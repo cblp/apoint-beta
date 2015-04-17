@@ -20,10 +20,7 @@ import            Database.Persist              ( (=.)
                                                 , update
                                                 )
 import            Database.Persist.Sql          ( SqlPersistT )
-import            Network.HTTP.Client.Conduit   ( Manager
-                                                , HasHttpManager
-                                                  ( getHttpManager )
-                                                )
+import qualified  Network.HTTP.Client.Conduit   as HTTP
 import            Network.Mail.Mime             ( Address ( Address )
                                                 , Encoding ( None )
                                                 , Mail (..)
@@ -169,12 +166,12 @@ data App = App
     , getStatic :: Static -- ^ Settings for static file serving.
     , connPool :: Persist.PersistConfigPool Settings.PersistConf
       -- ^ Database connection pool.
-    , httpManager :: Manager
+    , httpManager :: HTTP.Manager
     , persistConfig :: Settings.PersistConf
     , appLogger :: Logger
     }
 
-instance HasHttpManager App where
+instance HTTP.HasHttpManager App where
     getHttpManager = httpManager
 
 -- Set up i18n messages. See the message folder.
