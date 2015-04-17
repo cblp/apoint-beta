@@ -5,6 +5,7 @@ import Data.Functor         ( (<$>) )
 import Data.Maybe           ( fromMaybe )
 import Data.Monoid          ( (<>) )
 import Data.Text            ( Text )
+import Prelude
 import Yesod.Auth.Extended  ( requireAuthId' )
 
 import Import

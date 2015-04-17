@@ -2,8 +2,6 @@ module Import
     ( module Import
     ) where
 
-import Prelude              as Import hiding ( init, lines, readFile
-                                             , tail, writeFile )
 import Yesod                as Import
 
 import Foundation           as Import

@@ -6,6 +6,7 @@ import            Data.Monoid     ( (<>) )
 import qualified  Data.Text       as Text
 import            Data.Text       ( Text )
 import            Data.Text.Lazy  ( fromStrict )
+import            Prelude
 import            Text.Markdown   ( markdown )
 
 import            Import

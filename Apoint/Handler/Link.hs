@@ -5,6 +5,7 @@ import            Data.Char         ( isDigit )
 import            Data.Monoid       ( (<>) )
 import qualified  Data.Text         as Text
 import            Data.Text         ( Text )
+import            Prelude
 import            Yesod.Form.Jquery ( jqueryAutocompleteField )
 
 import            Form              ( runFormPostChecked )

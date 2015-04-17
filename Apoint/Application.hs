@@ -18,6 +18,7 @@ import            Network.Wai.Middleware.RequestLogger  ( IPAddrSource (..)
                                                         , mkRequestLogger
                                                         , outputFormat
                                                         )
+import            Prelude
 import            System.Log.FastLogger                 ( newStdoutLoggerSet
                                                         , defaultBufSize
                                                         )

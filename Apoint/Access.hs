@@ -5,6 +5,7 @@
 module Access where
 
 import Control.Monad        ( when )
+import Prelude
 import Yesod.Auth.Extended  ( requireAuthId' )
 
 import Import

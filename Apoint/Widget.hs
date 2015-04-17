@@ -1,5 +1,7 @@
 module Widget where
 
+import Prelude
+
 import Form ( emptyForm )
 import Import
 
