@@ -3,8 +3,16 @@
 module Local.Yesod.Auth where
 
 import Prelude
-import Yesod
-import Yesod.Auth
+import Yesod      ( HandlerT, Yesod
+                  , acceptsJson
+                  , authRoute
+                  , getYesod
+                  , notAuthenticated
+                  , permissionDenied
+                  , redirect
+                  , setUltDestCurrent
+                  )
+import Yesod.Auth ( AuthId, YesodAuthPersist, maybeAuthId )
 
 
 -- | Similar to 'requireAuthId',
