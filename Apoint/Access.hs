@@ -4,7 +4,7 @@
 
 module Access where
 
-import Local.Yesod.Auth ( requireAuthId' )
+import Yesod.Auth.Extended ( requireAuthId' )
 
 import Import
 

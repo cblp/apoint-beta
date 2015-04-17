@@ -31,7 +31,7 @@ library
                      Widget.Note
 
     other-modules:  Data.Text.Extended
-                    Local.Yesod.Auth
+                    Yesod.Auth.Extended
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

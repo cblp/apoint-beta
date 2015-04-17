@@ -1,6 +1,6 @@
 {-# LANGUAGE ConstraintKinds #-}
 
-module Local.Yesod.Auth where
+module Yesod.Auth.Extended where
 
 import Prelude
 import Yesod      ( HandlerT, Yesod

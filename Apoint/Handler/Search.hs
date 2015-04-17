@@ -1,12 +1,12 @@
 module Handler.Search where
 
-import Data.Aeson.TH    ( defaultOptions, deriveToJSON, fieldLabelModifier )
-import Data.Maybe       ( fromMaybe )
-import Local.Yesod.Auth ( requireAuthId' )
+import Data.Aeson.TH        ( defaultOptions, deriveToJSON, fieldLabelModifier )
+import Data.Maybe           ( fromMaybe )
+import Yesod.Auth.Extended  ( requireAuthId' )
 
 import Import
-import Model.Note       ( noteContentShort )
-import Widget.Note      ( NoteslistMode (FoundNotes), makeNotesListWidget )
+import Model.Note           ( noteContentShort )
+import Widget.Note          ( NoteslistMode (FoundNotes), makeNotesListWidget )
 
 
 data NoteSearchResult = NoteSearchResult
