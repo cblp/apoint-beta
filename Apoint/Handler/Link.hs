@@ -1,11 +1,11 @@
 module Handler.Link where
 
-import            Control.Lens  ( (&) )
-import            Data.Char     ( isDigit )
-import qualified  Data.Text     as Text
-import            Yesod.Form.Jquery
+import            Control.Lens      ( (&) )
+import            Data.Char         ( isDigit )
+import qualified  Data.Text         as Text
+import            Yesod.Form.Jquery ( jqueryAutocompleteField )
 
-import            Form
+import            Form              ( runFormPostChecked )
 import            Import
 
 

@@ -2,12 +2,29 @@ module Handler.Note where
 
 import Local.Yesod.Auth ( requireAuthId' )
 
-import Access
-import Form
-import Form.Note
+import Access           ( AccessMode (Delete, Read, Update)
+                        , CurrentUser (CurrentUser)
+                        , authorize
+                        )
+import Form             ( emptyForm, runFormPostChecked )
+import Form.Note        ( noteContentForm )
 import Import
-import Model.Note
-import Widget.Note
+import Model.Note       ( noteContentShort, noteSiblings )
+import Widget.Note      ( NoteslistMode ( NotesLinkedFrom
+                                        , NotesLinkedFromNew
+                                        , NotesLinkedTo
+                                        , NotesLinkedToNew
+                                        , SelectedNotes
+                                        )
+                        , UserIntent (UserIntentExisting, UserIntentNew)
+                        , UserIntentExisting (Edit, View)
+                        , UserIntentNew (CreateFree, CreateRel)
+                        , makeNewNoteWidget
+                        , makeNoteContentViewWidget
+                        , makeNoteContentEditWidget
+                        , makeNotesListWidget
+                        , workareaWidget
+                        )
 
 
 getNoteR :: NoteId -> Handler Html
