@@ -38,6 +38,7 @@ import            Yesod.Default.Main              ( LogFunc, defaultDevelApp )
 
 import            Import
 import            Settings                        ( PersistConf )
+import qualified  Settings.StaticFiles            as StaticFiles
 
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
@@ -86,7 +87,7 @@ makeApplication conf = do
 makeFoundation :: AppConfig DefaultEnv Extra -> IO App
 makeFoundation conf = do
     manager <- newManager
-    s <- staticSite
+    s <- StaticFiles.staticSite
     dbconf <- withYamlEnvironment "config/sqlite.yml" (appEnv conf)
               Persist.loadConfig >>=
               Persist.applyEnv
