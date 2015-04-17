@@ -14,6 +14,9 @@ import            Yesod.Persist     ( Entity (..), Filter
                                     )
 
 import            Import
+import            Model             ( Note (..), NoteId
+                                    , Notelink
+                                    )
 
 
 noteContentHtml :: Note -> Html

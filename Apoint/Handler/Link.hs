@@ -19,6 +19,7 @@ import            Yesod.Persist             ( (==.)
                                             )
 
 import            Form                      ( runFormPostChecked )
+import            Model
 import            Import
 
 

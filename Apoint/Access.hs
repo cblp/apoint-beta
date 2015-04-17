@@ -11,6 +11,9 @@ import Yesod.Core           ( permissionDenied )
 import Yesod.Persist        ( get404, runDB )
 
 import Import
+import Model                ( Note (..), NoteId
+                            , UserId
+                            )
 
 
 data AccessMode = Read | Update | Delete

@@ -18,6 +18,7 @@ import Yesod.Persist        ( (==.)
                             )
 
 import Import
+import Model
 import Model.Note           ( noteContentShort )
 import Settings             ( extraNoteSuggestSize, extraNotesOnAPage )
 import Widget.Note          ( NoteslistMode (FoundNotes), makeNotesListWidget )
