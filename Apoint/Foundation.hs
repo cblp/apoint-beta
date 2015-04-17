@@ -40,22 +40,8 @@ import            Yesod.Auth                    ( Auth
                                                 , Route ( LoginR, LogoutR )
                                                 )
 import qualified  Yesod.Auth.Email              as YesodAuth
-import            Yesod.Core                    ( Yesod ( addStaticContent
-                                                        , approot
-                                                        , authRoute
-                                                        , defaultLayout
-                                                        , isAuthorized
-                                                        , joinPath
-                                                        , jsLoader
-                                                        , makeLogger
-                                                        , makeSessionBackend
-                                                        , shouldLog
-                                                        , urlRenderOverride
-                                                        )
-                                                , defaultClientSessionBackend
-                                                , mkYesodData
-                                                , widgetToPageContent
-                                                )
+import qualified  Yesod.Core                    as Yesod
+import            Yesod.Core                    ( Yesod )
 import            Yesod.Core.Handler            ( getMessage
                                                 , getYesod
                                                 , giveUrlRenderer
@@ -152,7 +138,7 @@ mkMessage "App" "messages" "en"
 -- Note that this is really half the story; in Application.hs, mkYesodDispatch
 -- generates the rest of the code. Please see the linked documentation for an
 -- explanation for this split.
-mkYesodData "App" $(parseRoutesFile "config/routes")
+Yesod.mkYesodData "App" $(parseRoutesFile "config/routes")
 
 type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
@@ -173,7 +159,7 @@ defaultLayout' searchQuery widget = do
 
     maybeUser <- fmap entityVal <$> YesodAuth.maybeAuth
 
-    pc <- widgetToPageContent $ do
+    pc <- Yesod.widgetToPageContent $ do
         $(combineStylesheets 'StaticR
             [ css_apoint_css
             , css_normalize_css
@@ -195,7 +181,7 @@ instance Yesod App where
 
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
-    makeSessionBackend _ = Just <$> defaultClientSessionBackend
+    makeSessionBackend _ = Just <$> Yesod.defaultClientSessionBackend
         120    -- timeout in minutes
         "config/client_session_key.aes"
 
@@ -204,7 +190,9 @@ instance Yesod App where
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
     urlRenderOverride y (StaticR s) =
-        Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
+        Just $
+        uncurry (Yesod.joinPath y (Settings.staticRoot $ settings y)) $
+        renderRoute s
     urlRenderOverride _ _ = Nothing
 
     -- The page to be redirected to when authentication is required.
