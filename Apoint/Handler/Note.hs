@@ -1,5 +1,6 @@
 module Handler.Note where
 
+import Control.Applicative  ( (<$>), (<*>) )
 import Yesod.Auth.Extended  ( requireAuthId' )
 
 import Access               ( AccessMode (Delete, Read, Update)

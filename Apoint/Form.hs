@@ -1,5 +1,7 @@
 module Form where
 
+import Control.Applicative ( pure )
+
 import Import
 
 
