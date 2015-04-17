@@ -40,24 +40,7 @@ import            Text.Shakespeare.I18N         ( RenderMessage
                                                   ( renderMessage )
                                                 )
 import            Web.PathPieces                ( PathPiece (..) )
-import            Yesod                         ( ScriptLoadPosition
-                                                  ( BottomOfBody )
-                                                , Yesod ( addStaticContent
-                                                        , approot
-                                                        , authRoute
-                                                        , defaultLayout
-                                                        , isAuthorized
-                                                        , jsLoader
-                                                        , makeLogger
-                                                        , makeSessionBackend
-                                                        , shouldLog
-                                                        , urlRenderOverride
-                                                        )
-                                                , YesodPersist
-                                                , YesodPersistBackend
-                                                , YesodPersistRunner
-                                                  ( getDBRunner )
-                                                , defaultClientSessionBackend
+import            Yesod                         ( defaultClientSessionBackend
                                                 , defaultFormMessage
                                                 , defaultGetDBRunner
                                                 , defaultRunDB
@@ -104,10 +87,24 @@ import            Yesod.Auth.Email              ( AuthEmailId
                                                   )
                                                 , authEmail
                                                 )
+import            Yesod.Core                    ( Yesod ( addStaticContent
+                                                        , approot
+                                                        , authRoute
+                                                        , defaultLayout
+                                                        , isAuthorized
+                                                        , jsLoader
+                                                        , makeLogger
+                                                        , makeSessionBackend
+                                                        , shouldLog
+                                                        , urlRenderOverride
+                                                        )
+                                                )
 import            Yesod.Core.Types              ( Approot ( ApprootMaster )
                                                 , AuthResult ( Authorized )
                                                 , HandlerT
                                                 , Logger
+                                                , ScriptLoadPosition
+                                                  ( BottomOfBody )
                                                 )
 import            Yesod.Default.Config          ( AppConfig, DefaultEnv
                                                 , appExtra
@@ -119,6 +116,11 @@ import            Yesod.Form                    ( FormMessage
                                                 , MForm
                                                 )
 import            Yesod.Form.Jquery             ( YesodJquery )
+import            Yesod.Persist                 ( YesodPersist
+                                                , YesodPersistBackend
+                                                , YesodPersistRunner
+                                                  ( getDBRunner )
+                                                )
 import            Yesod.Routes.Class            ( RenderRoute ( renderRoute ) )
 import            Yesod.Static                  ( Route (StaticRoute)
                                                 , Static
