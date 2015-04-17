@@ -81,15 +81,7 @@ import qualified  Settings                      ( PersistConf
                                                 )
 import            Settings                      ( Extra (..), widgetFile )
 import            Settings.Development          ( development )
-import            Settings.StaticFiles          ( combineScripts
-                                                , combineStylesheets
-                                                , css_apoint_css
-                                                , css_bootstrap_css
-                                                , css_normalize_css
-                                                , js_bootstrap_min_js
-                                                , js_jquery_min_js
-                                                , js_jquery_ui_min_js
-                                                )
+import qualified  Settings.StaticFiles          as StaticFiles
 
 
 -- | Relation from one note to another
@@ -152,15 +144,15 @@ defaultLayout' searchQuery widget = do
     maybeUser <- fmap entityVal <$> YesodAuth.maybeAuth
 
     pc <- Yesod.widgetToPageContent $ do
-        $(combineStylesheets 'StaticR
-            [ css_apoint_css
-            , css_normalize_css
-            , css_bootstrap_css
+        $(StaticFiles.combineStylesheets 'StaticR
+            [ StaticFiles.css_apoint_css
+            , StaticFiles.css_normalize_css
+            , StaticFiles.css_bootstrap_css
             ])
-        $(combineScripts 'StaticR
-            [ js_jquery_min_js
-            , js_jquery_ui_min_js
-            , js_bootstrap_min_js
+        $(StaticFiles.combineScripts 'StaticR
+            [ StaticFiles.js_jquery_min_js
+            , StaticFiles.js_jquery_ui_min_js
+            , StaticFiles.js_bootstrap_min_js
             ])
         $(widgetFile "default-layout")
     Yesod.giveUrlRenderer
