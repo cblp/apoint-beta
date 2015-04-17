@@ -14,7 +14,7 @@ data NoteslistMode  = SelectedNotes
                     | NotesLinkedFrom NoteId
                     | NotesLinkedToNew
                     | NotesLinkedFromNew
-                    | FoundNotes Text -- search query
+                    | FoundNotes Text -- ^ search query
 
 
 makeNotesListWidget :: NoteslistMode -> [Entity Note] -> Handler Widget
