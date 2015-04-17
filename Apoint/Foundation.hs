@@ -127,11 +127,6 @@ import            Settings.StaticFiles          ( combineScripts
                                                 )
 
 
-(<$$>) :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
-(<$$>) = fmap . fmap
-{-# INLINE (<$$>) #-}
-
-
 -- | Relation from one note to another
 data Rel = RelFrom | RelTo
     deriving (Eq, Read, Show)
@@ -189,7 +184,7 @@ defaultLayout' searchQuery widget = do
     let copyright = master & settings & appExtra & extraCopyright
                     & preEscapedToMarkup
 
-    maybeUser <- entityVal <$$> YesodAuth.maybeAuth
+    maybeUser <- fmap entityVal <$> YesodAuth.maybeAuth
 
     pc <- widgetToPageContent $ do
         $(combineStylesheets 'StaticR
