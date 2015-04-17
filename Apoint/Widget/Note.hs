@@ -2,6 +2,7 @@ module Widget.Note where
 
 import Data.Monoid  ( (<>) )
 import Data.Maybe   ( isJust )
+import Data.Text    ( Text )
 
 import Form.Note    ( noteContentForm )
 import Handler.Link ( noteLinkForm )

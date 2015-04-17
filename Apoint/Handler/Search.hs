@@ -4,6 +4,7 @@ import Data.Aeson.TH        ( defaultOptions, deriveToJSON, fieldLabelModifier )
 import Data.Functor         ( (<$>) )
 import Data.Maybe           ( fromMaybe )
 import Data.Monoid          ( (<>) )
+import Data.Text            ( Text )
 import Yesod.Auth.Extended  ( requireAuthId' )
 
 import Import

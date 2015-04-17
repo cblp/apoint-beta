@@ -1,6 +1,7 @@
 module Form.Note where
 
 import Data.Functor ( (<$>) )
+import Data.Text    ( Text )
 
 import Import
 

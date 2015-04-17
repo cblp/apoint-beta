@@ -2,7 +2,6 @@ module Import
     ( module Import
     ) where
 
-import Data.Text            as Import (Text)
 import Prelude              as Import hiding ( init, lines, readFile
                                              , tail, writeFile )
 import Yesod                as Import

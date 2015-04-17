@@ -4,6 +4,7 @@ import            Control.Lens      ( (&) )
 import            Data.Char         ( isDigit )
 import            Data.Monoid       ( (<>) )
 import qualified  Data.Text         as Text
+import            Data.Text         ( Text )
 import            Yesod.Form.Jquery ( jqueryAutocompleteField )
 
 import            Form              ( runFormPostChecked )

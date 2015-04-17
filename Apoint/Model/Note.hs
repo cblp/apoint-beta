@@ -4,6 +4,7 @@ import            Control.Monad   ( forM )
 import            Data.Default    ( def )
 import            Data.Monoid     ( (<>) )
 import qualified  Data.Text       as Text
+import            Data.Text       ( Text )
 import            Data.Text.Lazy  ( fromStrict )
 import            Text.Markdown   ( markdown )
 
