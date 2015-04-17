@@ -14,13 +14,6 @@ import            Network.Wai                     ( Application )
 import            Network.Wai.Logger              ( clockDateCacher )
 import qualified  Network.Wai.Middleware.RequestLogger
                                                   as RequestLogger
-import            Network.Wai.Middleware.RequestLogger
-                                                  ( IPAddrSource (..)
-                                                  , OutputFormat (..)
-                                                  , destination
-                                                  , mkRequestLogger
-                                                  , outputFormat
-                                                  )
 import            Prelude
 import            System.Log.FastLogger           ( newStdoutLoggerSet
                                                   , defaultBufSize
@@ -81,12 +74,13 @@ makeApplication conf = do
     foundation <- makeFoundation conf
 
     -- Initialize the logging middleware
-    logWare <- mkRequestLogger def
-        { outputFormat =
-            if development
-                then Detailed True
-                else Apache FromSocket
-        , destination = RequestLogger.Logger $ loggerSet $ appLogger foundation
+    logWare <- RequestLogger.mkRequestLogger def
+        { RequestLogger.outputFormat =
+              if development
+                  then RequestLogger.Detailed True
+                  else RequestLogger.Apache RequestLogger.FromSocket
+        , RequestLogger.destination =
+              RequestLogger.Logger $ loggerSet $ appLogger foundation
         }
 
     -- Create the WAI application and apply middlewares
