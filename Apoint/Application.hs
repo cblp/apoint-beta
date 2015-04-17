@@ -38,6 +38,7 @@ import            Yesod.Default.Main              ( LogFunc, defaultDevelApp )
 
 import            Import
 import            Settings                        ( PersistConf )
+import            Settings.Development            ( development )
 import qualified  Settings.StaticFiles            as StaticFiles
 
 -- Import all relevant handler modules here.
