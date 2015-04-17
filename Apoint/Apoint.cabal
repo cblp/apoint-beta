@@ -21,7 +21,6 @@ library
                      Handler.Link
                      Handler.Note
                      Handler.Search
-                     Import
                      Model
                      Model.Note
                      Settings
