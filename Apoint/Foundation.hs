@@ -349,8 +349,3 @@ getExtra = appExtra . settings <$> Yesod.getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
-
-
--- | TODO Prelude.Extended
-curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
-curry3 f a b c = f (a, b, c)
