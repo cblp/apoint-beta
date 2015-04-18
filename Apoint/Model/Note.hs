@@ -1,6 +1,5 @@
 module            Model.Note where
 
-import            Control.Monad     ( forM )
 import            Data.Monoid       ( (<>) )
 import qualified  Data.Text         as Text
 import            Data.Text         ( Text )

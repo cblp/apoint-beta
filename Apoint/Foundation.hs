@@ -1,7 +1,6 @@
 module Foundation where
 
 import            Control.Lens                  ( (&) )
-import            Control.Monad.IO.Class        ( liftIO )
 import            Control.Monad.Logger          ( LogLevel ( LevelWarn )
                                                 , logInfo
                                                 )

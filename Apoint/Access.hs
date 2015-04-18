@@ -4,8 +4,7 @@
 
 module Access where
 
-import Control.Monad        ( when )
-import Prelude
+import Prelude.Extended
 import Yesod.Auth.Extended  ( requireAuthId' )
 import Yesod.Core           ( permissionDenied )
 import Yesod.Persist        ( get404, runDB )

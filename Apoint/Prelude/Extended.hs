@@ -1,10 +1,13 @@
-module Prelude.Extended     ( module Import
-                            , module Prelude
-                            , module Prelude.Extended
-                            ) where
+module Prelude.Extended ( module I
+                        , module Prelude
+                        , module Prelude.Extended
+                        ) where
 
-import Control.Applicative  as Import ( (<$>), (<*>) )
-import Data.Default         as Import ( def )
+import Control.Applicative        as I  ( (<$>), (<*>) )
+import Control.Monad              as I  ( forM, when )
+import Control.Monad.IO.Class     as I  ( liftIO )
+import Control.Monad.Trans.Class  as I  ( lift )
+import Data.Default               as I  ( def )
 import Prelude
 
 
