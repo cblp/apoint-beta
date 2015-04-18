@@ -24,11 +24,9 @@ import            Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
 import            Text.Hamlet                   ( hamletFile
                                                 , shamlet
                                                 )
-import            Text.Jasmine                  ( minifym )
+import qualified  Text.Jasmine                  as Jasmine
 import            Text.Shakespeare.Text         ( stext )
-import            Text.Shakespeare.I18N         ( RenderMessage (..)
-                                                , mkMessage
-                                                )
+import qualified  Text.Shakespeare.I18N         as I18N
 import            Web.PathPieces                ( PathPiece (..) )
 import qualified  Yesod.Auth                    as YesodAuth
 import            Yesod.Auth                    ( Auth
@@ -107,7 +105,7 @@ instance HTTP.HasHttpManager App where
     getHttpManager = httpManager
 
 -- Set up i18n messages. See the message folder.
-mkMessage "App" "messages" "en"
+I18N.mkMessage "App" "messages" "en"
 
 -- This is where we define all of the routes in our application. For a full
 -- explanation of the syntax, please see:
@@ -188,8 +186,10 @@ instance Yesod App where
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
     -- users receiving stale content.
-    addStaticContent =
-        addStaticContentExternal minifym genFileName Settings.staticDir (StaticR . flip StaticRoute [])
+    addStaticContent = addStaticContentExternal Jasmine.minifym
+                                                genFileName
+                                                Settings.staticDir
+                                                (StaticR . flip StaticRoute [])
       where
         -- Generate a unique filename based on the content itself
         genFileName lbs
@@ -331,7 +331,7 @@ instance YesodJquery App
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
-instance RenderMessage App FormMessage where
+instance I18N.RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
