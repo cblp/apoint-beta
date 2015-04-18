@@ -11,5 +11,10 @@ import Data.Default               as I  ( def )
 import Prelude
 
 
+(&) :: a -> (a -> b) -> b
+x & f = f x
+{-# INLINE (&) #-}
+
+
 curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
 curry3 f a b c = f (a, b, c)

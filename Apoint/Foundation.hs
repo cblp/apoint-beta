@@ -1,6 +1,5 @@
 module Foundation where
 
-import            Control.Lens                  ( (&) )
 import            Control.Monad.Logger          ( LogLevel ( LevelWarn )
                                                 , logInfo
                                                 )
