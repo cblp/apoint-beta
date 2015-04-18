@@ -78,7 +78,9 @@ postNoteDeleteR noteId = do
 
 
 getNoteNewR :: Handler Html
-getNoteNewR = notePage $ UserIntentNew CreateFree
+getNoteNewR = do
+    _ <- requireAuthId'
+    notePage $ UserIntentNew CreateFree
 
 
 getNoteNewRelR :: Rel -> NoteId -> Handler Html
