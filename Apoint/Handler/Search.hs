@@ -2,7 +2,6 @@ module Handler.Search where
 
 import Data.Aeson           ( Value )
 import Data.Aeson.TH        ( defaultOptions, deriveToJSON, fieldLabelModifier )
-import Data.Maybe           ( fromMaybe )
 import Data.Text            ( Text )
 import Prelude.Extended
 import Web.PathPieces       ( PathPiece (..) )
