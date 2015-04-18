@@ -1,6 +1,5 @@
 module Foundation where
 
-import            Control.Applicative           ( (<$>) )
 import            Control.Lens                  ( (&) )
 import            Control.Monad.IO.Class        ( liftIO )
 import            Control.Monad.Logger          ( LogLevel ( LevelWarn )
@@ -22,7 +21,7 @@ import            Database.Persist              ( (=.)
 import            Database.Persist.Sql          ( SqlPersistT )
 import qualified  Network.HTTP.Client.Conduit   as HTTP
 import qualified  Network.Mail.Mime             as Mail
-import            Prelude
+import            Prelude.Extended
 import            Text.Blaze                    ( preEscapedToMarkup )
 import            Text.Blaze.Html               ( Html )
 import            Text.Blaze.Html.Renderer.Utf8 ( renderHtml )

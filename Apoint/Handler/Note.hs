@@ -1,6 +1,5 @@
 module Handler.Note where
 
-import Control.Applicative  ( (<$>), (<*>) )
 import Data.Monoid          ( (<>) )
 import Prelude.Extended
 import Text.Blaze.Html      ( Html, toHtml )

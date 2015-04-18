@@ -1,5 +1,9 @@
-module Prelude.Extended ( module Prelude, module Prelude.Extended ) where
+module Prelude.Extended     ( module Control.Applicative
+                            , module Prelude
+                            , module Prelude.Extended
+                            ) where
 
+import Control.Applicative  ( (<$>), (<*>) )
 import Prelude
 
 
