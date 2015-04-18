@@ -1,10 +1,9 @@
 module Widget.Note where
 
 import Data.Aeson         ( Value, toJSON )
-import Data.Monoid        ( (<>) )
 import Data.Maybe         ( isJust )
 import Data.Text          ( Text )
-import Prelude
+import Prelude.Extended
 import Text.Hamlet        ( shamlet )
 import Yesod.Core         ( newIdent )
 import Yesod.Form         ( generateFormPost )

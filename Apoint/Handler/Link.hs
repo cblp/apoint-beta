@@ -1,7 +1,6 @@
 module            Handler.Link where
 
 import            Data.Char         ( isDigit )
-import            Data.Monoid       ( (<>) ) -- TODO to Prelude.Extended
 import qualified  Data.Text         as Text
 import            Data.Text         ( Text ) -- TODO to Prelude.Extended
 import            Prelude.Extended

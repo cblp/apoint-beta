@@ -1,6 +1,5 @@
 module            Model.Note where
 
-import            Data.Monoid       ( (<>) )
 import qualified  Data.Text         as Text
 import            Data.Text         ( Text )
 import            Data.Text.Lazy    ( fromStrict )

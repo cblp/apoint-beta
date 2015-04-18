@@ -1,6 +1,5 @@
 module Handler.Note where
 
-import Data.Monoid          ( (<>) )
 import Prelude.Extended
 import Text.Blaze.Html      ( Html, toHtml )
 import Yesod.Auth.Extended  ( requireAuthId' )

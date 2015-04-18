@@ -3,7 +3,6 @@ module Foundation where
 import            Control.Monad.Logger          ( LogLevel ( LevelWarn )
                                                 , logInfo
                                                 )
-import            Data.Monoid                   ( mconcat )
 import qualified  Data.Text                     as Text
 import            Data.Text                     ( Text )
 import            Data.Text.Lazy.Encoding       ( encodeUtf8 )
