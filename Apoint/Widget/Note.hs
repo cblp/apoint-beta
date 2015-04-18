@@ -1,7 +1,6 @@
 module Widget.Note where
 
 import Data.Aeson         ( Value, toJSON )
-import Data.Text          ( Text )
 import Prelude.Extended
 import Text.Hamlet        ( shamlet )
 import Yesod.Core         ( newIdent )

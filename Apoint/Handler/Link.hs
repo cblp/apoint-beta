@@ -2,7 +2,6 @@ module            Handler.Link where
 
 import            Data.Char         ( isDigit )
 import qualified  Data.Text         as Text
-import            Data.Text         ( Text ) -- TODO to Prelude.Extended
 import            Prelude.Extended
 import            Text.Blaze.Html   ( Html )
 import            Web.PathPieces    ( PathPiece (..) )

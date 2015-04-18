@@ -10,6 +10,7 @@ import Control.Monad.Trans.Class  as I  ( lift )
 import Data.Default               as I  ( def )
 import Data.Maybe                 as I  ( fromMaybe, isJust )
 import Data.Monoid                as I  ( (<>), mconcat )
+import Data.Text                  as I  ( Text )
 import Prelude
 
 

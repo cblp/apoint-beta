@@ -1,7 +1,6 @@
 module            Model where
 
 import qualified  Data.Text               as Text
-import            Data.Text               ( Text )
 import            Data.Typeable           ( Typeable )
 import            Database.Persist        ( PersistFilter
                                             ( BackendSpecificFilter )
@@ -15,7 +14,7 @@ import            Database.Persist.TH     ( mkMigrate
                                           , share
                                           , sqlOnlySettings
                                           )
-import            Prelude
+import            Prelude.Extended
 
 
 -- You can define all of your database entities in the entities file.

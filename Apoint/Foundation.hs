@@ -4,7 +4,6 @@ import            Control.Monad.Logger          ( LogLevel ( LevelWarn )
                                                 , logInfo
                                                 )
 import qualified  Data.Text                     as Text
-import            Data.Text                     ( Text )
 import            Data.Text.Lazy.Encoding       ( encodeUtf8 )
 import qualified  Database.Persist              as Persist
 import            Database.Persist              ( (=.)

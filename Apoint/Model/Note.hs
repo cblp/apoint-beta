@@ -1,8 +1,7 @@
 module            Model.Note where
 
 import qualified  Data.Text         as Text
-import            Data.Text         ( Text )
-import            Data.Text.Lazy    ( fromStrict )
+import qualified  Data.Text.Lazy    as Text ( fromStrict )
 import            Prelude.Extended
 import            Text.Blaze.Html   ( Html )
 import            Text.Markdown     ( markdown )
@@ -17,7 +16,7 @@ import            Model             ( Note (..), NoteId
 
 
 noteContentHtml :: Note -> Html
-noteContentHtml = markdown def . fromStrict . noteContent
+noteContentHtml = markdown def . Text.fromStrict . noteContent
 
 
 noteContentShort :: Note -> Text

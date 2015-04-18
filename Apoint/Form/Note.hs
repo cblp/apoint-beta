@@ -1,8 +1,6 @@
 module Form.Note where
 
-import Data.Functor     ( (<$>) )
-import Data.Text        ( Text )
-import Prelude
+import Prelude.Extended
 import Text.Blaze.Html  ( Html )
 import Yesod.Form       ( FormResult, MForm, Textarea (..)
                         , areq, renderDivs, textareaField
