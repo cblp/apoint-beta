@@ -5,7 +5,6 @@
 -- declared in the Foundation.hs file.
 module Settings where
 
-import Data.Default               ( def )
 import Data.Text                  ( Text )
 import Data.Yaml                  ( (.:), (.:?), Object, Parser )
 import Database.Persist.Sqlite    ( SqliteConf )

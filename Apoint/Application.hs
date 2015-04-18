@@ -6,7 +6,6 @@ module            Application                     ( makeApplication
                                                   ) where
 
 import            Control.Monad.Logger            ( runLoggingT )
-import            Data.Default                    ( def )
 import qualified  Database.Persist                as Persist
 import            Database.Persist.Sql            ( runMigration )
 import            Network.HTTP.Client.Conduit     ( newManager )
@@ -14,7 +13,7 @@ import            Network.Wai                     ( Application )
 import            Network.Wai.Logger              ( clockDateCacher )
 import qualified  Network.Wai.Middleware.RequestLogger
                                                   as RequestLogger
-import            Prelude
+import            Prelude.Extended
 import            System.Log.FastLogger           ( newStdoutLoggerSet
                                                   , defaultBufSize
                                                   )

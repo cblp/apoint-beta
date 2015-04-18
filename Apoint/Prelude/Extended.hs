@@ -1,9 +1,10 @@
-module Prelude.Extended     ( module Control.Applicative
+module Prelude.Extended     ( module Import
                             , module Prelude
                             , module Prelude.Extended
                             ) where
 
-import Control.Applicative  ( (<$>), (<*>) )
+import Control.Applicative  as Import ( (<$>), (<*>) )
+import Data.Default         as Import ( def )
 import Prelude
 
 

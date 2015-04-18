@@ -1,8 +1,7 @@
 module            Settings.StaticFiles where
 
-import            Data.Default          ( def )
 import            Language.Haskell.TH   ( Q, Exp, Name )
-import            Prelude
+import            Prelude.Extended
 import            Yesod.Static          -- implicit for $staticFiles
 import qualified  Yesod.Static          as Static
 
