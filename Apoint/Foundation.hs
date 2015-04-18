@@ -41,11 +41,10 @@ import            Yesod.Auth                    ( Auth
                                                 )
 import qualified  Yesod.Auth.Email              as YesodAuth
 import qualified  Yesod                         as Yesod
-import            Yesod                         ( AuthResult ( Authorized )
-                                                , Yesod
-                                                )
+import            Yesod.Core                    ( Yesod )
 import qualified  Yesod.Core.Types              as Yesod
-import            Yesod.Core.Types              ( PageContent ( pageBody
+import            Yesod.Core.Types              ( AuthResult ( Authorized )
+                                                , PageContent ( pageBody
                                                               , pageHead
                                                               , pageTitle
                                                               )
@@ -184,11 +183,11 @@ instance Yesod App where
     authRoute _ = Just $ AuthR LoginR
 
     -- Routes not requiring authenitcation.
-    isAuthorized (AuthR _) _ = return Authorized
-    isAuthorized FaviconR _ = return Authorized
-    isAuthorized RobotsR _ = return Authorized
+    isAuthorized (AuthR _)  _ = return Authorized
+    isAuthorized FaviconR   _ = return Authorized
+    isAuthorized RobotsR    _ = return Authorized
     -- Default to Authorized for now.
-    isAuthorized _ _ = return Authorized
+    isAuthorized _          _ = return Authorized
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
