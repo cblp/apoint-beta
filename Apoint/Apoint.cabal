@@ -29,7 +29,8 @@ library
                      Widget
                      Widget.Note
 
-    other-modules:  Yesod.Auth.Extended
+    other-modules:  Prelude.Extended
+                    Yesod.Auth.Extended
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
