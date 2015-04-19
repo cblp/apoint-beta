@@ -7,16 +7,14 @@ module            Application                     ( makeApplication
 
 import            Control.Monad.Logger            ( runLoggingT )
 import qualified  Database.Persist                as Persist
-import            Database.Persist.Sql            ( runMigration )
-import            Network.HTTP.Client.Conduit     ( newManager )
+import qualified  Database.Persist.Sql            as Sql
+import qualified  Network.HTTP.Client.Conduit     as HTTP
 import            Network.Wai                     ( Application )
 import            Network.Wai.Logger              ( clockDateCacher )
 import qualified  Network.Wai.Middleware.RequestLogger
                                                   as RequestLogger
 import            Prelude.Extended
-import            System.Log.FastLogger           ( newStdoutLoggerSet
-                                                  , defaultBufSize
-                                                  )
+import            System.Log.FastLogger           as FastLogger
 import            Yesod.Auth                      ( getAuth )
 import            Yesod.Core                      ( messageLoggerSource )
 import            Yesod.Core.Dispatch             ( defaultMiddlewaresNoLogging
@@ -36,10 +34,8 @@ import            Yesod.Default.Handlers          ( getFaviconR, getRobotsR )
 import            Yesod.Default.Main              ( LogFunc, defaultDevelApp )
 
 import            Foundation
-import            Model                           ( migrateAll )
-import            Settings                        ( Extra, PersistConf
-                                                  , parseExtra
-                                                  )
+import qualified  Model
+import qualified  Settings
 import            Settings.Development            ( development )
 import qualified  Settings.StaticFiles            as StaticFiles
 
@@ -66,7 +62,7 @@ mkYesodDispatch "App" resourcesApp
 -- performs initialization and creates a WAI application. This is also the
 -- place to put your migrate statements to have automatic database
 -- migrations handled by Yesod.
-makeApplication :: AppConfig DefaultEnv Extra -> IO (Application, LogFunc)
+makeApplication :: AppConfig DefaultEnv Settings.Extra -> IO (Application, LogFunc)
 makeApplication conf = do
     foundation <- makeFoundation conf
 
@@ -87,9 +83,9 @@ makeApplication conf = do
 
 -- | Loads up any necessary settings, creates your foundation datatype, and
 -- performs some initialization.
-makeFoundation :: AppConfig DefaultEnv Extra -> IO App
+makeFoundation :: AppConfig DefaultEnv Settings.Extra -> IO App
 makeFoundation conf = do
-    manager <- newManager
+    manager <- HTTP.newManager
     s <- StaticFiles.staticSite
     dbconf <- withYamlEnvironment "config/sqlite.yml" (appEnv conf)
               Persist.loadConfig >>=
@@ -103,7 +99,7 @@ makeFoundation conf = do
         foundation = App conf s p manager dbconf logger
 
     -- Perform database migration using our application's logging settings.
-    runLoggingT (Persist.runPool dbconf (runMigration migrateAll) p)
+    runLoggingT (Persist.runPool dbconf (Sql.runMigration Model.migrateAll) p)
                 (messageLoggerSource foundation logger)
 
     return foundation
@@ -114,5 +110,5 @@ getApplicationDev =
     defaultDevelApp loader (fmap fst . makeApplication)
   where
     loader = Yesod.Default.Config.loadConfig (configSettings Development)
-        { csParseExtra = parseExtra
+        { csParseExtra = Settings.parseExtra
         }
