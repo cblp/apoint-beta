@@ -1,0 +1,117 @@
+Source: haskell-mongodb
+Maintainer: Fedor Gogolev <knsd@knsd.net>
+Priority: optional
+Section: haskell
+Build-Depends: debhelper (>= 7.0)
+               , haskell-devscripts (>= 0.8)
+               , cdbs
+               , ghc
+               , ghc-prof
+               , libghc-bson-dev (>= 0.3)
+               , libghc-bson-dev (<< 0.4)
+               , libghc-bson-prof (>= 0.3)
+               , libghc-bson-prof (<< 0.4)
+               , libghc-cryptohash-dev
+               , libghc-cryptohash-prof
+               , libghc-hashtables-dev (>= 1.1.2.0)
+               , libghc-hashtables-prof (>= 1.1.2.0)
+               , libghc-lifted-base-dev (>= 0.1.0.3)
+               , libghc-lifted-base-prof (>= 0.1.0.3)
+               , libghc-monad-control-dev (>= 0.3.1)
+               , libghc-monad-control-prof (>= 0.3.1)
+               , libghc-mtl-dev (>= 2)
+               , libghc-mtl-prof (>= 2)
+               , libghc-network-dev
+               , libghc-network-prof
+               , libghc-parsec3-dev (>= 3) | libghc-parsec2-dev (<< 3)
+               , libghc-parsec3-prof (>= 3) | libghc-parsec2-prof (<< 3)
+               , libghc-random-dev
+               , libghc-random-prof
+               , libghc-random-shuffle-dev
+               , libghc-random-shuffle-prof
+               , libghc-text-dev
+               , libghc-text-prof
+               , libghc-transformers-base-dev (>= 0.4.1)
+               , libghc-transformers-base-prof (>= 0.4.1)
+Build-Depends-Indep: ghc-doc
+                     , libghc-bson-doc (>= 0.3)
+                     , libghc-bson-doc (<< 0.4)
+                     , libghc-cryptohash-doc
+                     , libghc-hashtables-doc (>= 1.1.2.0)
+                     , libghc-lifted-base-doc (>= 0.1.0.3)
+                     , libghc-monad-control-doc (>= 0.3.1)
+                     , libghc-mtl-doc (>= 2)
+                     , libghc-network-doc
+                     , libghc-parsec3-doc (>= 3) | libghc-parsec2-doc (<< 3)
+                     , libghc-random-doc
+                     , libghc-random-shuffle-doc
+                     , libghc-text-doc
+                     , libghc-transformers-base-doc (>= 0.4.1)
+
+Package: libghc-mongodb-dev
+Architecture: any
+Depends: ${shlibs:Depends}
+         , ${haskell:Depends}
+         , ${misc:Depends}
+Recommends: ${haskell:Recommends}
+Suggests: ${haskell:Suggests}
+Conflicts: ${haskell:Conflicts}
+Provides: ${haskell:Provides}
+Replaces: ${haskell:Replaces}
+Description: Driver (client) for MongoDB, a free, scalable, fast, document DBMS
+ This package lets you connect to MongoDB servers and
+ update/query their data. Please see the example in
+ Database.MongoDB and the tutorial from the homepage. For
+ information about MongoDB itself, see www.mongodb.org.
+ .
+  Author: Tony Hannan
+  Upstream-Maintainer: Fedor Gogolev <knsd@knsd.net>
+ .
+ This package provides a library for the Haskell programming language.
+ See http:///www.haskell.org/ for more information on Haskell.
+
+Package: libghc-mongodb-prof
+Architecture: any
+Depends: ${shlibs:Depends}
+         , ${haskell:Depends}
+         , ${misc:Depends}
+Recommends: ${haskell:Recommends}
+Suggests: ${haskell:Suggests}
+Conflicts: ${haskell:Conflicts}
+Provides: ${haskell:Provides}
+Replaces: ${haskell:Replaces}
+Description: Driver (client) for MongoDB, a free, scalable, fast, document DBMS
+ This package lets you connect to MongoDB servers and
+ update/query their data. Please see the example in
+ Database.MongoDB and the tutorial from the homepage. For
+ information about MongoDB itself, see www.mongodb.org.
+ .
+  Author: Tony Hannan
+  Upstream-Maintainer: Fedor Gogolev <knsd@knsd.net>
+ .
+ This package provides a library for the Haskell programming language, compiled
+ for profiling.  See http:///www.haskell.org/ for more information on Haskell.
+
+Package: libghc-mongodb-doc
+Architecture: all
+Section: doc
+Depends: ${shlibs:Depends}
+         , ${haskell:Depends}
+         , ${misc:Depends}
+Recommends: ${haskell:Recommends}
+Suggests: ${haskell:Suggests}
+Conflicts: ${haskell:Conflicts}
+Provides: ${haskell:Provides}
+Replaces: ${haskell:Replaces}
+Description: Driver (client) for MongoDB, a free, scalable, fast, document DBMS
+ This package lets you connect to MongoDB servers and
+ update/query their data. Please see the example in
+ Database.MongoDB and the tutorial from the homepage. For
+ information about MongoDB itself, see www.mongodb.org.
+ .
+  Author: Tony Hannan
+  Upstream-Maintainer: Fedor Gogolev <knsd@knsd.net>
+ .
+ This package provides the documentation for a library for the Haskell
+ programming language.
+ See http:///www.haskell.org/ for more information on Haskell.
