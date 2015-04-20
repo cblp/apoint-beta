@@ -1,8 +1,9 @@
 {-# LANGUAGE PackageImports #-}
 
 import            Control.Concurrent        ( forkIO, threadDelay )
+import            Control.Monad.Loops       ( untilM_ )
 import qualified  Network.Wai.Handler.Warp  as Warp
-import            Prelude.Extended
+import            Prelude
 import            System.Directory          ( doesFileExist, removeFile )
 import            System.Exit               ( exitSuccess )
 

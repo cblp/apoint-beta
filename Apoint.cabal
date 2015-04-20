@@ -12,22 +12,23 @@ Flag library-only
     Default:       False
 
 library
-    exposed-modules: Access
-                     Application
-                     Form
-                     Form.Note
-                     Foundation
-                     Handler.Home
-                     Handler.Link
-                     Handler.Note
-                     Handler.Search
-                     Model
-                     Model.Note
-                     Settings
-                     Settings.Development
-                     Settings.StaticFiles
-                     Widget
-                     Widget.Note
+    hs-source-dirs: src
+    exposed-modules:  Access
+                      Application
+                      Form
+                      Form.Note
+                      Foundation
+                      Handler.Home
+                      Handler.Link
+                      Handler.Note
+                      Handler.Search
+                      Model
+                      Model.Note
+                      Settings
+                      Settings.Development
+                      Settings.StaticFiles
+                      Widget
+                      Widget.Note
 
     other-modules:  Prelude.Extended
                     Yesod.Auth.Extended

@@ -6,7 +6,6 @@ module Prelude.Extended ( module I
 import Control.Applicative        as I  ( (<$>), (<*>) )
 import Control.Monad              as I  ( forM, when )
 import Control.Monad.IO.Class     as I  ( liftIO )
-import Control.Monad.Loops        as I  ( untilM_ )
 import Control.Monad.Trans.Class  as I  ( lift )
 import Data.Default               as I  ( def )
 import Data.Maybe                 as I  ( fromMaybe, isJust )
