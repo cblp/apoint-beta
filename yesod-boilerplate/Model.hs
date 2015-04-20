@@ -3,6 +3,8 @@ module Model where
 import Yesod
 import Data.Text (Text)
 import Database.Persist.Quasi
+import Database.Persist.MongoDB hiding (master)
+import Language.Haskell.TH.Syntax
 import Data.Typeable (Typeable)
 import Prelude
 
@@ -10,5 +12,8 @@ import Prelude
 -- You can find more information on persistent and how to declare entities
 -- at:
 -- http://www.yesodweb.com/book/persistent/
-share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
-    $(persistFileWith lowerCaseSettings "config/models")
+let mongoSettings = (mkPersistSettings (ConT ''MongoBackend))
+                        { mpsGeneric = False
+                        }
+ in share [mkPersist mongoSettings]
+    $(persistFileWith upperCaseSettings "config/models")

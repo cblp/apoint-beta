@@ -1,0 +1,24 @@
+Default: &defaults
+  user: yesod-boilerplate
+  password: yesod-boilerplate
+  host: localhost
+  database: yesod-boilerplate
+  connections: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: yesod-boilerplate_test
+  <<: *defaults
+
+Staging:
+  database: yesod-boilerplate_staging
+  connections: 100
+  <<: *defaults
+
+Production:
+  database: yesod-boilerplate_production
+  connections: 100
+  host: localhost
+  <<: *defaults

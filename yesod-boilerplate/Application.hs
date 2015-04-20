@@ -16,9 +16,7 @@ import Network.Wai.Middleware.RequestLogger
     )
 import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
 import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
 import Network.HTTP.Client.Conduit (newManager)
-import Control.Monad.Logger (runLoggingT)
 import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
@@ -61,7 +59,7 @@ makeFoundation :: AppConfig DefaultEnv Extra -> IO App
 makeFoundation conf = do
     manager <- newManager
     s <- staticSite
-    dbconf <- withYamlEnvironment "config/sqlite.yml" (appEnv conf)
+    dbconf <- withYamlEnvironment "config/mongoDB.yml" (appEnv conf)
               Database.Persist.loadConfig >>=
               Database.Persist.applyEnv
     p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
@@ -71,11 +69,6 @@ makeFoundation conf = do
 
     let logger = Yesod.Core.Types.Logger loggerSet' getter
         foundation = App conf s p manager dbconf logger
-
-    -- Perform database migration using our application's logging settings.
-    runLoggingT
-        (Database.Persist.runPool dbconf (runMigration migrateAll) p)
-        (messageLoggerSource foundation logger)
 
     return foundation
 

@@ -11,7 +11,9 @@ module TestImport
 
 import Yesod.Test
 import Database.Persist hiding (get)
-import Database.Persist.Sql (SqlPersistM, runSqlPersistMPool)
+import Database.Persist.MongoDB hiding (master)
+import Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import Control.Monad.Logger (NoLoggingT, runNoLoggingT)
 import Control.Monad.IO.Class (liftIO)
 
 import Foundation
@@ -20,7 +22,7 @@ import Model
 type Spec = YesodSpec App
 type Example = YesodExample App
 
-runDB :: SqlPersistM a -> Example a
+runDB :: Action (NoLoggingT (ResourceT IO)) a -> YesodExample App a
 runDB query = do
     pool <- fmap connPool getTestYesod
-    liftIO $ runSqlPersistMPool query pool
+    liftIO $ runResourceT $ runNoLoggingT $ runMongoDBPoolDef query pool
