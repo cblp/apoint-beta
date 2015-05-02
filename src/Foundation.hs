@@ -66,8 +66,7 @@ import            Yesod.Static                  ( Route (StaticRoute)
                                                 , base64md5
                                                 )
 
-import            Model
-                  -- ^ TODO explicit import UniqueUser
+import            Model                         -- TODO explicit import UniqueUser
 import qualified  Settings                      ( PersistConf
                                                 , staticDir, staticRoot
                                                 )
