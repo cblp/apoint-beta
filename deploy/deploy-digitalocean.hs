@@ -1,16 +1,16 @@
 #!/usr/bin/env runhaskell
 {-# OPTIONS -Wall -Werror #-}
 
-import Development.Shake          ( (*>)
+import Development.Shake          ( (*>), CmdOption(Traced)
                                   , command_, shakeArgs, shakeOptions, want
                                   )
 import Development.Shake.FilePath ( (</>) )
 
 main :: IO ()
 main = shakeArgs shakeOptions $ do
-    want [deployed]
+    want [deploy]
 
-    deployed *> \_ -> do
+    deploy *> \_ -> do
         upload
         install
         restart
@@ -27,22 +27,20 @@ main = shakeArgs shakeOptions $ do
     uploadPath = tmp </> packageFile
 
     -- targets
-    deployed = "deployed"
+    deploy = "deploy"
 
     -- actions
     install = remoteSudo ["dpkg", "--install", uploadPath]
 
     restart = remoteSudo ["service", "restart", serviceName]
 
-    upload = command_ [] "scp" [sourcePath, remotePath user server uploadPath]
+    upload =
+        let targetPath = concat [user, "@", server, ":", uploadPath]
+            trace = unwords ["scp", sourcePath, targetPath]
+        in  command_ [Traced trace] "scp" [sourcePath, targetPath]
 
-    remoteSudo args = command_ [] "ssh" ((user ++ "@" ++ server) : args)
+    remoteSudo args =
+        command_ [Traced $ unwords args] "ssh" ((user ++ "@" ++ server) : args)
 
     -- constants
     tmp = "/tmp"
-
-(<:>) :: FilePath -> FilePath -> FilePath
-a <:> b = a ++ ":" ++ b
-
-remotePath :: String -> String -> FilePath -> String
-remotePath user server uploadPath = concat [user, "@", server, ":", uploadPath]
