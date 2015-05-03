@@ -2,22 +2,27 @@
 {-# OPTIONS -Wall -Werror #-}
 
 import Development.Shake          ( (*>), CmdOption(Traced)
-                                  , command_, shakeArgs, shakeOptions, want
+                                  , command_
+                                  , need
+                                  , shakeArgs
+                                  , shakeOptions
+                                  , want
                                   )
 import Development.Shake.FilePath ( (</>) )
 
 main :: IO ()
 main = shakeArgs shakeOptions $ do
-    want [deploy]
+    want1 deploy
 
     deploy *> \_ -> do
+        need1 sourcePath
         upload
         install
         restart
 
   where
     -- parameters
-    packageFile = "haskell-apoint-utils_0.0.0_amd64.deb"
+    packageFile = "apoint_0.0.0_amd64.deb"
     server = "45.55.198.147"
     serviceName = "apoint"
     user = "root"
@@ -44,3 +49,7 @@ main = shakeArgs shakeOptions $ do
 
     -- constants
     tmp = "/tmp"
+
+    -- util
+    need1 = need . (:[])
+    want1 = want . (:[])
