@@ -1,0 +1,10 @@
+[Unit]
+Description=Apoint service
+
+[Service]
+WorkingDirectory=/usr/lib/apoint
+ExecStart=/usr/bin/apoint Testing
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

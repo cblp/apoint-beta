@@ -19,6 +19,7 @@ main = shakeArgs shakeOptions $ do
         upload
         install
         restart
+        status -- TODO check port
 
   where
     -- parameters
@@ -37,7 +38,9 @@ main = shakeArgs shakeOptions $ do
     -- actions
     install = remoteSudo ["dpkg", "--install", uploadPath]
 
-    restart = remoteSudo ["service", "restart", serviceName]
+    restart = remoteSudo ["service", serviceName, "restart"]
+
+    status = remoteSudo ["service", serviceName, "status"]
 
     upload =
         let targetPath = concat [user, "@", server, ":", uploadPath]

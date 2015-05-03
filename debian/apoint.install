@@ -1,1 +1,3 @@
-dist-ghc/build/apoint/apoint usr/bin
+dist-ghc/build/apoint/apoint  usr/bin
+config                        usr/lib/apoint
+static                        usr/lib/apoint
