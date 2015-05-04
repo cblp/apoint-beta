@@ -1,0 +1,24 @@
+Default: &defaults
+  user: yesod-boilerplate
+  password: yesod-boilerplate
+  host: localhost
+  port: 5432
+  database: yesod-boilerplate
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: yesod-boilerplate_test
+  <<: *defaults
+
+Staging:
+  database: yesod-boilerplate_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: yesod-boilerplate_production
+  poolsize: 100
+  <<: *defaults
