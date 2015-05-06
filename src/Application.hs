@@ -87,7 +87,7 @@ makeFoundation :: AppConfig DefaultEnv Settings.Extra -> IO App
 makeFoundation conf = do
     manager <- HTTP.newManager
     s <- StaticFiles.staticSite
-    dbconf <- withYamlEnvironment "config/sqlite.yml" (appEnv conf)
+    dbconf <- withYamlEnvironment "config/postgresql.yml" (appEnv conf)
               Persist.loadConfig >>=
               Persist.applyEnv
     p <- Persist.createPoolConfig (dbconf :: Settings.PersistConf)
