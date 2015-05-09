@@ -1,24 +1,24 @@
 Default: &defaults
-  user: apoint
-  password: Apoint
+  user: yesod-boilerplate
+  password: yesod-boilerplate
   host: localhost
   port: 5432
-  database: apoint
+  database: yesod-boilerplate
   poolsize: 10
 
 Development:
   <<: *defaults
 
 Testing:
-  database: apoint_test
+  database: yesod-boilerplate_test
   <<: *defaults
 
 Staging:
-  database: apoint_staging
+  database: yesod-boilerplate_staging
   poolsize: 100
   <<: *defaults
 
 Production:
-  database: apoint_production
+  database: yesod-boilerplate_production
   poolsize: 100
   <<: *defaults

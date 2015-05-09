@@ -3,208 +3,79 @@ Maintainer: Yuriy Syrovetskiy <cblp@cblp.su>
 Priority: optional
 Section: haskell
 Build-Depends: debhelper (>= 7.0)
-               , haskell-devscripts (>= 0.8)
                , cdbs
                , ghc
+               , haskell-devscripts (>= 0.8)
                , libghc-aeson-dev (>= 0.6)
                , libghc-aeson-dev (<< 0.8)
-               , libghc-aeson-prof (>= 0.6)
-               , libghc-aeson-prof (<< 0.8)
-               , ghc-prof
                , libghc-blaze-html-dev
-               , libghc-blaze-html-prof
                , libghc-blaze-markup-dev (>= 0.6.1)
                , libghc-blaze-markup-dev (<< 0.7)
-               , libghc-blaze-markup-prof (>= 0.6.1)
-               , libghc-blaze-markup-prof (<< 0.7)
                , libghc-conduit-dev (>= 1.0)
                , libghc-conduit-dev (<< 2.0)
-               , libghc-conduit-prof (>= 1.0)
-               , libghc-conduit-prof (<< 2.0)
                , libghc-data-default-dev
-               , libghc-data-default-prof
                , libghc-fast-logger-dev (>= 2.1.4)
                , libghc-fast-logger-dev (<< 2.2)
-               , libghc-fast-logger-prof (>= 2.1.4)
-               , libghc-fast-logger-prof (<< 2.2)
                , libghc-hamlet-dev
-               , libghc-hamlet-prof
                , libghc-hjsmin-dev (>= 0.1)
                , libghc-hjsmin-dev (<< 0.2)
-               , libghc-hjsmin-prof (>= 0.1)
-               , libghc-hjsmin-prof (<< 0.2)
                , libghc-http-conduit-dev (>= 2.1)
                , libghc-http-conduit-dev (<< 2.2)
-               , libghc-http-conduit-prof (>= 2.1)
-               , libghc-http-conduit-prof (<< 2.2)
                , libghc-markdown-dev
-               , libghc-markdown-prof
                , libghc-mime-mail-dev
-               , libghc-mime-mail-prof
                , libghc-monad-control-dev (>= 0.3)
                , libghc-monad-control-dev (<< 0.4)
-               , libghc-monad-control-prof (>= 0.3)
-               , libghc-monad-control-prof (<< 0.4)
                , libghc-monad-logger-dev (>= 0.3)
                , libghc-monad-logger-dev (<< 0.4)
-               , libghc-monad-logger-prof (>= 0.3)
-               , libghc-monad-logger-prof (<< 0.4)
                , libghc-monad-loops-dev (>= 0.4.2.1)
                , libghc-monad-loops-dev (<< 0.5)
-               , libghc-monad-loops-prof (>= 0.4.2.1)
-               , libghc-monad-loops-prof (<< 0.5)
                , libghc-path-pieces-dev (>= 0.1.2)
                , libghc-path-pieces-dev (<< 0.2)
-               , libghc-path-pieces-prof (>= 0.1.2)
-               , libghc-path-pieces-prof (<< 0.2)
                , libghc-persistent-dev (>= 1.3)
                , libghc-persistent-dev (<< 1.4)
-               , libghc-persistent-prof (>= 1.3)
-               , libghc-persistent-prof (<< 1.4)
-               , libghc-persistent-sqlite-dev (>= 1.3)
-               , libghc-persistent-sqlite-dev (<< 1.4)
-               , libghc-persistent-sqlite-prof (>= 1.3)
-               , libghc-persistent-sqlite-prof (<< 1.4)
+               , libghc-persistent-postgresql-dev (>= 1.3)
+               , libghc-persistent-postgresql-dev (<< 1.4)
                , libghc-persistent-template-dev (>= 1.3)
                , libghc-persistent-template-dev (<< 1.4)
-               , libghc-persistent-template-prof (>= 1.3)
-               , libghc-persistent-template-prof (<< 1.4)
                , libghc-shakespeare-dev
-               , libghc-shakespeare-prof
                , libghc-shakespeare-i18n-dev (>= 1.0)
                , libghc-shakespeare-i18n-dev (<< 1.1)
-               , libghc-shakespeare-i18n-prof (>= 1.0)
-               , libghc-shakespeare-i18n-prof (<< 1.1)
                , libghc-shakespeare-text-dev
-               , libghc-shakespeare-text-prof
                , libghc-text-dev (>= 0.11)
                , libghc-text-dev (<< 2.0)
-               , libghc-text-prof (>= 0.11)
-               , libghc-text-prof (<< 2.0)
                , libghc-transformers-dev (>= 0.3)
                , libghc-transformers-dev (<< 0.4)
-               , libghc-transformers-prof (>= 0.3)
-               , libghc-transformers-prof (<< 0.4)
                , libghc-wai-dev (>= 3.0.1.1)
                , libghc-wai-dev (<< 3.1)
-               , libghc-wai-prof (>= 3.0.1.1)
-               , libghc-wai-prof (<< 3.1)
                , libghc-wai-extra-dev (>= 3.0)
                , libghc-wai-extra-dev (<< 3.1)
-               , libghc-wai-extra-prof (>= 3.0)
-               , libghc-wai-extra-prof (<< 3.1)
                , libghc-wai-logger-dev (>= 2.1)
                , libghc-wai-logger-dev (<< 2.2)
-               , libghc-wai-logger-prof (>= 2.1)
-               , libghc-wai-logger-prof (<< 2.2)
                , libghc-warp-dev (>= 3.0)
                , libghc-warp-dev (<< 3.1)
-               , libghc-warp-prof (>= 3.0)
-               , libghc-warp-prof (<< 3.1)
                , libghc-yaml-dev (>= 0.8)
                , libghc-yaml-dev (<< 0.9)
-               , libghc-yaml-prof (>= 0.8)
-               , libghc-yaml-prof (<< 0.9)
-               , libghc-yesod-dev (>= 1.2.5)
-               , libghc-yesod-dev (<< 1.3)
-               , libghc-yesod-prof (>= 1.2.5)
-               , libghc-yesod-prof (<< 1.3)
                , libghc-yesod-auth-dev (>= 1.3)
                , libghc-yesod-auth-dev (<< 1.4)
-               , libghc-yesod-auth-prof (>= 1.3)
-               , libghc-yesod-auth-prof (<< 1.4)
                , libghc-yesod-core-dev (>= 1.2.12)
                , libghc-yesod-core-dev (<< 1.3)
-               , libghc-yesod-core-prof (>= 1.2.12)
-               , libghc-yesod-core-prof (<< 1.3)
+               , libghc-yesod-dev (>= 1.2.5)
+               , libghc-yesod-dev (<< 1.3)
                , libghc-yesod-form-dev (>= 1.3)
                , libghc-yesod-form-dev (<< 1.4)
-               , libghc-yesod-form-prof (>= 1.3)
-               , libghc-yesod-form-prof (<< 1.4)
                , libghc-yesod-persistent-dev (>= 1.2.3)
                , libghc-yesod-persistent-dev (<< 1.3)
-               , libghc-yesod-persistent-prof (>= 1.2.3)
-               , libghc-yesod-persistent-prof (<< 1.3)
                , libghc-yesod-routes-dev (>= 1.2)
                , libghc-yesod-routes-dev (<< 1.3)
-               , libghc-yesod-routes-prof (>= 1.2)
-               , libghc-yesod-routes-prof (<< 1.3)
                , libghc-yesod-static-dev (>= 1.2)
                , libghc-yesod-static-dev (<< 1.3)
-               , libghc-yesod-static-prof (>= 1.2)
-               , libghc-yesod-static-prof (<< 1.3)
-               , libghc-yesod-dev
-               , libghc-yesod-prof
-Build-Depends-Indep: ghc-doc
-                     , libghc-aeson-doc (>= 0.6)
-                     , libghc-aeson-doc (<< 0.8)
-                     , libghc-blaze-html-doc
-                     , libghc-blaze-markup-doc (>= 0.6.1)
-                     , libghc-blaze-markup-doc (<< 0.7)
-                     , libghc-conduit-doc (>= 1.0)
-                     , libghc-conduit-doc (<< 2.0)
-                     , libghc-data-default-doc
-                     , libghc-fast-logger-doc (>= 2.1.4)
-                     , libghc-fast-logger-doc (<< 2.2)
-                     , libghc-hamlet-doc
-                     , libghc-hjsmin-doc (>= 0.1)
-                     , libghc-hjsmin-doc (<< 0.2)
-                     , libghc-http-conduit-doc (>= 2.1)
-                     , libghc-http-conduit-doc (<< 2.2)
-                     , libghc-markdown-doc
-                     , libghc-mime-mail-doc
-                     , libghc-monad-control-doc (>= 0.3)
-                     , libghc-monad-control-doc (<< 0.4)
-                     , libghc-monad-logger-doc (>= 0.3)
-                     , libghc-monad-logger-doc (<< 0.4)
-                     , libghc-monad-loops-doc (>= 0.4.2.1)
-                     , libghc-monad-loops-doc (<< 0.5)
-                     , libghc-path-pieces-doc (>= 0.1.2)
-                     , libghc-path-pieces-doc (<< 0.2)
-                     , libghc-persistent-doc (>= 1.3)
-                     , libghc-persistent-doc (<< 1.4)
-                     , libghc-persistent-sqlite-doc (>= 1.3)
-                     , libghc-persistent-sqlite-doc (<< 1.4)
-                     , libghc-persistent-template-doc (>= 1.3)
-                     , libghc-persistent-template-doc (<< 1.4)
-                     , libghc-shakespeare-doc
-                     , libghc-shakespeare-i18n-doc (>= 1.0)
-                     , libghc-shakespeare-i18n-doc (<< 1.1)
-                     , libghc-shakespeare-text-doc
-                     , libghc-text-doc (>= 0.11)
-                     , libghc-text-doc (<< 2.0)
-                     , libghc-transformers-doc (>= 0.3)
-                     , libghc-transformers-doc (<< 0.4)
-                     , libghc-wai-doc (>= 3.0.1.1)
-                     , libghc-wai-doc (<< 3.1)
-                     , libghc-wai-extra-doc (>= 3.0)
-                     , libghc-wai-extra-doc (<< 3.1)
-                     , libghc-wai-logger-doc (>= 2.1)
-                     , libghc-wai-logger-doc (<< 2.2)
-                     , libghc-warp-doc (>= 3.0)
-                     , libghc-warp-doc (<< 3.1)
-                     , libghc-yaml-doc (>= 0.8)
-                     , libghc-yaml-doc (<< 0.9)
-                     , libghc-yesod-doc (>= 1.2.5)
-                     , libghc-yesod-doc (<< 1.3)
-                     , libghc-yesod-auth-doc (>= 1.3)
-                     , libghc-yesod-auth-doc (<< 1.4)
-                     , libghc-yesod-core-doc (>= 1.2.12)
-                     , libghc-yesod-core-doc (<< 1.3)
-                     , libghc-yesod-form-doc (>= 1.3)
-                     , libghc-yesod-form-doc (<< 1.4)
-                     , libghc-yesod-persistent-doc (>= 1.2.3)
-                     , libghc-yesod-persistent-doc (<< 1.3)
-                     , libghc-yesod-routes-doc (>= 1.2)
-                     , libghc-yesod-routes-doc (<< 1.3)
-                     , libghc-yesod-static-doc (>= 1.2)
-                     , libghc-yesod-static-doc (<< 1.3)
+
 
 Package: libghc-apoint-dev
 Architecture: any
-Depends: ${shlibs:Depends}
-         , ${haskell:Depends}
-         , ${misc:Depends}
+Depends:  ${shlibs:Depends}
+        , ${haskell:Depends}
+        , ${misc:Depends}
 Recommends: ${haskell:Recommends}
 Suggests: ${haskell:Suggests}
 Conflicts: ${haskell:Conflicts}
@@ -219,9 +90,11 @@ Description: No short description available
 Package: apoint
 Architecture: any
 Section: misc
-Depends: ${shlibs:Depends}
-         , ${haskell:Depends}
-         , ${misc:Depends}
+Depends:  postgresql (>= 9.4)
+        , postgresql (<< 10)
+        , ${shlibs:Depends}
+        , ${haskell:Depends}
+        , ${misc:Depends}
 Recommends: ${haskell:Recommends}
 Suggests: ${haskell:Suggests}
 Conflicts: ${haskell:Conflicts}
@@ -230,4 +103,3 @@ Replaces: ${haskell:Replaces}
 Description: No short description available
  .
  Files associated with the Apoint package.
-

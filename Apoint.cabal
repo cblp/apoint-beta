@@ -73,7 +73,7 @@ library
                  , monad-loops                   >= 0.4.2.1    && < 0.5
                  , monad-logger                  >= 0.3        && < 0.4
                  , persistent                    >= 1.3        && < 1.4
-                 , persistent-sqlite             >= 1.3        && < 1.4
+                 , persistent-postgresql         >= 1.3        && < 1.4
                  , persistent-template           >= 1.3        && < 1.4
                  , shakespeare
                  , shakespeare-i18n              >= 1.0        && < 1.1
@@ -119,7 +119,7 @@ test-suite test
                  , yesod-core
                  , yesod
                  , persistent
-                 , persistent-sqlite
+                 , persistent-postgresql
                  , resourcet
                  , monad-logger
                  , transformers
