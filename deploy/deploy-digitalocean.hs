@@ -24,9 +24,11 @@ main = shakeArgs shakeOptions $ do
   where
     -- parameters
     packageFile = "apoint_0.0.0_amd64.deb"
-    server = "45.55.198.147"
     serviceName = "apoint"
     user = "root"
+    server = next02
+      where
+        next02 = "45.55.198.147"
 
     -- derivatives
     sourcePath = ".." </> packageFile
