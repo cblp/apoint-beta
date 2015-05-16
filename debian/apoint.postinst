@@ -23,7 +23,7 @@ case "$1" in
         adduser --system --home /var/lib/apoint --no-create-home --quiet apoint
 
         # disable default nginx configuration
-        unlink /etc/nginx/sites-enabled/default
+        rm -f /etc/nginx/sites-enabled/default
 
         # TODO postfix: myhostname = next.cblp.su
     ;;
