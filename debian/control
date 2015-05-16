@@ -90,7 +90,8 @@ Description: No short description available
 Package: apoint
 Architecture: any
 Section: misc
-Depends:  postgresql (>= 9.4)
+Depends:  nginx
+        , postgresql (>= 9.4)
         , postgresql (<< 10)
         , ${shlibs:Depends}
         , ${haskell:Depends}

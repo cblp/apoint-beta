@@ -1,7 +1,8 @@
 #!/usr/bin/env runhaskell
 {-# OPTIONS -Wall -Werror #-}
 
-import Development.Shake          ( (*>), CmdOption(Traced)
+import Control.Monad              ( forM_ )
+import Development.Shake          ( (~>), CmdOption(Traced)
                                   , command_
                                   , need
                                   , shakeArgs
@@ -14,17 +15,18 @@ main :: IO ()
 main = shakeArgs shakeOptions $ do
     want1 deploy
 
-    deploy *> \_ -> do
+    deploy ~> do
         need1 sourcePath
         upload
         install
-        restart
-        status -- TODO check port
+        forM_ services $ \s -> do
+            restart s
+            status s  -- TODO check port
 
   where
     -- parameters
     packageFile = "apoint_0.0.0_amd64.deb"
-    serviceName = "apoint"
+    services = ["apoint", "nginx"]
     user = "root"
     server = next02
       where
@@ -40,9 +42,9 @@ main = shakeArgs shakeOptions $ do
     -- actions
     install = remoteSudo ["dpkg", "--install", uploadPath]
 
-    restart = remoteSudo ["service", serviceName, "restart"]
+    restart serviceName = remoteSudo ["service", serviceName, "restart"]
 
-    status = remoteSudo ["service", serviceName, "status"]
+    status serviceName = remoteSudo ["service", serviceName, "status"]
 
     upload =
         let targetPath = concat [user, "@", server, ":", uploadPath]

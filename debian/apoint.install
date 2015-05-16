@@ -1,3 +1,4 @@
+nginx/apoint                  etc/nginx/sites-enabled
 dist-ghc/build/apoint/apoint  usr/bin
 config                        usr/lib/apoint
 static                        usr/lib/apoint
