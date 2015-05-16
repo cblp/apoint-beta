@@ -91,6 +91,7 @@ Package: apoint
 Architecture: any
 Section: misc
 Depends:  nginx
+        , postfix
         , postgresql (>= 9.4)
         , postgresql (<< 10)
         , ${shlibs:Depends}

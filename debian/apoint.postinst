@@ -24,6 +24,8 @@ case "$1" in
 
         # disable default nginx configuration
         unlink /etc/nginx/sites-enabled/default
+
+        # TODO postfix: myhostname = next.cblp.su
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
