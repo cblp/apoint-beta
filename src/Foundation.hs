@@ -238,6 +238,47 @@ instance YesodAuth.YesodAuth App where
 
 
 -- Here's all of the email-specific code
+sendRegistrationEmail :: Text -> YesodAuth.VerKey -> Text -> Handler ()
+sendRegistrationEmail email verkey verurl = do
+    $logInfo $ mconcat  [ "email = ", email
+                        , ", verkey = ", verkey
+                        , ", verurl = ", verurl
+                        ]
+    liftIO $ Mail.renderSendMail
+        (Mail.emptyMail $ Mail.Address Nothing "noreply")
+            { Mail.mailTo = [Mail.Address Nothing email]
+            , Mail.mailHeaders = [("Subject", "Verify your email address")]
+            , Mail.mailParts = [[textPart, htmlPart]]
+            }
+    where
+        textPart = Mail.Part
+            { Mail.partType = "text/plain; charset=utf-8"
+            , Mail.partEncoding = Mail.None
+            , Mail.partFilename = Nothing
+            , Mail.partContent = encodeUtf8
+                [stext|
+                    Please confirm your email address by clicking on the link below.
+
+                    #{verurl}
+
+                    Thank you
+                |]
+            , Mail.partHeaders = []
+            }
+        htmlPart = Mail.Part
+            { Mail.partType = "text/html; charset=utf-8"
+            , Mail.partEncoding = Mail.None
+            , Mail.partFilename = Nothing
+            , Mail.partContent = renderHtml
+                [shamlet|
+                    <p>Please confirm your email address by clicking on the link below.
+                    <p>
+                        <a href=#{verurl}>#{verurl}
+                    <p>Thank you
+                |]
+            , Mail.partHeaders = []
+            }
+
 instance YesodAuth.YesodAuthEmail App where
     type AuthEmailId App = UserId
 
@@ -246,42 +287,10 @@ instance YesodAuth.YesodAuthEmail App where
     addUnverified email verkey =
         runDB $ insert $ User email Nothing (Just verkey) False
 
-    sendVerifyEmail email _ verurl = do
-        $logInfo $ mconcat ["email = ", email, ", verurl = ", verurl]
-        liftIO $ Mail.renderSendMail
-            (Mail.emptyMail $ Mail.Address Nothing "noreply")
-                { Mail.mailTo = [Mail.Address Nothing email]
-                , Mail.mailHeaders = [("Subject", "Verify your email address")]
-                , Mail.mailParts = [[textPart, htmlPart]]
-                }
-        where
-            textPart = Mail.Part
-                { Mail.partType = "text/plain; charset=utf-8"
-                , Mail.partEncoding = Mail.None
-                , Mail.partFilename = Nothing
-                , Mail.partContent = Data.Text.Lazy.Encoding.encodeUtf8
-                    [stext|
-                        Please confirm your email address by clicking on the link below.
-
-                        #{verurl}
-
-                        Thank you
-                    |]
-                , Mail.partHeaders = []
-                }
-            htmlPart = Mail.Part
-                { Mail.partType = "text/html; charset=utf-8"
-                , Mail.partEncoding = Mail.None
-                , Mail.partFilename = Nothing
-                , Mail.partContent = renderHtml
-                    [shamlet|
-                        <p>Please confirm your email address by clicking on the link below.
-                        <p>
-                            <a href=#{verurl}>#{verurl}
-                        <p>Thank you
-                    |]
-                , Mail.partHeaders = []
-                }
+    sendVerifyEmail email verkey verurl = do
+        verifyUsersManually <- extraVerifyUsersManually <$> getExtra
+        when (not verifyUsersManually) $
+            sendRegistrationEmail email verkey verurl
 
     getVerifyKey uid = runDB $ do
         mu <- get uid

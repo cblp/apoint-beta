@@ -72,6 +72,7 @@ widgetFile = (if development then widgetFileReload
 data Extra = Extra
     { extraCopyright :: Text
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
+    , extraVerifyUsersManually :: Bool
     , extraNotesOnAPage :: Int
     , extraNoteSuggestSize :: Int
     } deriving Show
@@ -80,5 +81,6 @@ parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = Extra
     <$> o .:  "copyright"
     <*> o .:? "analytics"
+    <*> o .:  "verifyUsersManually"
     <*> o .:  "notesOnAPage"
     <*> o .:  "noteSuggestSize"
