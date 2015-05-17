@@ -30,4 +30,4 @@ contains_i field val =
     Filter
         field
         (Left $ Text.concat ["%", val, "%"])
-        (BackendSpecificFilter "LIKE") -- TODO: ILIKE for Postgres
+        (BackendSpecificFilter "ILIKE")
