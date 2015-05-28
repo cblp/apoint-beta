@@ -4,6 +4,7 @@ module Prelude.Extended ( module I
                         ) where
 
 import Control.Applicative        as I  ( (<$>), (<*>) )
+import Control.Arrow              as I  ( (>>>) )
 import Control.Monad              as I  ( forM, when )
 import Control.Monad.IO.Class     as I  ( liftIO )
 import Control.Monad.Trans.Class  as I  ( lift )
