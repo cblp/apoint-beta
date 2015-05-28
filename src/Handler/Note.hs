@@ -21,7 +21,7 @@ import Access               ( AccessMode (Delete, Read, Update)
                             )
 import Form                 ( emptyForm, runFormPostChecked )
 import Form.Note            ( noteContentForm )
-import Foundation
+import Foundation           -- Handler
 import Model
 import Model.Note           ( noteContentShort, noteSiblings )
 import Settings             ( extraNotesOnAPage )
