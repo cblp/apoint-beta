@@ -24,6 +24,12 @@ x & f = f x
 {-# INLINE (&) #-}
 
 
+(<&>) :: Functor f => f a -> (a -> b) -> f b
+x <&> f = f <$> x
+infix 4 <&>
+{-# INLINE (<&>) #-}
+
+
 curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
 curry3 f a b c = f (a, b, c)
 
