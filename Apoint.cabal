@@ -18,6 +18,7 @@ library
                       Form
                       Form.Note
                       Foundation
+                      Handler.Admin.User
                       Handler.Home
                       Handler.Link
                       Handler.Note

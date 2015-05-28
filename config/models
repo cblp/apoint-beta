@@ -21,4 +21,16 @@ User
 
     UniqueUser email
 
-    deriving Typeable
+    deriving Show Typeable
+
+
+Accessgroup
+    name Text  -- TODO make `name` a primary id
+    UniqueAccessgroup name
+
+
+UserAccessgroup
+    user  UserId
+    group AccessgroupId
+
+    UniqueUserAccessgroup user group

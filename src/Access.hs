@@ -7,12 +7,10 @@ module Access where
 import Prelude.Extended
 import Yesod.Auth.Extended  ( requireAuthId' )
 import Yesod.Core           ( permissionDenied )
-import Yesod.Persist        ( get404, runDB )
+import Yesod.Persist        ( (==.), entityKey, getBy, get404, runDB, selectFirst )
 
 import Foundation           ( Handler )
-import Model                ( Note (..), NoteId
-                            , UserId
-                            )
+import Model                -- Accessgroup*, Note*, User*, UserAccessgroup*
 
 
 data AccessMode = Read | Update | Delete
@@ -54,4 +52,27 @@ authorize _ userLoc noteLoc = do
     userId <- getUserId userLoc
     note <- getNote noteLoc
     when (userId /= noteAuthor note) $
-        permissionDenied "You are not the author of this note"
+        permissionDenied "User is not the author of this note"
+
+
+-- | Returns `()` if user is in `admin` access group.
+--   Sends user to login page and back if he isn't authenticated,
+--     or raises `notAuthenticated` if it's an API client.
+--   Raises `permissionDenied` if user is valid,
+--     but doesn't belong to the admin group.
+authorizeAdmin :: Handler ()
+authorizeAdmin = do
+    userId <- requireAuthId'
+    userIsAdmin <- runDB $ do
+        -- TODO create `admin` group at startup, instead of error
+        -- TODO get `admin` group id at startup
+        adminGroupId <- getBy (UniqueAccessgroup "admin")
+                        <&> ( fromMaybe (error "no group `admin` in db")
+                              >>> entityKey )
+        exists  [ UserAccessgroupUser ==. userId
+                , UserAccessgroupGroup ==. adminGroupId
+                ]
+    when (not userIsAdmin) $
+        permissionDenied "You have no admin priviledges"
+  where
+    exists filters = isJust <$> selectFirst filters []
